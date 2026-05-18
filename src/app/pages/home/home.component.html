@@ -1,0 +1,263 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero" *ngIf="featuredMovie" [style.backgroundImage]="'url(' + featuredMovie.imageUrl + ')'">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h2 class="hero-title">{{ featuredMovie.title }}</h2>
+      <p class="hero-desc">{{ featuredMovie.description }}</p>
+      <div class="hero-buttons">
+        <button class="btn btn-primary play-btn" *ngIf="featuredMovie.slug" (click)="viewMovie(featuredMovie.slug)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          Watch Now
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="content-section" *ngIf="!currentType">
+    <h3 class="section-title">Categories / Thể Loại</h3>
+    <div class="category-list">
+      <div class="category-pill" *ngFor="let cat of categories" (click)="onCategoryClick(cat)">{{ cat }}</div>
+    </div>
+  </section>
+
+  <!-- Phim Đang Xem Dở -->
+  <section class="content-section premium-slider-section" *ngIf="!currentType && !searchKeyword && inProgressMovies.length > 0">
+    <h3 class="section-title flex-title">
+      <svg class="title-icon-svg" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+      Phim Đang Xem Dở
+    </h3>
+    <div class="movie-grid">
+      <div class="movie-card progress-card" *ngFor="let movie of inProgressMovies" (click)="viewMovie(movie.slug)">
+        <div class="movie-poster">
+          <img [src]="movie.thumb_url || movie.poster_url" [alt]="movie.name" loading="lazy">
+          <div class="movie-overlay">
+            <button class="play-circle-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            </button>
+          </div>
+          <span class="movie-badge" style="font-weight: 600; background: var(--color-primary); color: white;">Tập {{ movie.episode_current }}</span>
+          
+          <!-- Premium watch progress bar overlay -->
+          <div class="watch-progress-track">
+            <div class="watch-progress-bar" [style.width.%]="movie.progressPercent || 0"></div>
+          </div>
+        </div>
+        <div class="movie-info">
+          <h4 class="movie-title">{{ movie.name }}</h4>
+          <div class="movie-meta progress-meta">
+            <span class="progress-percent-label">Đã xem {{ movie.progressPercent || 0 }}%</span>
+            <span class="movie-rating" style="color: var(--color-primary); font-weight: bold;">Tập {{ movie.episode_current }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phim Đã Xem -->
+  <section class="content-section" *ngIf="!currentType && !searchKeyword && watchedMovies.length > 0">
+    <h3 class="section-title flex-title">
+      <svg class="title-icon-svg" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      Phim Đã Xem Gần Đây
+    </h3>
+    <div class="movie-grid">
+      <div class="movie-card completed-card" *ngFor="let movie of watchedMovies" (click)="viewMovie(movie.slug)">
+        <div class="movie-poster">
+          <img [src]="movie.thumb_url || movie.poster_url" [alt]="movie.name" loading="lazy">
+          <div class="movie-overlay">
+            <button class="play-circle-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            </button>
+          </div>
+          <span class="movie-badge" style="background: #2ec4b6; color: white;">Hoàn thành ✓</span>
+        </div>
+        <div class="movie-info">
+          <h4 class="movie-title">{{ movie.name }}</h4>
+          <div class="movie-meta">
+            <span class="movie-genre" style="color: #2ec4b6;">Đã xem xong</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phim Gợi Ý Cùng Thể Loại -->
+  <section class="content-section" *ngIf="!currentType && !searchKeyword && recommendedMovies.length > 0">
+    <h3 class="section-title flex-title">
+      <svg class="title-icon-svg" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+      </svg>
+      Gợi ý phim thể loại: <span class="highlight-genre" style="color: var(--color-primary); margin-left: 6px;">{{ recommendedGenreName }}</span>
+    </h3>
+    <div class="movie-grid">
+      <div class="movie-card recommendation-card" *ngFor="let movie of recommendedMovies" (click)="viewMovie(movie.slug)">
+        <div class="movie-poster">
+          <img [src]="movie.thumb_url || movie.poster_url" [alt]="movie.name" loading="lazy">
+          <button class="card-favorite-btn" 
+                  [class.is-favorite]="isFavorite(movie.slug)"
+                  (click)="toggleFavoriteOnCard($event, movie)"
+                  title="Yêu thích">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" [attr.fill]="isFavorite(movie.slug) ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+          <div class="movie-overlay">
+            <button class="play-circle-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            </button>
+          </div>
+          <span class="movie-badge" *ngIf="movie.quality || movie.lang || movie.episode_current">
+            {{ movie.episode_current ? 'Tập ' + movie.episode_current : movie.quality + ' ' + movie.lang }}
+          </span>
+        </div>
+        <div class="movie-info">
+          <h4 class="movie-title">{{ movie.name }}</h4>
+          <div class="movie-meta">
+            <span class="movie-genre">{{ movie.origin_name || (movie.type === 'series' ? 'Phim Bộ' : 'Phim Lẻ') }}</span>
+            <span class="movie-rating" *ngIf="movie.year">
+              {{ movie.year }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Movies List / Search Results / Tabs -->
+  <section class="content-section">
+    <div class="section-header-row">
+      <h3 class="section-title">
+        <ng-container *ngIf="currentType === 'favorites'">Phim Yêu Thích Của Bạn</ng-container>
+        <ng-container *ngIf="currentType === 'history'">Lịch Sử Xem Phim</ng-container>
+        <ng-container *ngIf="!currentType">
+          {{ searchKeyword ? 'Kết quả tìm kiếm cho: "' + searchKeyword + '"' : 'Phim Mới Cập Nhật' }}
+        </ng-container>
+      </h3>
+      
+      <!-- Items per page selector (Only for search or general list, i.e. !currentType) -->
+      <div class="page-size-selector" *ngIf="!currentType">
+        <span class="size-label">Hiển thị:</span>
+        <div class="custom-select-wrapper">
+          <div class="custom-select-trigger" (click)="togglePageSizeDropdown($event)">
+            <span>{{ pageSize }} phim {{ pageSize === 100 ? '(Mặc định)' : '' }}</span>
+            <svg class="chevron-icon" [class.open]="isPageSizeDropdownOpen" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="custom-select-dropdown" *ngIf="isPageSizeDropdownOpen">
+            <div class="custom-select-option" 
+                 *ngFor="let size of pageSizeOptions" 
+                 [class.selected]="pageSize === size"
+                 (click)="selectPageSize(size, $event)">
+              {{ size }} phim {{ size === 100 ? '(Mặc định)' : '' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clear History Action -->
+      <button class="btn-clear-history" *ngIf="currentType === 'history' && movies.length > 0" (click)="clearHistory()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          <line x1="10" y1="11" x2="10" y2="17"></line>
+          <line x1="14" y1="11" x2="14" y2="17"></line>
+        </svg>
+        Xóa lịch sử xem
+      </button>
+    </div>
+    
+    <div class="movie-grid" *ngIf="movies.length > 0; else noMovies">
+      <div class="movie-card" *ngFor="let movie of movies" (click)="viewMovie(movie.slug)">
+        <div class="movie-poster">
+          <img [src]="movie.thumb_url || movie.poster_url" [alt]="movie.name" loading="lazy">
+          <button class="card-favorite-btn" 
+                  [class.is-favorite]="isFavorite(movie.slug)"
+                  (click)="toggleFavoriteOnCard($event, movie)"
+                  title="Yêu thích">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" [attr.fill]="isFavorite(movie.slug) ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+          <div class="movie-overlay">
+            <button class="play-circle-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            </button>
+          </div>
+          <span class="movie-badge" *ngIf="movie.quality || movie.lang || movie.episode_current">
+            {{ movie.episode_current ? 'Tập ' + movie.episode_current : movie.quality + ' ' + movie.lang }}
+          </span>
+        </div>
+        <div class="movie-info">
+          <h4 class="movie-title">{{ movie.name }}</h4>
+          <div class="movie-meta">
+            <span class="movie-genre">{{ movie.origin_name || (movie.type === 'series' ? 'Phim Bộ' : 'Phim Lẻ') }}</span>
+            <span class="movie-rating" *ngIf="movie.year">
+              {{ movie.year }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noMovies>
+      <div class="no-movies-box">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#777" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+        <p>
+          <ng-container *ngIf="currentType === 'favorites'">Danh sách phim yêu thích của bạn đang trống.</ng-container>
+          <ng-container *ngIf="currentType === 'history'">Lịch sử xem phim của bạn đang trống.</ng-container>
+          <ng-container *ngIf="!currentType">Không có phim nào khả dụng hoặc không tìm thấy phim phù hợp.</ng-container>
+        </p>
+      </div>
+    </ng-template>
+
+    <!-- Sleek & Highly Aesthetic Premium Pagination -->
+    <div class="pagination-container" *ngIf="!currentType && totalPages >= 1 && movies.length > 0">
+      <!-- Prev Button -->
+      <button class="page-arrow-btn" [disabled]="page === 1" (click)="prevPage()" title="Previous Page">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+
+      <!-- First Page -->
+      <button class="page-num-btn" [class.active]="page === 1" (click)="goToPage(1)">1</button>
+      
+      <!-- Ellipses -->
+      <span class="page-ellipsis" *ngIf="page > 4">...</span>
+
+      <!-- Middle visible pages -->
+      <ng-container *ngFor="let p of visiblePages">
+        <button 
+          class="page-num-btn" 
+          *ngIf="p !== 1 && p !== totalPages" 
+          [class.active]="page === p" 
+          (click)="goToPage(p)">
+          {{ p }}
+        </button>
+      </ng-container>
+
+      <!-- Ellipses -->
+      <span class="page-ellipsis" *ngIf="page < totalPages - 3">...</span>
+      
+      <!-- Last page -->
+      <button 
+        class="page-num-btn" 
+        *ngIf="totalPages > 1" 
+        [class.active]="page === totalPages" 
+        (click)="goToPage(totalPages)">
+        {{ totalPages }}
+      </button>
+
+      <!-- Next Button -->
+      <button class="page-arrow-btn" [disabled]="page === totalPages" (click)="nextPage()" title="Next Page">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+    </div>
+  </section>
+</div>

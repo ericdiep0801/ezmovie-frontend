@@ -1,0 +1,123 @@
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.popup-card {
+  width: 90%;
+  max-width: 400px;
+  background-color: #1a1a1a;
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.popup-header {
+  margin-bottom: 1.5rem;
+}
+
+.popup-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Success Styles */
+.popup-card.success .popup-icon-wrapper {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
+}
+
+/* Error Styles */
+.popup-card.error .popup-icon-wrapper {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+/* Info Styles */
+.popup-card.info .popup-icon-wrapper {
+  background-color: rgba(33, 150, 243, 0.1);
+  color: #2196f3;
+}
+
+/* Confirm Styles */
+.popup-card.confirm .popup-icon-wrapper {
+  background-color: rgba(255, 152, 0, 0.1);
+  color: #ff9800;
+}
+
+.popup-footer {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-cancel {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: none !important;
+}
+
+.btn-confirm {
+  background-color: #f44336 !important;
+  box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3) !important;
+}
+
+.popup-btn {
+  background-color: var(--color-primary);
+  box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+}
+
+.popup-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+}
+
+.popup-body p {
+  color: #aaa;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.popup-btn {
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.popup-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}

@@ -1,0 +1,51 @@
+<div class="otp-overlay" *ngIf="(otpService.otpState$ | async)?.show">
+  <div class="otp-card" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="close()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    
+    <div class="otp-header">
+      <div class="otp-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+      </div>
+      <h2>Verify Your Email</h2>
+      <p>We've sent a 6-digit verification code to <br><span>{{ email }}</span></p>
+    </div>
+
+    <div class="otp-form">
+      <div class="otp-input-wrapper">
+        <input 
+          type="text" 
+          [(ngModel)]="otpCode" 
+          maxlength="6" 
+          placeholder="0 0 0 0 0 0"
+          class="otp-field"
+          (keyup.enter)="onSubmit()"
+          oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+        >
+      </div>
+
+      <div class="timer-box" [class.expired]="timeLeft === 0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <span>Expires in: {{ formattedTime }}</span>
+      </div>
+
+      <button class="verify-submit-btn" (click)="onSubmit()" [disabled]="otpCode.length !== 6 || timeLeft === 0">
+        Verify Account
+      </button>
+
+      <div class="otp-resend">
+        <p>Didn't receive the code? <button class="resend-link" (click)="onResendOtp()" [disabled]="timeLeft > 0 || isLoading">Resend Code</button></p>
+      </div>
+    </div>
+  </div>
+</div>

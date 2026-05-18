@@ -1,0 +1,181 @@
+<header class="header" [class.scrolled]="isScrolled" *ngIf="isVisible">
+  <div class="header-container">
+    <div class="logo" routerLink="/">
+      <span class="logo-text">EZ<span class="highlight">MOVIE</span></span>
+    </div>
+
+    <nav class="nav-links">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Trang Chủ</a>
+      <a routerLink="/home" [queryParams]="{type: 'favorites'}" routerLinkActive="active" *ngIf="currentUser">Phim Yêu Thích</a>
+      <a routerLink="/home" [queryParams]="{type: 'history'}" routerLinkActive="active" *ngIf="currentUser">Lịch Sử Xem</a>
+    </nav>
+
+    <div class="search-bar">
+      <div class="search-input-wrapper">
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery" 
+          (keyup.enter)="onSearch()"
+          (focus)="onSearchFocus()"
+          (blur)="onSearchBlur()"
+          placeholder="Tìm phim, thể loại..."
+        >
+        <button class="btn-search" (click)="onSearch()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- High-End Glassmorphic Search History Popup -->
+      <div class="search-history-popup" *ngIf="showSearchHistory && filteredSearchHistory.length > 0">
+        <div class="history-header">
+          <span>Lịch sử tìm kiếm</span>
+          <button class="btn-clear-all" (mousedown)="clearAllSearchHistory($event)">Xóa tất cả</button>
+        </div>
+        <div class="history-items">
+          <div class="history-item" *ngFor="let item of filteredSearchHistory" (mousedown)="selectSearchHistoryItem($event, item)">
+            <svg class="clock-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span class="history-text">{{ item }}</span>
+            <button class="btn-delete-item" (mousedown)="deleteSearchHistoryItem($event, item)" title="Xóa">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-section">
+      <ng-container *ngIf="!(authService.currentUser$ | async); else userLoggedIn">
+        <button class="btn-login" routerLink="/login">Sign In</button>
+        <button class="btn-signup" routerLink="/signup">Sign Up</button>
+      </ng-container>
+
+      <ng-template #userLoggedIn>
+        <div class="user-menu" (click)="toggleProfile()">
+          <div class="avatar-container">
+            <img [src]="getAvatarUrl(currentUser?.avatar)" 
+                 (error)="handleAvatarError($event)"
+                 referrerpolicy="no-referrer"
+                 alt="Avatar" class="mini-avatar">
+          </div>
+          <span class="username" [attr.title]="currentUser?.username">{{ currentUser?.username }}</span>
+          <svg class="chevron-icon" [class.open]="isProfileOpen" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+          
+          <!-- Profile Popup Dropdown -->
+          <div class="profile-popup" *ngIf="isProfileOpen" (click)="$event.stopPropagation()">
+            <div class="popup-header">
+              <div class="popup-avatar">
+                <img [src]="getAvatarUrl(currentUser?.avatar)" 
+                     (error)="handleAvatarError($event)"
+                     referrerpolicy="no-referrer"
+                     alt="Avatar">
+              </div>
+              <div class="user-info">
+                <div class="name-wrapper">
+                  <h3>{{ currentUser?.username }}</h3>
+                  <button class="btn-edit-profile" (click)="openUpdateProfile()" title="Edit Profile">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                </div>
+                <p>{{ currentUser?.email }}</p>
+              </div>
+            </div>
+            
+            <div class="popup-content">
+              <div class="popup-tabs">
+                <button class="tab-btn" [class.active]="activeTab === 'history'" (click)="activeTab = 'history'">
+                  Lịch sử xem
+                </button>
+                <button class="tab-btn" [class.active]="activeTab === 'favorites'" (click)="activeTab = 'favorites'">
+                  Đã thích
+                </button>
+              </div>
+
+              <!-- 1. Watch History Tab -->
+              <div class="tab-pane" *ngIf="activeTab === 'history'">
+                <div class="history-tab-header" *ngIf="watchHistory.length > 0">
+                  <span class="history-section-title">Gần đây</span>
+                  <button class="btn-clear-history" (click)="clearAllWatchHistory($event)">Xóa tất cả</button>
+                </div>
+                <div class="history-list-dropdown" *ngIf="watchHistory.length > 0; else emptyHistory">
+                  <div class="history-item-dropdown" *ngFor="let item of watchHistory" (click)="goToMovie(item.movieSlug, item.episodeSlug)" title="Xem tiếp: {{ item.episodeName }}">
+                    <img [src]="item.moviePoster" class="history-thumb-dropdown" alt="Poster">
+                    <div class="history-details-dropdown">
+                      <span class="history-name-dropdown">{{ item.movieName }}</span>
+                      <span class="history-ep-dropdown">Xem tiếp: {{ item.episodeName }}</span>
+                    </div>
+                    <button class="btn-delete-history-item" (click)="deleteWatchHistoryItem($event, item.movieSlug)" title="Xóa lịch sử">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <ng-template #emptyHistory>
+                  <div class="empty-dropdown-state">
+                    <p>Lịch sử xem trống.<br>Hãy chọn một bộ phim để xem ngay!</p>
+                  </div>
+                </ng-template>
+              </div>
+
+              <!-- 2. Favorites Tab -->
+              <div class="tab-pane" *ngIf="activeTab === 'favorites'">
+                <div class="favorites-list-dropdown" *ngIf="favoritesList.length > 0; else emptyFavorites">
+                  <div class="favorite-item-dropdown" *ngFor="let item of favoritesList" (click)="goToMovie(item.movieSlug)">
+                    <img [src]="item.moviePoster" class="favorite-thumb-dropdown" alt="Poster">
+                    <div class="favorite-details-dropdown">
+                      <span class="favorite-name-dropdown">{{ item.movieName }}</span>
+                      <span class="favorite-type-dropdown">{{ item.movieType | uppercase }}</span>
+                    </div>
+                    <button class="btn-unfavorite-dropdown" (click)="unfavoriteMovie($event, item.movieSlug)" title="Bỏ thích">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="heart-icon-filled">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <ng-template #emptyFavorites>
+                  <div class="empty-dropdown-state">
+                    <p>Chưa có phim yêu thích.<br>Nhấn Tim ở trang chi tiết phim nhé!</p>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+
+            <div class="popup-footer">
+              <button class="btn-action" (click)="openChangePassword()" *ngIf="currentUser?.provider === 'local'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                Change Password
+              </button>
+              <button class="btn-logout" (click)="logout()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</header>

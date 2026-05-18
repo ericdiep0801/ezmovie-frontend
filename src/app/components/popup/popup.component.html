@@ -1,0 +1,49 @@
+<div class="popup-overlay" *ngIf="(popupService.popup$ | async)?.show" (click)="close()">
+  <div class="popup-card" [class]="(popupService.popup$ | async)?.type" (click)="$event.stopPropagation()">
+    <div class="popup-header">
+      <div class="popup-icon-wrapper">
+        <!-- Error Icon -->
+        <svg *ngIf="(popupService.popup$ | async)?.type === 'error'" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="15" y1="9" x2="9" y2="15"></line>
+          <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+        <!-- Success Icon -->
+        <svg *ngIf="(popupService.popup$ | async)?.type === 'success'" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <!-- Info Icon -->
+        <svg *ngIf="(popupService.popup$ | async)?.type === 'info'" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <!-- Confirm Icon -->
+        <svg *ngIf="(popupService.popup$ | async)?.type === 'confirm'" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+      </div>
+      <h3>{{ (popupService.popup$ | async)?.title }}</h3>
+    </div>
+    
+    <div class="popup-body">
+      <p>{{ (popupService.popup$ | async)?.message }}</p>
+    </div>
+
+    <div class="popup-footer">
+      <ng-container *ngIf="(popupService.popup$ | async)?.type === 'confirm'; else standardBtn">
+        <button class="popup-btn btn-cancel" (click)="close()">
+          {{ (popupService.popup$ | async)?.cancelText || 'Hủy' }}
+        </button>
+        <button class="popup-btn btn-confirm" (click)="confirm()">
+          {{ (popupService.popup$ | async)?.confirmText || 'Đồng ý' }}
+        </button>
+      </ng-container>
+      <ng-template #standardBtn>
+        <button class="popup-btn" (click)="close()">Got it</button>
+      </ng-template>
+    </div>
+  </div>
+</div>

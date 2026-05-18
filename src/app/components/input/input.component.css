@@ -1,0 +1,131 @@
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.input-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+
+
+.custom-input:disabled {
+  background-color: var(--color-bg-panel);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.custom-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Fix browser autofill background color and detect autofill */
+@keyframes onAutoFillStart {
+  from { opacity: 1; }
+  to { opacity: 1; }
+}
+
+@keyframes onAutoFillCancel {
+  from { opacity: 1; }
+  to { opacity: 1; }
+}
+
+.custom-input:-webkit-autofill,
+.custom-input:-webkit-autofill:hover, 
+.custom-input:-webkit-autofill:focus, 
+.custom-input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px var(--color-bg-dark) inset !important;
+    -webkit-text-fill-color: var(--color-text) !important;
+    transition: background-color 5000s ease-in-out 0s;
+    animation-name: onAutoFillStart;
+}
+
+.custom-input:not(:-webkit-autofill) {
+    animation-name: onAutoFillCancel;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background-color: var(--color-bg-dark);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-wrapper.is-focused {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(255, 87, 34, 0.2);
+}
+
+.input-wrapper.has-error {
+  border-color: var(--color-error);
+}
+
+.input-wrapper.is-valid {
+  border-color: #4caf50;
+}
+
+.input-prefix, .input-suffix {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  padding: 0 0.75rem;
+}
+
+.input-suffix {
+  gap: 0.5rem;
+}
+
+.custom-input {
+  flex: 1;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: none;
+  background-color: transparent;
+  color: var(--color-text);
+  caret-color: var(--color-primary);
+  outline: none;
+}
+
+.custom-input.has-prefix {
+  padding-left: 0;
+}
+
+.custom-input.has-suffix {
+  padding-right: 0;
+}
+
+.toggle-password-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  outline: none;
+}
+
+.toggle-password-btn:hover {
+  color: var(--color-text);
+}
+
+.valid-icon, .invalid-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.input-error-msg {
+  color: var(--color-error);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}

@@ -1,1 +1,227 @@
-/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --color-primary: #ff5722; /* Vibrant Orange */
+  --color-primary-hover: #e64a19;
+  --color-bg-dark: #141414; /* Requested Deep Gray/Black */
+  --color-bg-panel: #1f1f1f;
+  --color-text: #ffffff;
+  --color-text-muted: #b3b3b3;
+  --color-border: #333333;
+  --color-error: #f44336;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--color-bg-dark);
+  color: var(--color-text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+/* Shared Auth Styles */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background: radial-gradient(
+    circle at top right,
+    #2a0a00 0%,
+    var(--color-bg-dark) 40%
+  );
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background-color: rgba(30, 30, 30, 0.6);
+  backdrop-filter: blur(12px);
+  padding: 2.5rem;
+  border-radius: 16px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-header h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 0.8rem;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.auth-header p {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.logo-bold {
+  font-weight: 800;
+  color: #fff;
+}
+
+.highlight {
+  color: var(--color-primary);
+}
+
+.forgot-password {
+  text-align: right;
+  margin-bottom: 1.5rem;
+  margin-top: -0.5rem;
+}
+
+.forgot-password a {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.btn-outline:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+.divider span {
+  padding: 0 1rem;
+}
+
+.auth-footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.auth-footer a {
+  font-weight: 600;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1.5rem;
+  transition: all 0.3s;
+}
+
+.back-link:hover {
+  color: var(--color-text);
+}
+
+.back-link svg {
+  transition: transform 0.3s;
+}
+
+.back-link:hover svg {
+  transform: translateX(-3px);
+}
+
+/* ==========================================
+   PREMIUM CUSTOM CAPSULE SCROLLBAR (GLOBAL)
+   ========================================== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Fully transparent background track so it NEVER blocks content */
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 87, 34, 0.65); /* Vibrant semi-transparent primary orange */
+  border-radius: 100px;
+  border: 2px solid transparent; /* Nice padding floating capsule look */
+  background-clip: padding-box;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 87, 34, 0.95); /* Glows brightly on hover */
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Firefox Support */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 87, 34, 0.65) transparent;
+}
