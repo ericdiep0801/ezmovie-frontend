@@ -48,8 +48,6 @@
 
         <!-- Clickable skip zones and play zones -->
         <div class="skip-click-zone left-zone" 
-             (mousedown)="onDragStart($event, 'left')"
-             (touchstart)="onDragStart($event, 'left')"
              (click)="onSkipZoneClick($event, 'left')">
           <div class="ripple-effect" [class.animate]="showLeftRipple">
             <svg class="ripple-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.5 12l8.5 6V6zM4 12l8.5 6V6z"/></svg>
@@ -57,8 +55,6 @@
         </div>
 
         <div class="skip-click-zone right-zone" 
-             (mousedown)="onDragStart($event, 'right')"
-             (touchstart)="onDragStart($event, 'right')"
              (click)="onSkipZoneClick($event, 'right')">
           <div class="ripple-effect" [class.animate]="showRightRipple">
             <svg class="ripple-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 18l8.5-6L4 6zm8.5 0l8.5-6-8.5-6z"/></svg>
@@ -67,44 +63,6 @@
 
         <div class="play-click-zone" (click)="togglePlay()"></div>
 
-        <!-- Gesture Swipe/Drag Value Vertical Indicators (Sleek Timeline-style) -->
-        <div class="gesture-overlay-vertical left-gesture-vertical" [class.show]="showLeftOverlayValue">
-          <span class="vertical-percent-text">
-            <svg class="vertical-mini-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="5"></circle>
-              <line x1="12" y1="1" x2="12" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="23"></line>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-              <line x1="1" y1="12" x2="3" y2="12"></line>
-              <line x1="21" y1="12" x2="23" y2="12"></line>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
-            {{ getBrightnessPercent() }}%
-          </span>
-          <div class="vertical-slider-track-sleek">
-            <div class="vertical-slider-fill-sleek" [style.height.%]="((brightness - 0.2) / 1.8 * 100)">
-              <div class="vertical-slider-thumb-sleek"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="gesture-overlay-vertical right-gesture-vertical" [class.show]="showRightOverlayValue">
-          <span class="vertical-percent-text">
-            <svg class="vertical-mini-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
-              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-            </svg>
-            {{ getVolumePercent() }}%
-          </span>
-          <div class="vertical-slider-track-sleek">
-            <div class="vertical-slider-fill-sleek" [style.height.%]="getVolumePercent()">
-              <div class="vertical-slider-thumb-sleek"></div>
-            </div>
-          </div>
-        </div>
 
         <!-- Skip Action Indicator Overlay -->
         <div class="skip-indicator-overlay" [class.show]="showSkipFlash">

@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://ezmovie-backend.onrender.com',
+  // apiUrl: 'https://ezmovie-backend.onrender.com',
+  apiUrl: 'http://localhost:3000',
 };
 
 /*
