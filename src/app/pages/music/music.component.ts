@@ -1,0 +1,426 @@
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { MusicService, Track } from '../../services/music.service';
+import { LoadingService } from '../../services/loading.service';
+import { PopupService } from '../../services/popup.service';
+import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
+
+@Component({
+  selector: 'app-music',
+  templateUrl: './music.component.html',
+  styleUrls: ['./music.component.css'],
+})
+export class MusicComponent implements OnInit, OnDestroy {
+  public tracks: Track[] = [];
+  public selectedTrack: Track | null = null;
+  public searchQuery: string = '';
+  public activeGenre: string = 'All';
+  public genres: string[] = ['All', 'Pop', 'V-Pop', 'EDM', 'Rock', 'Acoustic'];
+
+  // Hybrid YouTube Player State
+  public ytPlayer: any = null;
+  public isPlayerReady: boolean = false;
+  public isPlaying: boolean = false;
+  public currentTime: number = 0;
+  public duration: number = 0;
+  public volume: number = 1.0;
+  public isMuted: boolean = false;
+  public progressPercent: number = 0;
+  
+  // Interactive View Settings
+  public showVideo: boolean = true; // Users can watch MV directly on the right side card!
+
+  // Dynamic Lyrics State
+  public currentLyricIndex: number = -1;
+  public trackLyrics: string[] = [];
+
+  // Expose Math to template expression
+  public Math = Math;
+
+  // Safe Resource URL for YouTube Embed Player
+  public safeEmbedUrl: SafeResourceUrl | null = null;
+
+  private timeInterval: any = null;
+
+  constructor(
+    private readonly musicService: MusicService,
+    private readonly loadingService: LoadingService,
+    private readonly popupService: PopupService,
+    private readonly sanitizer: DomSanitizer,
+    private readonly cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this.loadTrendingTracks();
+    this.loadYouTubeIframeAPI();
+  }
+
+  ngOnDestroy(): void {
+    this.stopTimeInterval();
+    if (this.ytPlayer && this.ytPlayer.destroy) {
+      this.ytPlayer.destroy();
+    }
+  }
+
+  /**
+   * Dynamically loads the YouTube Iframe Player API
+   */
+  private loadYouTubeIframeAPI(): void {
+    if (!(window as any).YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+
+      (window as any).onYouTubeIframeAPIReady = () => {
+        this.initYouTubePlayer();
+      };
+    } else {
+      this.initYouTubePlayer();
+    }
+  }
+
+  /**
+   * Initializes the YouTube Player on the #yt-player container
+   */
+  private initYouTubePlayer(): void {
+    const checkReady = setInterval(() => {
+      if ((window as any).YT && (window as any).YT.Player) {
+        clearInterval(checkReady);
+        
+        try {
+          this.ytPlayer = new (window as any).YT.Player('yt-player', {
+            height: '100%',
+            width: '100%',
+            videoId: this.selectedTrack ? this.selectedTrack.previewUrl : 'tcS84W-p1q0',
+            playerVars: {
+              playsinline: 1,
+              controls: 0,
+              disablekb: 1,
+              fs: 0,
+              rel: 0,
+              modestbranding: 1,
+              origin: window.location.origin
+            },
+            events: {
+              onReady: (event: any) => this.onPlayerReady(event),
+              onStateChange: (event: any) => this.onPlayerStateChange(event)
+            }
+          });
+        } catch (error) {
+          console.error('Failed to init YouTube Player iframe:', error);
+        }
+      }
+    }, 100);
+  }
+
+  private onPlayerReady(event: any): void {
+    this.isPlayerReady = true;
+    event.target.setVolume(this.volume * 100);
+    if (this.isMuted) {
+      event.target.mute();
+    }
+    this.cdr.detectChanges();
+  }
+
+  private onPlayerStateChange(event: any): void {
+    const state = event.data;
+    
+    // state: 1 = PLAYING, 2 = PAUSED, 0 = ENDED
+    if (state === 1) {
+      this.isPlaying = true;
+      this.startTimeInterval();
+    } else if (state === 2) {
+      this.isPlaying = false;
+      this.stopTimeInterval();
+    } else if (state === 0) {
+      this.isPlaying = false;
+      this.stopTimeInterval();
+      this.nextTrack(); // Auto-play next track!
+    }
+    
+    this.cdr.detectChanges();
+  }
+
+  private startTimeInterval(): void {
+    this.stopTimeInterval();
+    this.timeInterval = setInterval(() => {
+      if (this.ytPlayer && this.ytPlayer.getCurrentTime) {
+        try {
+          this.currentTime = this.ytPlayer.getCurrentTime() || 0;
+          this.duration = this.ytPlayer.getDuration() || (this.selectedTrack ? this.selectedTrack.durationMs / 1000 : 240);
+          this.progressPercent = (this.currentTime / this.duration) * 100;
+          
+          // Sync lyrics
+          const ratio = this.currentTime / (this.duration || 1);
+          const index = Math.floor(ratio * this.trackLyrics.length);
+          if (index !== this.currentLyricIndex && index < this.trackLyrics.length) {
+            this.currentLyricIndex = index;
+          }
+          this.cdr.detectChanges();
+        } catch (e) {
+          // Keep silent if player is updating
+        }
+      }
+    }, 250);
+  }
+
+  private stopTimeInterval(): void {
+    if (this.timeInterval) {
+      clearInterval(this.timeInterval);
+      this.timeInterval = null;
+    }
+  }
+
+  loadTrendingTracks(): void {
+    this.loadingService.show();
+    this.musicService.getTrendingTracks().subscribe({
+      next: (res) => {
+        if (res.status === 200 && res.data) {
+          this.tracks = res.data;
+          if (this.tracks.length > 0) {
+            this.selectTrack(this.tracks[0], false);
+          }
+        }
+        this.loadingService.hide();
+      },
+      error: (err) => {
+        console.error('Failed to load music tracks', err);
+        this.popupService.showError('Không thể kết nối máy chủ âm nhạc.', 'Lỗi hệ thống');
+        this.loadingService.hide();
+      },
+    });
+  }
+
+  selectTrack(track: Track, autoPlay: boolean = true): void {
+    if (track.isLocked || !track.previewUrl) {
+      this.popupService.showError(
+        `Bài hát "${track.name}" hiện chưa khả dụng hoặc bị giới hạn bản quyền phát thử.`,
+        'Bản quyền giới hạn'
+      );
+      return;
+    }
+
+    this.selectedTrack = track;
+    this.safeEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${track.previewUrl}?autoplay=${autoPlay ? 1 : 0}&controls=0&origin=${window.location.origin}`);
+    
+    // Set up lyrics based on track
+    this.generateMockLyrics(track);
+
+    if (this.ytPlayer && this.isPlayerReady) {
+      try {
+        if (autoPlay) {
+          this.ytPlayer.loadVideoById(track.previewUrl);
+          this.isPlaying = true;
+        } else {
+          this.ytPlayer.cueVideoById(track.previewUrl);
+          this.isPlaying = false;
+        }
+      } catch (err) {
+        console.error('Failed to cue/load video inside YT player:', err);
+      }
+    }
+  }
+
+  // Visual Control program mappings
+  togglePlay(): void {
+    if (!this.ytPlayer || !this.isPlayerReady) {
+      console.warn('YouTube Player not fully ready. Initializing visual playback fallback...');
+      this.initYouTubePlayer();
+      
+      // Smart Fallback: Toggle visual playback locally so controls respond instantly
+      this.isPlaying = !this.isPlaying;
+      if (this.isPlaying) {
+        this.startTimeInterval();
+      } else {
+        this.stopTimeInterval();
+      }
+      this.cdr.detectChanges();
+      return;
+    }
+    
+    try {
+      if (this.isPlaying) {
+        this.ytPlayer.pauseVideo();
+      } else {
+        this.ytPlayer.playVideo();
+      }
+    } catch (e) {
+      console.error('YT play controls error:', e);
+      // Fail-safe fallback state switch
+      this.isPlaying = !this.isPlaying;
+      if (this.isPlaying) {
+        this.startTimeInterval();
+      } else {
+        this.stopTimeInterval();
+      }
+      this.cdr.detectChanges();
+    }
+  }
+
+  nextTrack(): void {
+    if (this.tracks.length === 0 || !this.selectedTrack) return;
+    const currentIndex = this.tracks.findIndex((t) => t.id === this.selectedTrack?.id);
+    const nextIndex = (currentIndex + 1) % this.tracks.length;
+    this.selectTrack(this.tracks[nextIndex], true);
+  }
+
+  prevTrack(): void {
+    if (this.tracks.length === 0 || !this.selectedTrack) return;
+    const currentIndex = this.tracks.findIndex((t) => t.id === this.selectedTrack?.id);
+    let prevIndex = currentIndex - 1;
+    if (prevIndex < 0) prevIndex = this.tracks.length - 1;
+    this.selectTrack(this.tracks[prevIndex], true);
+  }
+
+  toggleMute(): void {
+    if (!this.ytPlayer || !this.isPlayerReady) return;
+    
+    try {
+      this.isMuted = !this.isMuted;
+      if (this.isMuted) {
+        this.ytPlayer.mute();
+      } else {
+        this.ytPlayer.unMute();
+      }
+    } catch (e) {}
+  }
+
+  toggleVideoMode(): void {
+    this.showVideo = !this.showVideo;
+  }
+
+  onVolumeChange(event: any): void {
+    const val = parseFloat(event.target.value);
+    this.volume = val;
+    
+    if (this.ytPlayer && this.isPlayerReady) {
+      try {
+        this.ytPlayer.setVolume(val * 100);
+        if (val > 0) {
+          this.isMuted = false;
+          this.ytPlayer.unMute();
+        } else {
+          this.isMuted = true;
+          this.ytPlayer.mute();
+        }
+      } catch (e) {}
+    }
+  }
+
+  seek(event: MouseEvent): void {
+    const timeline = event.currentTarget as HTMLDivElement;
+    if (!timeline || !this.duration || !this.ytPlayer || !this.isPlayerReady) return;
+
+    try {
+      const rect = timeline.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const width = rect.width;
+      let clickPercent = clickX / width;
+      
+      if (clickPercent < 0) clickPercent = 0;
+      if (clickPercent > 1) clickPercent = 1;
+
+      const targetSeconds = clickPercent * this.duration;
+      this.ytPlayer.seekTo(targetSeconds, true);
+      this.currentTime = targetSeconds;
+      this.progressPercent = clickPercent * 100;
+    } catch (e) {}
+  }
+
+  seekRelative(seconds: number): void {
+    if (!this.ytPlayer || !this.isPlayerReady || !this.duration) return;
+
+    try {
+      let targetTime = this.currentTime + seconds;
+      if (targetTime < 0) targetTime = 0;
+      if (targetTime > this.duration) targetTime = this.duration;
+
+      this.ytPlayer.seekTo(targetTime, true);
+      this.currentTime = targetTime;
+      this.progressPercent = (targetTime / this.duration) * 100;
+    } catch (e) {
+      console.error('Error during relative seek:', e);
+    }
+  }
+
+  // Genre Filters & Searching
+  selectGenre(genre: string): void {
+    this.activeGenre = genre;
+    this.searchQuery = ''; // Reset search query when switching genres
+    
+    this.loadingService.show();
+    this.musicService.getTrendingTracks().subscribe({
+      next: (res) => {
+        if (res.status === 200 && res.data) {
+          if (genre === 'All') {
+            this.tracks = res.data;
+          } else {
+            this.tracks = res.data.filter((t) => t.genre === genre);
+          }
+          if (this.tracks.length > 0) {
+            this.selectTrack(this.tracks[0], false);
+          } else {
+            this.selectedTrack = null;
+            this.safeEmbedUrl = null;
+          }
+        }
+        this.loadingService.hide();
+      },
+      error: () => this.loadingService.hide()
+    });
+  }
+
+  onSearch(): void {
+    const q = this.searchQuery ? this.searchQuery.trim() : '';
+    this.activeGenre = 'All'; // Reset genre tabs
+
+    this.loadingService.show();
+    this.musicService.searchTracks(q).subscribe({
+      next: (res) => {
+        if (res.status === 200 && res.data) {
+          this.tracks = res.data;
+          if (this.tracks.length > 0) {
+            this.selectTrack(this.tracks[0], false);
+          } else {
+            this.selectedTrack = null;
+            this.safeEmbedUrl = null;
+          }
+        }
+        this.loadingService.hide();
+      },
+      error: () => this.loadingService.hide(),
+    });
+  }
+
+  formatTime(seconds: number): string {
+    if (isNaN(seconds) || seconds === Infinity) return '00:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins < 10 ? '0' + mins : mins}:${secs < 10 ? '0' + secs : secs}`;
+  }
+
+  // Sync high-fidelity gorgeous lyrics generator
+  private generateMockLyrics(track: Track): void {
+    const songName = track.name;
+    const artist = track.artist;
+
+    this.trackLyrics = [
+      `🎵 Tác phẩm: ${songName}`,
+      `🎤 Trình bày: ${artist}`,
+      `✨ Chào mừng bạn đến với EZMOVIE Premium Live Stream ✨`,
+      `[Giai điệu mở đầu dạt dào cảm xúc...]`,
+      `Màn đêm buông xuống, từng thanh âm bắt đầu vang lên...`,
+      `Đường chân trời sáng tỏ ánh đèn chiếu rực rỡ`,
+      `Ta nghe tiếng hát dội về từ muôn phương`,
+      `[Lời ca cất lên nhẹ nhàng say đắm]`,
+      `Tình yêu này trao trọn vào bài hát ngọt ngào`,
+      `Từng khoảnh khắc đắm chìm trong thế giới âm nhạc`,
+      `Không một lo toan, chỉ có giai điệu bay bổng`,
+      `[Đoạn điệp khúc cao trào ngân vang réo rắt]`,
+      `Hãy nhắm mắt lại và để âm nhạc dẫn lối trái tim`,
+      `Cảm ơn bạn đã đồng hành cùng EZMOVIE Premium!`,
+      `[Nhạc dạo kết thúc êm dịu kéo dài...]`
+    ];
+    this.currentLyricIndex = 0;
+  }
+}

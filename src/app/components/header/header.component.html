@@ -7,9 +7,10 @@
     <nav class="nav-links">
       <a routerLink="/home" [queryParams]="{type: 'catalog'}" [class.active]="isMoviesActive()">Phim</a>
       <a routerLink="/tv" [class.active]="isTvActive()">TV</a>
+      <a routerLink="/music" [class.active]="isMusicActive()">Âm nhạc</a>
     </nav>
 
-    <div class="search-bar" *ngIf="!isTvActive()">
+    <div class="search-bar" *ngIf="!isTvActive() && !isMusicActive()">
       <div class="search-input-wrapper">
         <input 
           type="text" 

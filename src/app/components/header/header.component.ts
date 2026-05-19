@@ -335,10 +335,14 @@ export class HeaderComponent implements OnInit {
   }
 
   isMoviesActive(): boolean {
-    return !this.isTvActive();
+    return !this.isTvActive() && !this.isMusicActive();
   }
 
   isTvActive(): boolean {
     return this.router.url.split('?')[0].startsWith('/tv');
+  }
+
+  isMusicActive(): boolean {
+    return this.router.url.split('?')[0].startsWith('/music');
   }
 }

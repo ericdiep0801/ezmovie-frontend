@@ -1,0 +1,259 @@
+<div class="music-dashboard-container">
+  <!-- 1. LEFT SIDEBAR: Genre Navigation -->
+  <aside class="music-sidebar">
+    <nav class="genre-navigation">
+      <h3 class="nav-title">Thể Loại</h3>
+      <ul class="genre-list">
+        <li *ngFor="let genre of genres" 
+            [class.active]="activeGenre === genre" 
+            (click)="selectGenre(genre)"
+            [id]="'genre-btn-' + genre.toLowerCase()">
+          <span class="genre-indicator"></span>
+          <span class="genre-text">{{ genre }}</span>
+        </li>
+      </ul>
+    </nav>
+
+  </aside>
+
+  <!-- 2. CENTER CONTENT: Search Bar, Now Playing Hero, and Track Queue -->
+  <main class="music-main-content">
+    <!-- Top Search Header -->
+    <header class="music-search-header">
+      <div class="search-box-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" 
+               [(ngModel)]="searchQuery" 
+               (keyup.enter)="onSearch()" 
+               placeholder="Tìm kiếm bài hát, nghệ sĩ tại EZMOVIE..." 
+               class="search-input"
+               id="music-search-input">
+        <button (click)="onSearch()" class="search-btn" id="music-search-btn">Tìm Kiếm</button>
+      </div>
+    </header>
+
+    <!-- Now Playing Hero Card (Glows dynamically) -->
+    <section class="now-playing-hero" *ngIf="selectedTrack" 
+             [style.background-image]="'linear-gradient(rgba(10, 10, 15, 0.85), rgba(10, 10, 15, 0.95)), url(' + selectedTrack.coverUrl + ')'">
+      <div class="hero-cover-wrapper">
+        <img [src]="selectedTrack.coverUrl" [alt]="selectedTrack.name" class="hero-cover">
+        <div class="hero-play-indicator" [class.playing]="isPlaying" (click)="togglePlay()">
+          <i class="fas" [class.fa-pause]="isPlaying" [class.fa-play]="!isPlaying"></i>
+        </div>
+      </div>
+      <div class="hero-details">
+        <span class="category-tag">{{ selectedTrack.genre }}</span>
+        <h1 class="hero-song-title">{{ selectedTrack.name }}</h1>
+        <p class="hero-artist-name"><i class="fas fa-microphone-alt"></i> {{ selectedTrack.artist }}</p>
+        <div class="hero-meta">
+          <span><i class="fas fa-music"></i> Album: {{ selectedTrack.album }}</span>
+          <span><i class="fas fa-fire"></i> Thịnh hành: {{ selectedTrack.popularity }}%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tracklist Queue Table -->
+    <section class="track-queue-section">
+      <div class="section-header">
+        <h2 class="section-title">Danh Sách Phát</h2>
+        <span class="track-count">{{ tracks.length }} bài hát</span>
+      </div>
+
+      <div class="table-container-scroll">
+        <table class="track-table">
+          <thead>
+            <tr>
+              <th class="col-num">#</th>
+              <th class="col-title">Tiêu Đề</th>
+              <th class="col-album">Album</th>
+              <th class="col-duration"><i class="far fa-clock"></i></th>
+              <th class="col-actions">Tùy Chọn</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let track of tracks; let i = index" 
+                [class.active-track]="selectedTrack?.id === track.id"
+                [class.locked-track]="track.isLocked || !track.previewUrl"
+                (click)="selectTrack(track, true)"
+                class="track-row"
+                [id]="'track-row-' + track.id">
+              
+              <td class="col-num">
+                <!-- If currently selected track: show beautiful spinning or paused vinyl disc -->
+                <span class="active-playing-disc" *ngIf="selectedTrack?.id === track.id" [class.paused-disc]="!isPlaying">
+                  <i class="fas fa-compact-disc" [class.fa-spin]="isPlaying"></i>
+                </span>
+                
+                <!-- If not currently selected track: show normal numbering, play on hover, or lock icon -->
+                <ng-container *ngIf="selectedTrack?.id !== track.id">
+                  <span class="normal-num" *ngIf="!track.isLocked && track.previewUrl">{{ i + 1 }}</span>
+                  <span class="play-icon-hover" *ngIf="!track.isLocked && track.previewUrl"><i class="fas fa-play"></i></span>
+                  <span class="lock-icon-static" *ngIf="track.isLocked || !track.previewUrl"><i class="fas fa-lock"></i></span>
+                </ng-container>
+              </td>
+              
+              <td class="col-title">
+                <div class="track-info-cell">
+                  <img [src]="track.coverUrl" [alt]="track.name" class="table-cover">
+                  <div class="cell-details">
+                    <span class="track-cell-name">
+                      {{ track.name }}
+                      <span class="locked-badge" *ngIf="track.isLocked || !track.previewUrl">GIỚI HẠN</span>
+                    </span>
+                    <span class="track-cell-artist">{{ track.artist }}</span>
+                  </div>
+                </div>
+              </td>
+              
+              <td class="col-album">{{ track.album }}</td>
+              
+              <td class="col-duration">{{ formatTime(track.durationMs / 1000) }}</td>
+              
+              <td class="col-actions" (click)="$event.stopPropagation()">
+                <button class="action-icon-btn" title="Thêm vào danh sách phát">
+                  <i class="fas fa-plus"></i>
+                </button>
+                <button class="action-icon-btn" title="Yêu thích">
+                  <i class="far fa-heart"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- 3. RIGHT SIDEBAR: Video Embed Display, Vinyl Animation, and Lyrics Stream -->
+  <aside class="music-right-panel">
+    <!-- Video Playback Iframe Panel -->
+    <div class="video-card-container">
+      <div class="video-header">
+        <h3 class="panel-subtitle"><i class="fab fa-youtube"></i> Trình Chiếu MV</h3>
+        <button class="toggle-video-btn" (click)="toggleVideoMode()" id="toggle-mv-btn">
+          <i class="fas" [class.fa-video]="showVideo" [class.fa-video-slash]="!showVideo"></i>
+          {{ showVideo ? 'Ẩn Video' : 'Xem Video MV' }}
+        </button>
+      </div>
+      
+      <!-- Hidden or active video embed container -->
+      <div class="yt-video-wrapper" [class.video-hidden]="!showVideo">
+        <div id="yt-player"></div>
+      </div>
+    </div>
+
+    <!-- Retro Vinyl Turntable Display -->
+    <div class="visualizer-card" *ngIf="selectedTrack">
+      <div class="vinyl-player-turntable">
+        <div class="vinyl-arm" [class.arm-playing]="isPlaying"></div>
+        <div class="vinyl-disc-spin" [class.disc-rotating]="isPlaying">
+          <img [src]="selectedTrack.coverUrl" [alt]="selectedTrack.name" class="vinyl-center-art">
+          <div class="vinyl-center-hole"></div>
+        </div>
+      </div>
+
+      <!-- Equalizer Visualizer Waves -->
+      <div class="equalizer-waves-block" [class.active-equalizer]="isPlaying">
+        <span class="eq-bar eq-bar-1"></span>
+        <span class="eq-bar eq-bar-2"></span>
+        <span class="eq-bar eq-bar-3"></span>
+        <span class="eq-bar eq-bar-4"></span>
+        <span class="eq-bar eq-bar-5"></span>
+        <span class="eq-bar eq-bar-6"></span>
+        <span class="eq-bar eq-bar-7"></span>
+        <span class="eq-bar eq-bar-8"></span>
+        <span class="eq-bar eq-bar-9"></span>
+        <span class="eq-bar eq-bar-10"></span>
+      </div>
+    </div>
+
+    <!-- Scrolling Karaoke Lyrics Stream -->
+    <div class="lyrics-panel-card">
+      <h3 class="panel-subtitle"><i class="fas fa-quote-right"></i> Lời Bài Hát</h3>
+      <div class="lyrics-scroll-box" id="lyrics-scroll-container">
+        <div *ngFor="let lyric of trackLyrics; let idx = index" 
+             class="lyric-line" 
+             [class.active-lyric]="idx === currentLyricIndex">
+          {{ lyric }}
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- 4. BOTTOM CONTROLS: Absolute Top Progress Timeline + Flex Bottom Row -->
+<footer class="music-bottom-player-bar" *ngIf="selectedTrack">
+  <!-- Top Progress Timeline Slider (Spans full width, 0 overlap danger) -->
+  <div class="top-progress-timeline-wrapper">
+    <div class="progress-bar-container" (click)="seek($event)">
+      <div class="progress-track-filled" [style.width.%]="progressPercent">
+        <span class="progress-seeker-handle"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="player-bottom-content">
+    <!-- Left: Song details -->
+    <div class="bottom-track-details">
+      <img [src]="selectedTrack.coverUrl" [alt]="selectedTrack.name" class="bottom-cover">
+      <div class="bottom-meta">
+        <span class="bottom-song-name">{{ selectedTrack.name }}</span>
+        <span class="bottom-artist">{{ selectedTrack.artist }}</span>
+      </div>
+    </div>
+
+    <!-- Center: Controls + Time indicators -->
+    <div class="bottom-playback-controls">
+      <div class="player-buttons-group">
+        <span class="time-stamp time-current">{{ formatTime(currentTime) }}</span>
+        
+        <!-- 1. Previous Track -->
+        <button class="player-ctrl-btn side-btn" (click)="prevTrack()" title="Bài trước">
+          <i class="fas fa-step-backward"></i>
+        </button>
+        
+        <!-- 2. Rewind 5 seconds -->
+        <button class="player-ctrl-btn jump-btn" (click)="seekRelative(-5)" title="Tua lùi 5s">
+          <i class="fas fa-undo-alt"></i>
+        </button>
+        
+        <!-- 3. Central Glowing Play/Pause Button -->
+        <button class="player-ctrl-btn play-circle-btn" (click)="togglePlay()" title="Phát/Tạm dừng" id="bottom-play-btn">
+          <i class="fas" [class.fa-pause]="isPlaying" [class.fa-play]="!isPlaying"></i>
+        </button>
+        
+        <!-- 4. Fast Forward 5 seconds -->
+        <button class="player-ctrl-btn jump-btn" (click)="seekRelative(5)" title="Tua nhanh 5s">
+          <i class="fas fa-redo-alt"></i>
+        </button>
+        
+        <!-- 5. Next Track -->
+        <button class="player-ctrl-btn side-btn" (click)="nextTrack()" title="Bài tiếp theo">
+          <i class="fas fa-step-forward"></i>
+        </button>
+        
+        <span class="time-stamp time-total">{{ formatTime(duration) }}</span>
+      </div>
+    </div>
+
+    <!-- Right: Volume controls -->
+    <div class="bottom-volume-actions">
+      <button class="volume-btn" (click)="toggleMute()">
+        <i class="fas" 
+           [class.fa-volume-mute]="isMuted" 
+           [class.fa-volume-up]="!isMuted && volume >= 0.5" 
+           [class.fa-volume-down]="!isMuted && volume < 0.5"
+           [class.orange-glow]="!isMuted && volume > 0"></i>
+      </button>
+      <input type="range" 
+             min="0" 
+             max="1" 
+             step="0.01" 
+             [value]="isMuted ? 0 : volume" 
+             (input)="onVolumeChange($event)" 
+             class="volume-slider"
+             [style.background]="'linear-gradient(to right, #ff5722 0%, #ff5722 ' + (isMuted ? 0 : volume * 100) + '%, rgba(255, 255, 255, 0.15) ' + (isMuted ? 0 : volume * 100) + '%, rgba(255, 255, 255, 0.15) 100%)'">
+      <span class="volume-percentage" [class.orange-text]="!isMuted && volume > 0">{{ isMuted ? 0 : Math.round(volume * 100) }}%</span>
+    </div>
+  </div>
+</footer>
