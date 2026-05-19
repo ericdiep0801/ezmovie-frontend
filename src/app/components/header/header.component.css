@@ -133,6 +133,26 @@
   color: rgba(255, 255, 255, 0.4);
 }
 
+.btn-clear {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.btn-clear:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-primary);
+  transform: scale(1.1);
+}
+
 .btn-search {
   background: transparent;
   border: none;

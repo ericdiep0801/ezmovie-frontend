@@ -245,6 +245,20 @@
   color: rgba(255, 255, 255, 0.35);
 }
 
+.clear-search-icon {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  margin-right: 2px;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.clear-search-icon:hover {
+  color: #ff5722;
+  transform: scale(1.1);
+}
+
 .search-btn {
   background: linear-gradient(135deg, #ff5722 0%, #ff8a50 100%);
   color: #ffffff;
@@ -978,6 +992,19 @@
   z-index: 10;
 }
 
+/* Spotify-style floating time indicators directly under the top timeline */
+.timeline-time-indicators {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-sizing: border-box;
+  pointer-events: none; /* Do not block clicking on the timeline track above it */
+}
+
 .top-progress-timeline-wrapper .progress-bar-container {
   width: 100%;
   height: 4px;
@@ -1016,6 +1043,19 @@
 
 .top-progress-timeline-wrapper .progress-bar-container:hover .progress-seeker-handle {
   opacity: 1;
+}
+
+/* Maintain visible and tall seeker handle during active timeline drag scrubbing */
+.top-progress-timeline-wrapper .progress-bar-container.grabbing-timeline {
+  height: 6px;
+  top: -1px;
+}
+
+.top-progress-timeline-wrapper .progress-bar-container.grabbing-timeline .progress-seeker-handle {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.3);
+  background: #ff8a50;
+  box-shadow: 0 0 15px #ff5722;
 }
 
 /* Bottom Flex Content Row */
@@ -1211,6 +1251,13 @@
   cursor: pointer;
   transition: color 0.2s;
   font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  height: 24px;
+  width: 24px;
 }
 
 .volume-btn:hover {
@@ -1518,15 +1565,15 @@
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    width: 170px !important; /* Optimized control bar width */
-    max-width: 170px !important;
+    width: 140px !important; /* Compact control buttons box, zero risk of overlapping song titles! */
+    max-width: 140px !important;
     margin: 0 !important;
   }
 
   .player-buttons-group {
     width: 100% !important;
     justify-content: center !important;
-    gap: 10px !important; /* Perfectly balanced 10px gap to ensure excellent tapping precision without overlaps! */
+    gap: 6px !important; /* Highly optimized spacing for mobile tapping */
   }
 
   .player-ctrl-btn {
@@ -1566,7 +1613,14 @@
   }
 
   .time-stamp {
-    display: none !important; /* Hide timestamps on mobile for sleek spacing */
+    font-size: 8px !important; /* Elegant smaller size under timeline */
+    min-width: unset !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+  }
+
+  .timeline-time-indicators {
+    top: 8px !important;
+    padding: 0 10px !important;
   }
 
   .bottom-volume-actions {
@@ -1583,20 +1637,29 @@
   }
 
   .volume-btn {
-    font-size: 10px !important;
-    padding: 2px !important;
+    font-size: 11px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 16px !important;
+    height: 16px !important;
   }
 
   .volume-slider {
     width: 35px !important; /* Narrow mini volume slider on the right side! */
-    height: 3px !important;
+    height: 4px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    align-self: center !important;
   }
 
-  /* Scale down the slider thumb for the mini slider */
+  /* Scale down the slider thumb for the mini slider and center it perfectly */
   .volume-slider::-webkit-slider-thumb {
     width: 8px !important;
     height: 8px !important;
-    margin-top: -3px !important;
+    margin-top: -2px !important; /* (4px track_height / 2) - (8px thumb_height / 2) = 2 - 4 = -2px */
   }
   .volume-slider::-moz-range-thumb {
     width: 8px !important;

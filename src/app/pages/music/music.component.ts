@@ -30,6 +30,7 @@ export class MusicComponent implements OnInit, OnDestroy {
   public showVideo: boolean = true; // Users can watch MV directly on the right side card!
   public showPopupMode: boolean = false; // Popup mode for high-focus MV watching!
   public showIndicator: boolean = true; // High-end fade out close indicator
+  public isScrubbing: boolean = false;
   private indicatorTimeout: any = null;
 
   // Dynamic Lyrics State
@@ -371,24 +372,71 @@ export class MusicComponent implements OnInit, OnDestroy {
     }
   }
 
-  seek(event: MouseEvent): void {
-    const timeline = event.currentTarget as HTMLDivElement;
-    if (!timeline || !this.duration || !this.ytPlayer || !this.isPlayerReady) return;
+  onProgressDragStart(event: MouseEvent | TouchEvent): void {
+    if (event instanceof MouseEvent && event.button !== 0) return; // Only allow left-click dragging
+    
+    // Prevent default scroll behaviors on touch
+    if (event.cancelable) {
+      event.preventDefault();
+    }
+    
+    this.isScrubbing = true;
+    this.seekProgress(event);
+
+    const onDragMove = (moveEvent: MouseEvent | TouchEvent) => {
+      if (this.isScrubbing) {
+        this.seekProgress(moveEvent);
+      }
+    };
+
+    const onDragEnd = () => {
+      this.isScrubbing = false;
+      document.removeEventListener('mousemove', onDragMove);
+      document.removeEventListener('mouseup', onDragEnd);
+      document.removeEventListener('touchmove', onDragMove);
+      document.removeEventListener('touchend', onDragEnd);
+    };
+
+    document.addEventListener('mousemove', onDragMove);
+    document.addEventListener('mouseup', onDragEnd);
+    document.addEventListener('touchmove', onDragMove, { passive: true });
+    document.addEventListener('touchend', onDragEnd);
+  }
+
+  seekProgress(event: MouseEvent | TouchEvent): void {
+    if (!this.ytPlayer || !this.isPlayerReady || !this.duration) return;
+
+    const progressContainer = document.querySelector('.progress-bar-container') as HTMLDivElement;
+    if (!progressContainer) return;
 
     try {
-      const rect = timeline.getBoundingClientRect();
-      const clickX = event.clientX - rect.left;
-      const width = rect.width;
-      let clickPercent = clickX / width;
-      
-      if (clickPercent < 0) clickPercent = 0;
-      if (clickPercent > 1) clickPercent = 1;
+      const rect = progressContainer.getBoundingClientRect();
+      let clientX = 0;
+      if (event instanceof MouseEvent) {
+        clientX = event.clientX;
+      } else if (event.touches && event.touches.length > 0) {
+        clientX = event.touches[0].clientX;
+      } else if (event.changedTouches && event.changedTouches.length > 0) {
+        clientX = event.changedTouches[0].clientX;
+      } else {
+        return;
+      }
 
-      const targetSeconds = clickPercent * this.duration;
+      const clickX = clientX - rect.left;
+      const width = rect.width;
+      let percent = clickX / width;
+      
+      if (percent < 0) percent = 0;
+      if (percent > 1) percent = 1;
+
+      const targetSeconds = percent * this.duration;
       this.ytPlayer.seekTo(targetSeconds, true);
       this.currentTime = targetSeconds;
-      this.progressPercent = clickPercent * 100;
-    } catch (e) {}
+      this.progressPercent = percent * 100;
+      this.cdr.detectChanges();
+    } catch (e) {
+      console.error('Error seeking progress:', e);
+    }
   }
 
   seekRelative(seconds: number): void {

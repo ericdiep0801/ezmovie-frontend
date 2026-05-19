@@ -168,6 +168,12 @@ export class HeaderComponent implements OnInit {
     this.isProfileOpen = !this.isProfileOpen;
   }
 
+  clearSearchQuery(event: MouseEvent) {
+    event.preventDefault(); // Prevents input blur from hiding history
+    this.searchQuery = '';
+    this.onSearch();
+  }
+
   onSearch() {
     const q = this.searchQuery ? this.searchQuery.trim() : '';
     if (q) {

@@ -28,7 +28,8 @@
                placeholder="Tìm kiếm bài hát, nghệ sĩ tại EZMOVIE..." 
                class="search-input"
                id="music-search-input">
-        <button (click)="onSearch()" class="search-btn" id="music-search-btn">Tìm Kiếm</button>
+        <i class="fas fa-times clear-search-icon" *ngIf="searchQuery" (click)="searchQuery=''; onSearch()" title="Xóa tìm kiếm"></i>
+        <button (click)="onSearch()" class="search-btn" id="music-search-btn" title="Tìm Kiếm"><i class="fas fa-search"></i></button>
       </div>
     </header>
 
@@ -201,10 +202,18 @@
 <footer class="music-bottom-player-bar" *ngIf="selectedTrack">
   <!-- Top Progress Timeline Slider (Spans full width, 0 overlap danger) -->
   <div class="top-progress-timeline-wrapper">
-    <div class="progress-bar-container" (click)="seek($event)">
+    <div class="progress-bar-container" 
+         [class.grabbing-timeline]="isScrubbing"
+         (mousedown)="onProgressDragStart($event)"
+         (touchstart)="onProgressDragStart($event)">
       <div class="progress-track-filled" [style.width.%]="progressPercent">
         <span class="progress-seeker-handle"></span>
       </div>
+    </div>
+    <!-- Dedicated Time Indicators Row (Spotify Style) -->
+    <div class="timeline-time-indicators">
+      <span class="time-stamp time-current">{{ formatTime(currentTime) }}</span>
+      <span class="time-stamp time-total">{{ formatTime(duration) }}</span>
     </div>
   </div>
 
@@ -218,11 +227,9 @@
       </div>
     </div>
 
-    <!-- Center: Controls + Time indicators -->
+    <!-- Center: Controls (Perfect absolute center row) -->
     <div class="bottom-playback-controls">
       <div class="player-buttons-group">
-        <span class="time-stamp time-current">{{ formatTime(currentTime) }}</span>
-        
         <!-- 1. Previous Track -->
         <button class="player-ctrl-btn side-btn" (click)="prevTrack()" title="Bài trước">
           <i class="fas fa-step-backward"></i>
@@ -247,8 +254,6 @@
         <button class="player-ctrl-btn side-btn" (click)="nextTrack()" title="Bài tiếp theo">
           <i class="fas fa-step-forward"></i>
         </button>
-        
-        <span class="time-stamp time-total">{{ formatTime(duration) }}</span>
       </div>
     </div>
 
