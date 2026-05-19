@@ -1,4 +1,4 @@
-<div class="home-container">
+<div class="home-container" [class.no-hero]="!featuredMovie">
   <!-- Hero Section -->
   <section class="hero" *ngIf="featuredMovie" [style.backgroundImage]="'url(' + featuredMovie.imageUrl + ')'">
     <div class="hero-overlay"></div>
@@ -15,7 +15,7 @@
   </section>
 
   <!-- Categories -->
-  <section class="content-section" *ngIf="!currentType">
+  <section class="content-section" *ngIf="!currentType || currentType === 'catalog'">
     <h3 class="section-title">Categories / Thể Loại</h3>
     <div class="category-list">
       <div class="category-pill" *ngFor="let cat of categories" (click)="onCategoryClick(cat)">{{ cat }}</div>
@@ -136,13 +136,14 @@
       <h3 class="section-title">
         <ng-container *ngIf="currentType === 'favorites'">Phim Yêu Thích Của Bạn</ng-container>
         <ng-container *ngIf="currentType === 'history'">Lịch Sử Xem Phim</ng-container>
+        <ng-container *ngIf="currentType === 'catalog'">Khám Phá Phim</ng-container>
         <ng-container *ngIf="!currentType">
           {{ searchKeyword ? 'Kết quả tìm kiếm cho: "' + searchKeyword + '"' : 'Phim Mới Cập Nhật' }}
         </ng-container>
       </h3>
       
-      <!-- Items per page selector (Only for search or general list, i.e. !currentType) -->
-      <div class="page-size-selector" *ngIf="!currentType">
+      <!-- Items per page selector (Only for search or general list, i.e. !currentType or catalog) -->
+      <div class="page-size-selector" *ngIf="!currentType || currentType === 'catalog'">
         <span class="size-label">Hiển thị:</span>
         <div class="custom-select-wrapper">
           <div class="custom-select-trigger" (click)="togglePageSizeDropdown($event)">
@@ -213,13 +214,13 @@
         <p>
           <ng-container *ngIf="currentType === 'favorites'">Danh sách phim yêu thích của bạn đang trống.</ng-container>
           <ng-container *ngIf="currentType === 'history'">Lịch sử xem phim của bạn đang trống.</ng-container>
-          <ng-container *ngIf="!currentType">Không có phim nào khả dụng hoặc không tìm thấy phim phù hợp.</ng-container>
+          <ng-container *ngIf="!currentType || currentType === 'catalog'">Không có phim nào khả dụng hoặc không tìm thấy phim phù hợp.</ng-container>
         </p>
       </div>
     </ng-template>
 
     <!-- Sleek & Highly Aesthetic Premium Pagination -->
-    <div class="pagination-container" *ngIf="!currentType && totalPages >= 1 && movies.length > 0">
+    <div class="pagination-container" *ngIf="(!currentType || currentType === 'catalog') && totalPages >= 1 && movies.length > 0">
       <!-- Prev Button -->
       <button class="page-arrow-btn" [disabled]="page === 1" (click)="prevPage()" title="Previous Page">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>

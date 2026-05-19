@@ -334,6 +334,10 @@
 }
 
 @media screen and (max-width: 768px) {
+  .detail-container {
+    padding: 115px 1rem 40px 1rem !important;
+  }
+
   .metadata-grid {
     grid-template-columns: 1fr;
   }
@@ -364,7 +368,7 @@
 
 @media screen and (max-width: 480px) {
   .detail-container {
-    padding: 5rem 1rem 2rem 1rem;
+    padding: 115px 1rem 40px 1rem !important;
   }
 
   .player-info {

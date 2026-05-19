@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.loadFavoriteSlugs();
 
-    // Listen for query parameters (q: search, type: favorites/history, page, limit)
+    // Listen for query parameters (q: search, type: favorites/history/catalog, page, limit)
     this.route.queryParams.subscribe(params => {
       const keyword = params['q'];
       const type = params['type'];
@@ -59,6 +59,10 @@ export class HomeComponent implements OnInit {
         this.currentType = 'history';
         this.searchKeyword = '';
         this.loadWatchHistory();
+      } else if (type === 'catalog') {
+        this.currentType = 'catalog';
+        this.searchKeyword = '';
+        this.loadNewMovies(this.page);
       } else if (keyword) {
         this.currentType = '';
         this.searchKeyword = keyword;
@@ -98,13 +102,17 @@ export class HomeComponent implements OnInit {
           this.updateVisiblePages();
           
           if (this.movies.length > 0) {
-            const first = this.movies[0];
-            this.featuredMovie = {
-              title: first.name,
-              description: `${first.origin_name} (${first.year}) - Phim mới cập nhật chất lượng cực cao.`,
-              imageUrl: first.poster_url || first.thumb_url,
-              slug: first.slug
-            };
+            if (this.currentType === 'catalog') {
+              this.featuredMovie = null;
+            } else {
+              const first = this.movies[0];
+              this.featuredMovie = {
+                title: first.name,
+                description: `${first.origin_name} (${first.year}) - Phim mới cập nhật chất lượng cực cao.`,
+                imageUrl: first.poster_url || first.thumb_url,
+                slug: first.slug
+              };
+            }
           }
         }
         this.loadingService.hide();

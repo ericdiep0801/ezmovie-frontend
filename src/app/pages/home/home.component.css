@@ -819,4 +819,15 @@
   .hero-content {
     margin-top: 8rem !important;
   }
+
+}
+
+.home-container.no-hero {
+  padding-top: 80px;
+}
+
+@media screen and (max-width: 992px) {
+  .home-container.no-hero {
+    padding-top: 115px !important;
+  }
 }

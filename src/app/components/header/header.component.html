@@ -5,12 +5,11 @@
     </div>
 
     <nav class="nav-links">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Trang Chủ</a>
-      <a routerLink="/home" [queryParams]="{type: 'favorites'}" routerLinkActive="active" *ngIf="currentUser">Phim Yêu Thích</a>
-      <a routerLink="/home" [queryParams]="{type: 'history'}" routerLinkActive="active" *ngIf="currentUser">Lịch Sử Xem</a>
+      <a routerLink="/home" [queryParams]="{type: 'catalog'}" [class.active]="isMoviesActive()">Phim</a>
+      <a routerLink="/tv" [class.active]="isTvActive()">TV</a>
     </nav>
 
-    <div class="search-bar">
+    <div class="search-bar" *ngIf="!isTvActive()">
       <div class="search-input-wrapper">
         <input 
           type="text" 

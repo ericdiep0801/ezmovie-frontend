@@ -18,6 +18,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { UpdateProfileModalComponent } from './components/update-profile-modal/update-profile-modal.component';
 import { SafePipe } from './pipes/safe.pipe';
 import { MovieDetailComponent } from './pages/movie-detail/movie-detail.component';
+import { TvComponent } from './pages/tv/tv.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgrokInterceptor } from './ngrok.interceptor';
 
@@ -36,7 +37,8 @@ import { NgrokInterceptor } from './ngrok.interceptor';
     HeaderComponent,
     UpdateProfileModalComponent,
     SafePipe,
-    MovieDetailComponent
+    MovieDetailComponent,
+    TvComponent
   ],
   imports: [
     BrowserModule,

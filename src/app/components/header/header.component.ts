@@ -333,4 +333,12 @@ export class HeaderComponent implements OnInit {
   handleAvatarError(event: any) {
     event.target.src = '/assets/images/default-avatar.png';
   }
+
+  isMoviesActive(): boolean {
+    return !this.isTvActive();
+  }
+
+  isTvActive(): boolean {
+    return this.router.url.split('?')[0].startsWith('/tv');
+  }
 }
