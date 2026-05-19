@@ -1,22 +1,5 @@
 <div class="music-dashboard-container">
-  <!-- 1. LEFT SIDEBAR: Genre Navigation -->
-  <aside class="music-sidebar">
-    <nav class="genre-navigation">
-      <h3 class="nav-title">Thể Loại</h3>
-      <ul class="genre-list">
-        <li *ngFor="let genre of genres" 
-            [class.active]="activeGenre === genre" 
-            (click)="selectGenre(genre)"
-            [id]="'genre-btn-' + genre.toLowerCase()">
-          <span class="genre-indicator"></span>
-          <span class="genre-text">{{ genre }}</span>
-        </li>
-      </ul>
-    </nav>
-
-  </aside>
-
-  <!-- 2. CENTER CONTENT: Search Bar, Now Playing Hero, and Track Queue -->
+  <!-- 1. CENTER CONTENT: Search Bar, Now Playing Hero, and Track Queue -->
   <main class="music-main-content">
     <!-- Top Search Header -->
     <header class="music-search-header">
@@ -52,6 +35,18 @@
         </div>
       </div>
     </header>
+
+    <!-- Sleek Glassmorphic Horizontal Genre Pill Bar (Compact and scalable design) -->
+    <div class="music-genre-bar">
+      <button *ngFor="let genre of genres" 
+              class="genre-pill" 
+              [class.active]="activeGenre === genre" 
+              (click)="selectGenre(genre)"
+              [id]="'genre-btn-' + genre.toLowerCase()">
+        <span class="genre-dot"></span>
+        <span class="genre-pill-text">{{ genre === 'All' ? 'Tất cả thể loại' : genre }}</span>
+      </button>
+    </div>
 
     <!-- Now Playing Hero Card (Glows dynamically) -->
     <section class="now-playing-hero" *ngIf="selectedTrack" 

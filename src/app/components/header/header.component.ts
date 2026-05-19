@@ -17,6 +17,7 @@ import { environment } from '../../../environments/environment';
 export class HeaderComponent implements OnInit {
   currentUser: User | null = null;
   isProfileOpen = false;
+  isNavMenuOpen = false;
   isScrolled = false;
   isVisible = true;
   searchQuery: string = '';
@@ -161,11 +162,22 @@ export class HeaderComponent implements OnInit {
   clickout(event: any) {
     if (!this.eRef.nativeElement.contains(event.target)) {
       this.isProfileOpen = false;
+      this.isNavMenuOpen = false;
     }
   }
 
   toggleProfile() {
     this.isProfileOpen = !this.isProfileOpen;
+    this.isNavMenuOpen = false;
+  }
+
+  toggleNavMenu() {
+    this.isNavMenuOpen = !this.isNavMenuOpen;
+    this.isProfileOpen = false;
+  }
+
+  closeNavMenu() {
+    this.isNavMenuOpen = false;
   }
 
   clearSearchQuery(event: MouseEvent) {
@@ -341,7 +353,7 @@ export class HeaderComponent implements OnInit {
   }
 
   isMoviesActive(): boolean {
-    return !this.isTvActive() && !this.isMusicActive();
+    return !this.isTvActive() && !this.isMusicActive() && !this.isCartoonActive();
   }
 
   isTvActive(): boolean {
@@ -350,5 +362,9 @@ export class HeaderComponent implements OnInit {
 
   isMusicActive(): boolean {
     return this.router.url.split('?')[0].startsWith('/music');
+  }
+
+  isCartoonActive(): boolean {
+    return this.router.url.split('?')[0].startsWith('/cartoon');
   }
 }

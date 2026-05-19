@@ -9,6 +9,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { MovieDetailComponent } from './pages/movie-detail/movie-detail.component';
 import { TvComponent } from './pages/tv/tv.component';
 import { MusicComponent } from './pages/music/music.component';
+import { CartoonComponent } from './pages/cartoon/cartoon.component';
 
 import { GuestGuard } from './guards/guest.guard';
 
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'movie/:slug', component: MovieDetailComponent },
   { path: 'tv', component: TvComponent },
   { path: 'music', component: MusicComponent },
+  { path: 'cartoon', component: CartoonComponent },
   { 
     path: 'login', 
     component: LoginComponent,

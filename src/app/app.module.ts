@@ -20,6 +20,7 @@ import { SafePipe } from './pipes/safe.pipe';
 import { MovieDetailComponent } from './pages/movie-detail/movie-detail.component';
 import { TvComponent } from './pages/tv/tv.component';
 import { MusicComponent } from './pages/music/music.component';
+import { CartoonComponent } from './pages/cartoon/cartoon.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgrokInterceptor } from './ngrok.interceptor';
 
@@ -40,7 +41,8 @@ import { NgrokInterceptor } from './ngrok.interceptor';
     SafePipe,
     MovieDetailComponent,
     TvComponent,
-    MusicComponent
+    MusicComponent,
+    CartoonComponent
   ],
   imports: [
     BrowserModule,

@@ -23,10 +23,46 @@
 .header-container {
   width: 100%;
   max-width: none;
+  height: 100%;
   padding: 0 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header-top-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.mobile-search-row {
+  display: none;
+}
+
+/* Symmetrical Grid Layout for Modern Look */
+.header-left {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.header-center {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
 }
 
 /* Logo Section */
@@ -51,54 +87,156 @@
   position: relative;
 }
 
-/* Nav Links Section (Futuristic Glassmorphic Capsule Dock) */
-.nav-links {
+/* Consolidated Navigation Dropdown Menu (Glassmorphic & Anti-Jitter) */
+.nav-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.nav-dropdown-toggle-btn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(12px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 5px;
-  border-radius: 30px;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12), 0 8px 25px rgba(0, 0, 0, 0.4);
-  transition: all 0.3s ease;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.12); /* Solid border width prevents lay-out jitters */
+  padding: 8px 18px;
+  border-radius: 25px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  transition: background 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
+              border-color 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
+              box-shadow 0.25s cubic-bezier(0.25, 0.8, 0.25, 1),
+              color 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+  backface-visibility: hidden;
+  will-change: background-color, border-color, box-shadow;
+  transform: translateZ(0);
 }
 
-.nav-links a {
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 800;
-  font-size: 0.88rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 8px 22px;
-  border-radius: 20px;
-  position: relative;
-  text-decoration: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-links a:hover {
+.nav-dropdown-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
   color: white;
-  background: rgba(255, 255, 255, 0.08);
-  transform: translateY(-1px);
+  border-color: rgba(255, 87, 34, 0.5); /* Color change only - zero jittering */
+  box-shadow: 0 0 15px rgba(255, 87, 34, 0.25);
 }
 
-.nav-links a.active {
-  color: white;
+.nav-dropdown-toggle-btn.active {
   background: linear-gradient(135deg, var(--color-primary) 0%, #ff6d3b 100%);
-  box-shadow: 0 4px 18px rgba(255, 87, 34, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  transform: scale(1.03);
+  color: white;
+  border-color: rgba(255, 87, 34, 0.65); /* Keeps the solid border! No reflow */
+  box-shadow: 0 4px 20px rgba(255, 87, 34, 0.4);
+}
+
+.nav-dropdown-toggle-btn.active:hover {
+  background: linear-gradient(135deg, #ff6d3b 0%, var(--color-primary) 100%);
+  color: white;
+  border-color: rgba(255, 87, 34, 0.8);
+  box-shadow: 0 6px 24px rgba(255, 87, 34, 0.55);
+}
+
+.dropdown-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hub-active-text {
+  color: #ff5722;
+  font-weight: 800;
+}
+
+.nav-dropdown-toggle-btn.active .hub-active-text {
+  color: #ffffff; /* Outstanding white contrast inside the primary bubble */
+}
+
+.nav-dropdown-toggle-btn .chevron-icon {
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  opacity: 0.8;
+}
+
+.nav-dropdown-toggle-btn .chevron-icon.open {
+  transform: rotate(180deg);
+}
+
+.nav-menu-icon {
+  opacity: 0.9;
+}
+
+/* Premium Dropdown Menu Panel (Highly Hardware Accelerated & Solid Theme) */
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  margin-left: -110px; /* Static horizontal centering avoids translateX animation jitters */
+  width: 220px;
+  background: #0d0d12; /* Solid dark prevents Chrome repaint jitter bugs with backdrop-filters */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.65);
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: dropdownFadeIn 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform-origin: top center;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nav-dropdown-menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: background 0.2s ease, color 0.2s ease;
+  backface-visibility: hidden;
+  will-change: background-color;
+}
+
+.nav-dropdown-menu a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.nav-dropdown-menu a.active {
+  background: rgba(255, 87, 34, 0.12);
+  color: var(--color-primary);
+}
+
+.dropdown-icon {
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.nav-dropdown-menu a:hover .dropdown-icon {
+  opacity: 1;
 }
 
 /* Search Bar Section */
 .search-bar {
+  max-width: 320px;
   flex: 1;
-  max-width: 400px;
-  margin: 0 2rem;
 }
 
 .search-input-wrapper {
@@ -443,132 +581,7 @@
   transform: scale(1.02);
 }
 
-/* Mobile Responsive */
-@media screen and (max-width: 1024px) {
-  .nav-links {
-    gap: 1.2rem;
-  }
-  
-  .search-bar {
-    max-width: 300px;
-    margin: 0 1.5rem;
-  }
-}
-
-@media screen and (max-width: 992px) {
-  .header {
-    height: auto !important;
-    padding-bottom: 0.5rem;
-    background: rgba(10, 10, 10, 0.96) !important;
-    backdrop-filter: blur(20px);
-  }
-
-  .header-container {
-    flex-wrap: wrap;
-    padding: 0.4rem 1rem 0;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .logo {
-    order: 1;
-    flex: 0 0 auto;
-  }
-
-  .logo-text {
-    font-size: 1.15rem;
-  }
-
-  .nav-links {
-    order: 2;
-    flex: 0 0 auto;
-    display: flex !important;
-    margin: 0;
-    padding: 3px 6px;
-    gap: 4px;
-    background: rgba(255, 255, 255, 0.04);
-    border-radius: 20px;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 4px 15px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .nav-links a {
-    padding: 5px 14px;
-    font-size: 0.8rem;
-    border-radius: 15px;
-  }
-
-  .auth-section {
-    order: 3;
-    flex: 0 0 auto;
-    gap: 0.75rem;
-  }
-
-  .username {
-    display: none;
-  }
-
-  .user-menu {
-    padding: 2px;
-    background: transparent;
-    border: none;
-  }
-
-  .avatar-container {
-    width: 28px;
-    height: 28px;
-  }
-
-  .search-bar {
-    order: 4;
-    flex: 1 1 100%;
-    margin: 0.5rem 0 0 0;
-    max-width: none;
-  }
-
-  .search-input-wrapper {
-    padding: 0px 4px 0px 1rem;
-    border-radius: 30px;
-  }
-
-  .search-input-wrapper input {
-    padding: 0.35rem 0;
-    font-size: 0.8rem;
-  }
-
-  .btn-search {
-    padding: 4px;
-  }
-
-  .btn-login {
-    font-size: 0.8rem;
-  }
-
-  .btn-signup {
-    padding: 0.4rem 1rem;
-    font-size: 0.78rem;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .header-container {
-    padding: 0.4rem 0.5rem 0;
-  }
-  
-  .auth-section {
-    gap: 0.5rem;
-  }
-
-  .btn-signup {
-    padding: 0.35rem 0.8rem;
-    font-size: 0.75rem;
-  }
-
-  .nav-links a {
-    padding: 4px 8px;
-    font-size: 0.75rem;
-  }
-}
+/* Mobile Responsive (Unified Clean Layout) */
 
 /* History Dropdown List Custom Styling */
 .history-list-dropdown {
@@ -1012,4 +1025,133 @@
   background: rgba(255, 255, 255, 0.1);
   color: #f44336 !important;
   transform: scale(1.15);
+}
+
+/* Premium Responsive Media Queries for Dropdown Header */
+@media screen and (max-width: 768px) {
+  .header.has-search {
+    height: auto !important;
+    min-height: 112px !important;
+    padding: 8px 0 !important;
+    background: rgba(10, 10, 10, 0.96) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .header.has-search.scrolled {
+    height: auto !important;
+    min-height: 106px !important;
+    background: rgba(10, 10, 10, 0.98) !important;
+  }
+
+  .header-container {
+    padding: 0 1.2rem !important;
+  }
+
+  .header.has-search .header-container {
+    height: auto !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+  }
+  
+  .header-top-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .header.has-search .header-top-row {
+    height: 48px !important;
+  }
+
+  .header-left {
+    flex: 0 0 auto !important; /* Limit size on mobile to reserve space */
+  }
+
+  .header-center {
+    flex: 1 !important; /* Grow and center the Hub dropdown beautifully! */
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  .header-right {
+    flex: 0 0 auto !important; /* Pull profile and search items closely to the right */
+    gap: 12px !important;
+  }
+
+  .desktop-search {
+    display: none !important;
+  }
+
+  .mobile-search-row {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 4px !important;
+  }
+
+  .mobile-search-row .search-input-wrapper {
+    width: 100% !important;
+    max-width: none !important;
+    height: 40px !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  .nav-dropdown-toggle-btn {
+    padding: 6px 12px !important;
+    font-size: 0.8rem !important;
+    gap: 5px !important;
+  }
+
+  .dropdown-label {
+    display: inline-flex !important;
+  }
+
+  .hub-title {
+    display: none !important; /* Hide "Hub:" prefix to keep it ultra compact on mobile */
+  }
+
+  .auth-section {
+    gap: 8px !important;
+  }
+
+  .btn-login {
+    padding: 6px 12px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .btn-signup {
+    display: none !important;
+  }
+  
+  .username {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .header-container {
+    padding: 0 0.8rem !important;
+  }
+
+  .logo-text {
+    font-size: 1rem !important;
+  }
+
+  .desktop-search {
+    max-width: 100px !important;
+  }
+
+  .nav-dropdown-toggle-btn {
+    padding: 5px 10px !important;
+  }
+
+  .dropdown-label {
+    display: inline-flex !important; /* Center text page indicator remains active on mobile! */
+  }
 }
