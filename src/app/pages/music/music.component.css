@@ -223,6 +223,147 @@
   padding: 6px 12px;
   gap: 10px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  position: relative; /* Contain absolute positioned history dropdown! */
+}
+
+/* Premium Glassmorphic Search History Dropdown Popup for Music */
+.search-history-popup {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 100%;
+  background: rgba(15, 15, 20, 0.96);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border: 1px solid rgba(255, 87, 34, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+  padding: 12px 0;
+  z-index: 1100;
+  animation: searchHistorySlide 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-origin: top center;
+  box-sizing: border-box;
+}
+
+@keyframes searchHistorySlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px 8px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #ff5722;
+}
+
+.btn-clear-all {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.btn-clear-all:hover {
+  color: #ff5722;
+  background: rgba(255, 87, 34, 0.1);
+}
+
+.history-items {
+  display: flex;
+  flex-direction: column;
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding-top: 6px;
+}
+
+.history-items::-webkit-scrollbar {
+  width: 4px;
+}
+
+.history-items::-webkit-scrollbar-thumb {
+  background: rgba(255, 87, 34, 0.2);
+  border-radius: 2px;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  text-align: left;
+}
+
+.history-item:hover {
+  background: rgba(255, 87, 34, 0.05);
+  color: #ffffff;
+}
+
+.clock-icon {
+  color: rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+  transition: color 0.2s;
+  font-size: 12px;
+}
+
+.history-item:hover .clock-icon {
+  color: #ff5722;
+}
+
+.history-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.btn-delete-item {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.history-item:hover .btn-delete-item {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-delete-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ff5722 !important;
+  transform: scale(1.1);
 }
 
 .search-icon {

@@ -25,11 +25,30 @@
         <input type="text" 
                [(ngModel)]="searchQuery" 
                (keyup.enter)="onSearch()" 
+               (focus)="onSearchFocus()"
+               (blur)="onSearchBlur()"
                placeholder="Tìm kiếm bài hát, nghệ sĩ tại EZMOVIE..." 
                class="search-input"
                id="music-search-input">
-        <i class="fas fa-times clear-search-icon" *ngIf="searchQuery" (click)="searchQuery=''; onSearch()" title="Xóa tìm kiếm"></i>
+        <i class="fas fa-times clear-search-icon" *ngIf="searchQuery" (click)="searchQuery=''" title="Xóa tìm kiếm"></i>
         <button (click)="onSearch()" class="search-btn" id="music-search-btn" title="Tìm Kiếm"><i class="fas fa-search"></i></button>
+
+        <!-- High-End Glassmorphic Search History Popup for Music -->
+        <div class="search-history-popup" *ngIf="showSearchHistory && filteredSearchHistory.length > 0">
+          <div class="history-header">
+            <span>Lịch sử tìm kiếm</span>
+            <button class="btn-clear-all" (mousedown)="clearAllSearchHistory($event)">Xóa tất cả</button>
+          </div>
+          <div class="history-items">
+            <div class="history-item" *ngFor="let item of filteredSearchHistory" (mousedown)="selectSearchHistoryItem($event, item)">
+              <i class="fas fa-history clock-icon"></i>
+              <span class="history-text">{{ item }}</span>
+              <button class="btn-delete-item" (mousedown)="deleteSearchHistoryItem($event, item)" title="Xóa">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </header>
 

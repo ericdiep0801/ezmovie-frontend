@@ -16,6 +16,10 @@ export class MusicComponent implements OnInit, OnDestroy {
   public activeGenre: string = 'All';
   public genres: string[] = ['All', 'Pop', 'V-Pop', 'EDM', 'Rock', 'Acoustic'];
 
+  // Search History State
+  public searchHistory: string[] = [];
+  public showSearchHistory: boolean = false;
+
   // Hybrid YouTube Player State
   public ytPlayer: any = null;
   public isPlayerReady: boolean = false;
@@ -56,6 +60,7 @@ export class MusicComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadTrendingTracks();
     this.loadYouTubeIframeAPI();
+    this.loadSearchHistory();
   }
 
   ngOnDestroy(): void {
@@ -486,6 +491,13 @@ export class MusicComponent implements OnInit, OnDestroy {
     const q = this.searchQuery ? this.searchQuery.trim() : '';
     this.activeGenre = 'All'; // Reset genre tabs
 
+    if (!q) {
+      this.loadTrendingTracks();
+      return;
+    }
+
+    this.saveSearchHistory(q); // Save searched keyword to history!
+
     this.loadingService.show();
     this.musicService.searchTracks(q).subscribe({
       next: (res) => {
@@ -502,6 +514,75 @@ export class MusicComponent implements OnInit, OnDestroy {
       },
       error: () => this.loadingService.hide(),
     });
+  }
+
+  // High-End Music Search History Methods
+  get filteredSearchHistory(): string[] {
+    if (!this.searchHistory) return [];
+    if (!this.searchQuery || !this.searchQuery.trim()) {
+      return this.searchHistory;
+    }
+    const q = this.searchQuery.trim().toLowerCase();
+    return this.searchHistory.filter(item => item.toLowerCase().includes(q));
+  }
+
+  loadSearchHistory(): void {
+    try {
+      const saved = localStorage.getItem('ezmovie_music_search_history');
+      this.searchHistory = saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      this.searchHistory = [];
+    }
+  }
+
+  saveSearchHistory(keyword: string): void {
+    if (!keyword || !keyword.trim()) return;
+    const cleanKeyword = keyword.trim();
+    this.loadSearchHistory();
+    this.searchHistory = [
+      cleanKeyword,
+      ...this.searchHistory.filter(h => h.toLowerCase() !== cleanKeyword.toLowerCase())
+    ].slice(0, 8);
+    try {
+      localStorage.setItem('ezmovie_music_search_history', JSON.stringify(this.searchHistory));
+    } catch (e) {}
+  }
+
+  deleteSearchHistoryItem(event: Event, item: string): void {
+    event.stopPropagation();
+    event.preventDefault();
+    this.searchHistory = this.searchHistory.filter(h => h !== item);
+    try {
+      localStorage.setItem('ezmovie_music_search_history', JSON.stringify(this.searchHistory));
+    } catch (e) {}
+  }
+
+  clearAllSearchHistory(event: Event): void {
+    event.stopPropagation();
+    event.preventDefault();
+    this.searchHistory = [];
+    try {
+      localStorage.removeItem('ezmovie_music_search_history');
+    } catch (e) {}
+  }
+
+  selectSearchHistoryItem(event: Event, item: string): void {
+    event.stopPropagation();
+    event.preventDefault();
+    this.searchQuery = item;
+    this.showSearchHistory = false;
+    this.onSearch();
+  }
+
+  onSearchFocus(): void {
+    this.loadSearchHistory();
+    this.showSearchHistory = true;
+  }
+
+  onSearchBlur(): void {
+    setTimeout(() => {
+      this.showSearchHistory = false;
+    }, 200);
   }
 
   formatTime(seconds: number): string {
