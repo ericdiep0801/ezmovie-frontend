@@ -100,6 +100,7 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   private overlayValueTimeout: any = null;
   private lastPreviewSeekTime: number = 0;
   private previewSeekTimeout: any = null;
+  private skipClickTimeout: any = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -142,6 +143,9 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.previewSeekTimeout) {
       clearTimeout(this.previewSeekTimeout);
+    }
+    if (this.skipClickTimeout) {
+      clearTimeout(this.skipClickTimeout);
     }
     if (this.ambientInterval) {
       clearInterval(this.ambientInterval);
@@ -671,8 +675,21 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    const seconds = direction === 'left' ? -10 : 10;
-    this.skipTime(seconds);
+    if (this.skipClickTimeout) {
+      // Double click: Fast forward / rewind (tua nhanh)
+      clearTimeout(this.skipClickTimeout);
+      this.skipClickTimeout = null;
+
+      const seconds = direction === 'left' ? -10 : 10;
+      this.skipTime(seconds);
+    } else {
+      // First click: Start double-click detection timer
+      this.skipClickTimeout = setTimeout(() => {
+        this.skipClickTimeout = null;
+        // Single click: Pause / Play (dừng/phát)
+        this.togglePlay();
+      }, 250);
+    }
   }
 
   // Drag adjustment methods (Swipe up/down)
