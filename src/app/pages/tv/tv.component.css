@@ -758,37 +758,42 @@
  * ------------------------------------------------------------- */
 @media (max-width: 1024px) {
   .tv-main-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    max-width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    align-items: stretch !important; /* Force all children to stretch fully to the right border of the viewport! */
   }
   
   .player-wrapper-frame {
-    order: 1;
-    max-width: 100%;
-    box-sizing: border-box;
+    order: 1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .channels-sidebar {
-    order: 2;
-    max-height: none;
-    padding: 20px;
-    position: static;
-    grid-area: auto;
-    max-width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
+    order: 2 !important;
+    max-height: none !important;
+    padding: 20px !important;
+    position: static !important;
+    grid-area: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
   }
 
   .epg-schedule-card {
-    order: 3;
-    padding: 24px;
-    grid-area: auto;
-    max-width: 100%;
-    box-sizing: border-box;
+    order: 3 !important;
+    padding: 24px !important;
+    grid-area: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
   
   .tv-page-container {
@@ -816,34 +821,48 @@
   }
 
   .sidebar-header {
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    margin-bottom: 16px;
+    display: flex !important;
+    flex-direction: column !important; /* Stack vertically on mobile to prevent crushing/overlapping! */
+    align-items: stretch !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  .sidebar-title-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    margin-bottom: 0 !important;
   }
 
   .sidebar-title {
-    font-size: 1rem;
-    margin: 0;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
     white-space: nowrap;
     letter-spacing: 0.2px;
+    color: #fff !important;
   }
 
   .search-channels-box {
-    max-width: 180px;
+    width: 100% !important; /* Take full width of sidebar for premium mobile search experience! */
+    max-width: 100% !important;
   }
 
   .search-channels-box input {
-    padding: 8px 12px 8px 32px;
-    font-size: 0.8rem;
-    border-radius: 8px;
+    padding: 10px 14px 10px 38px !important;
+    font-size: 0.85rem !important;
+    border-radius: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .search-channels-box .search-icon {
-    left: 10px;
-    width: 14px;
-    height: 14px;
+    left: 12px !important;
+    width: 14px !important;
+    height: 14px !important;
   }
 
   .channels-list {
@@ -915,31 +934,45 @@
     font-size: 0.82rem;
   }
   
-  .playing-chan-title {
-    font-size: 1.15rem;
-  }
-  
-  .live-badge-glow {
-    font-size: 0.68rem;
-    padding: 4px 10px;
-  }
-  
   .channel-details-banner {
-    padding: 16px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+    padding: 16px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+
+  .banner-left {
+    flex-direction: column !important; /* Stack live badge and channel name vertically on mobile! */
+    align-items: flex-start !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .live-badge-glow {
+    font-size: 0.65rem !important;
+    padding: 4px 10px !important;
+    align-self: flex-start !important; /* Don't stretch the live badge, keep it compact! */
+  }
+
+  .playing-chan-title {
+    font-size: 1.15rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .playing-chan-category {
+    font-size: 0.78rem !important;
   }
 
   .banner-right {
-    width: 100%;
+    width: 100% !important;
   }
 
   .action-fav-btn {
-    width: 100%;
-    justify-content: center;
-    padding: 8px 16px;
-    font-size: 0.85rem;
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 10px 16px !important;
+    font-size: 0.85rem !important;
+    border-radius: 10px !important;
   }
 
   .epg-timeline-node {
