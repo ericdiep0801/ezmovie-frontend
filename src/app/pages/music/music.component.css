@@ -1238,10 +1238,35 @@
     height: calc(100vh - 64px - 80px) !important; /* Full height minus header and bottom player */
     overflow-y: auto !important;
     grid-template-columns: 1fr !important;
+    padding-top: 72px !important; /* Offset the 72px fixed search bar height so contents start cleanly below it! */
+    position: relative !important;
   }
 
   .music-sidebar {
     display: none; /* Hide left sidebar menu */
+  }
+
+  /* Fixed search header above everything, including the MV player, with a glassy premium look */
+  .music-search-header {
+    position: fixed !important;
+    top: 64px !important; /* Positioned exactly under the main 64px global header */
+    left: 0 !important;
+    right: 0 !important;
+    height: 72px !important;
+    padding: 12px 16px !important;
+    background: rgba(7, 7, 10, 0.94) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid rgba(255, 87, 34, 0.15) !important;
+    z-index: 1000 !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+  }
+
+  .search-box-wrapper {
+    width: 100% !important;
+    margin: 0 !important;
   }
 
   /* Render right panel at the very top on mobile viewports, showing only the YouTube MV projection card! */
@@ -1264,8 +1289,8 @@
   }
 
   .music-main-content {
-    padding: 16px;
-    gap: 16px;
+    padding: 16px !important;
+    gap: 16px !important;
   }
 
   .now-playing-hero {
