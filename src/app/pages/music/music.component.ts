@@ -20,6 +20,11 @@ export class MusicComponent implements OnInit, OnDestroy {
   public searchHistory: string[] = [];
   public showSearchHistory: boolean = false;
 
+  // Pagination State
+  public paginatedTracks: Track[] = [];
+  public currentPage: number = 1;
+  public pageSize: number = 10;
+
   // Hybrid YouTube Player State
   public ytPlayer: any = null;
   public isPlayerReady: boolean = false;
@@ -188,6 +193,7 @@ export class MusicComponent implements OnInit, OnDestroy {
       next: (res) => {
         if (res.status === 200 && res.data) {
           this.tracks = res.data;
+          this.onTracksLoaded();
           if (this.tracks.length > 0) {
             this.selectTrack(this.tracks[0], false);
           }
@@ -474,6 +480,7 @@ export class MusicComponent implements OnInit, OnDestroy {
           } else {
             this.tracks = res.data.filter((t) => t.genre === genre);
           }
+          this.onTracksLoaded();
           if (this.tracks.length > 0) {
             this.selectTrack(this.tracks[0], false);
           } else {
@@ -503,6 +510,7 @@ export class MusicComponent implements OnInit, OnDestroy {
       next: (res) => {
         if (res.status === 200 && res.data) {
           this.tracks = res.data;
+          this.onTracksLoaded();
           if (this.tracks.length > 0) {
             this.selectTrack(this.tracks[0], false);
           } else {
@@ -583,6 +591,47 @@ export class MusicComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.showSearchHistory = false;
     }, 200);
+  }
+
+  // Premium Pagination Handlers
+  onTracksLoaded(): void {
+    this.currentPage = 1;
+    this.updatePaginatedTracks();
+  }
+
+  updatePaginatedTracks(): void {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    this.paginatedTracks = this.tracks.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.tracks.length / this.pageSize);
+  }
+
+  getPageNumbers(): number[] {
+    const total = this.totalPages;
+    if (total <= 5) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    if (this.currentPage <= 3) {
+      return [1, 2, 3, 4, 5];
+    }
+    if (this.currentPage >= total - 2) {
+      return [total - 4, total - 3, total - 2, total - 1, total];
+    }
+    return [this.currentPage - 2, this.currentPage - 1, this.currentPage, this.currentPage + 1, this.currentPage + 2];
+  }
+
+  setPage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.updatePaginatedTracks();
+    
+    // Auto scroll tracklist into view when switching pages
+    const section = document.querySelector('.track-queue-section');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   formatTime(seconds: number): string {
