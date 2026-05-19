@@ -29,7 +29,8 @@
                (blur)="onSearchBlur()"
                placeholder="Tìm kiếm bài hát, nghệ sĩ tại EZMOVIE..." 
                class="search-input"
-               id="music-search-input">
+               id="music-search-input"
+               autocomplete="off">
         <i class="fas fa-times clear-search-icon" *ngIf="searchQuery" (click)="searchQuery=''" title="Xóa tìm kiếm"></i>
         <button (click)="onSearch()" class="search-btn" id="music-search-btn" title="Tìm Kiếm"><i class="fas fa-search"></i></button>
 
