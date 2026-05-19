@@ -1349,21 +1349,21 @@
     left: 8px !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
-    width: 110px !important;
-    gap: 8px !important;
+    width: 90px !important; /* Compact details panel width to prevent clashing */
+    gap: 6px !important;
     display: flex !important;
     align-items: center !important;
   }
 
   .bottom-cover {
-    width: 32px !important;
-    height: 32px !important;
+    width: 28px !important; /* Elegant scaled-down thumbnail */
+    height: 28px !important;
     border-radius: 6px !important;
   }
 
   .bottom-song-name {
-    font-size: 11px !important;
-    max-width: 70px !important;
+    font-size: 10px !important; /* Slightly smaller text for narrow screens */
+    max-width: 55px !important; /* Constrain text width so text truncates cleanly before hitting buttons! */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1381,15 +1381,15 @@
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    width: 200px !important;
-    max-width: 200px !important;
+    width: 170px !important; /* Optimized control bar width */
+    max-width: 170px !important;
     margin: 0 !important;
   }
 
   .player-buttons-group {
     width: 100% !important;
     justify-content: center !important;
-    gap: 14px !important; /* Generous 14px gap prevents accidental double/adjacent taps on mobile! */
+    gap: 10px !important; /* Perfectly balanced 10px gap to ensure excellent tapping precision without overlaps! */
   }
 
   .player-ctrl-btn {
@@ -1397,15 +1397,15 @@
   }
 
   .side-btn {
-    width: 22px !important;
-    height: 22px !important;
-    font-size: 11px !important;
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 10px !important;
   }
 
   .jump-btn {
-    width: 24px !important;
-    height: 24px !important;
-    font-size: 10px !important;
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 9.5px !important;
   }
 
   .jump-badge {
@@ -1415,12 +1415,12 @@
   }
 
   .play-circle-btn {
-    width: 32px !important;
-    height: 32px !important;
+    width: 30px !important;
+    height: 30px !important;
   }
 
   .play-circle-btn i {
-    font-size: 12px !important;
+    font-size: 11px !important;
     margin-left: 2px !important;
   }
   
@@ -1438,7 +1438,7 @@
     top: 50% !important;
     transform: translateY(-50%) !important;
     display: flex !important; /* Always visible on the right! */
-    width: 75px !important; /* Super compact right-side volume actions */
+    width: 65px !important; /* Ultra compact right-side volume actions */
     justify-content: flex-end !important;
     gap: 4px !important;
     margin: 0 !important;
@@ -1446,12 +1446,12 @@
   }
 
   .volume-btn {
-    font-size: 11px !important;
+    font-size: 10px !important;
     padding: 2px !important;
   }
 
   .volume-slider {
-    width: 45px !important; /* Narrow mini volume slider on the right side! */
+    width: 35px !important; /* Narrow mini volume slider on the right side! */
     height: 3px !important;
   }
 
