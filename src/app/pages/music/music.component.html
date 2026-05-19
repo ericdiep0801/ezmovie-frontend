@@ -125,20 +125,36 @@
   </main>
 
   <!-- 3. RIGHT SIDEBAR: Video Embed Display, Vinyl Animation, and Lyrics Stream -->
-  <aside class="music-right-panel">
+  <aside class="music-right-panel" [class.popup-active]="showPopupMode">
     <!-- Video Playback Iframe Panel -->
     <div class="video-card-container">
       <div class="video-header">
         <h3 class="panel-subtitle"><i class="fab fa-youtube"></i> Trình Chiếu MV</h3>
-        <button class="toggle-video-btn" (click)="toggleVideoMode()" id="toggle-mv-btn">
-          <i class="fas" [class.fa-video]="showVideo" [class.fa-video-slash]="!showVideo"></i>
-          {{ showVideo ? 'Ẩn Video' : 'Xem Video MV' }}
-        </button>
+        <div class="video-header-actions">
+          <button class="toggle-video-btn" (click)="toggleVideoMode()" id="toggle-mv-btn" title="Ẩn/Hiện MV">
+            <i class="fas" [class.fa-video]="showVideo" [class.fa-video-slash]="!showVideo"></i>
+            {{ showVideo ? 'Ẩn' : 'Xem MV' }}
+          </button>
+          <button class="popup-video-btn" *ngIf="showVideo" (click)="togglePopupMode()" id="popup-mv-btn" title="Phóng to màn hình xem MV">
+            <i class="fas" [class.fa-expand-arrows-alt]="!showPopupMode" [class.fa-compress-arrows-alt]="showPopupMode"></i> 
+            {{ showPopupMode ? 'Thu nhỏ' : 'Phóng to' }}
+          </button>
+        </div>
       </div>
       
-      <!-- Hidden or active video embed container -->
-      <div class="yt-video-wrapper" [class.video-hidden]="!showVideo">
+      <!-- Hidden or active video embed container (with popup state hook) -->
+      <div class="yt-video-wrapper" [class.video-hidden]="!showVideo" [class.video-popup-active]="showPopupMode">
         <div id="yt-player"></div>
+        <button class="close-popup-btn" *ngIf="showPopupMode" (click)="togglePopupMode()" title="Thu nhỏ MV">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Glassmorphic Backdrop Overlay for Popup Focus Mode -->
+      <div class="mv-popup-backdrop-blur" *ngIf="showPopupMode" (click)="togglePopupMode()" (mousemove)="onBackdropMouseMove()">
+        <div class="mv-popup-close-indicator" [class.indicator-hidden]="!showIndicator">
+          <i class="fas fa-compress-arrows-alt"></i> Nhấn ngoài vùng để thu nhỏ MV
+        </div>
       </div>
     </div>
 

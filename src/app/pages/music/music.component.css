@@ -605,6 +605,12 @@
   gap: 24px;
   overflow-y: auto;
   z-index: 10;
+  transition: backdrop-filter 0.3s ease;
+}
+
+.music-right-panel.popup-active {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 .panel-subtitle {
@@ -632,13 +638,19 @@
   align-items: center;
 }
 
+.video-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .toggle-video-btn {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.8);
   font-size: 11px;
   font-weight: 600;
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s;
@@ -653,7 +665,30 @@
   color: #ff5722;
 }
 
+.popup-video-btn {
+  background: linear-gradient(135deg, rgba(255, 87, 34, 0.15) 0%, rgba(255, 138, 80, 0.05) 100%);
+  border: 1px solid rgba(255, 87, 34, 0.3);
+  color: #ff8a50;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.popup-video-btn:hover {
+  background: linear-gradient(135deg, #ff5722 0%, #ff8a50 100%);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(255, 87, 34, 0.35);
+}
+
 .yt-video-wrapper {
+  position: relative;
   width: 100%;
   aspect-ratio: 16/9;
   border-radius: 16px;
@@ -671,6 +706,108 @@
   opacity: 0;
   pointer-events: none;
   margin: 0;
+}
+
+/* Premium Floating Pop-up Cửa Sổ Nổi for YouTube MV Watching */
+.yt-video-wrapper.video-popup-active {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 1350px !important; /* Ultimate fully-immersive cinema width */
+  height: 760px !important; /* Perfect 16:9 cinematic widescreen height */
+  max-width: 96vw !important;
+  max-height: 54vw !important;
+  z-index: 2001 !important; /* Renders above backdrop */
+  border: 2px solid rgba(255, 87, 34, 0.4) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 87, 34, 0.25) !important;
+  overflow: hidden !important;
+  background: #000000 !important;
+  animation: popupScaleIn 0.28s cubic-bezier(0.25, 1, 0.5, 1) !important; /* Silky-smooth professional fade-in ease-out */
+}
+
+/* Floating close icon within popup */
+.close-popup-btn {
+  position: absolute !important;
+  top: 16px !important;
+  right: 16px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: rgba(10, 10, 15, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  z-index: 10 !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+.close-popup-btn:hover {
+  background: #ff5722 !important;
+  border-color: transparent !important;
+  transform: scale(1.1) rotate(90deg) !important;
+  box-shadow: 0 0 12px rgba(255, 87, 34, 0.6) !important;
+}
+
+/* Glassmorphic Backdrop Overlay for Popup Focus Mode */
+.mv-popup-backdrop-blur {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(5, 5, 8, 0.75) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  z-index: 2000 !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  padding-top: 60px !important;
+  cursor: pointer !important;
+  animation: fadeInBackdrop 0.3s ease-out !important;
+}
+
+.mv-popup-close-indicator {
+  background: rgba(255, 87, 34, 0.1) !important;
+  border: 1px solid rgba(255, 87, 34, 0.2) !important;
+  color: #ff8a50 !important;
+  padding: 8px 20px;
+  border-radius: 30px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+  pointer-events: none !important;
+}
+
+/* Pop-up Scale and Backdrop animations */
+@keyframes popupScaleIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.96); /* Gentle scale-in start */
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes fadeInBackdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Vinyl Player Turntable */
@@ -1469,4 +1606,34 @@
   .volume-percentage {
     display: none !important; /* Hide percentage text on mobile */
   }
+}
+
+/* Premium transition and visibility states for the close indicator */
+.mv-popup-close-indicator {
+  transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.mv-popup-close-indicator.indicator-hidden {
+  opacity: 0 !important;
+  transform: translateY(-12px) !important;
+  pointer-events: none !important;
+}
+
+/* Highly Immersive Cinema Mode CSS Overrides */
+:host-context(body.mv-cinema-mode) {
+  padding-top: 0 !important; /* Eliminate exact fixed height offset of the hidden header */
+}
+
+:host-context(body.mv-cinema-mode) .music-dashboard-container {
+  grid-template-columns: 0 1fr 0 !important; /* Completely collapse sidebar and right sidebar dimensions */
+  background: #000000 !important; /* Pitch-black cinema room canvas */
+}
+
+:host-context(body.mv-cinema-mode) .music-sidebar,
+:host-context(body.mv-cinema-mode) .music-search-header,
+:host-context(body.mv-cinema-mode) .now-playing-hero,
+:host-context(body.mv-cinema-mode) .queue-section,
+:host-context(body.mv-cinema-mode) .visualizer-card,
+:host-context(body.mv-cinema-mode) .lyrics-panel-card {
+  display: none !important; /* Vaporize all layouts to isolate focus on the main video */
 }

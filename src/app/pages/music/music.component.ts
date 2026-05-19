@@ -28,6 +28,9 @@ export class MusicComponent implements OnInit, OnDestroy {
   
   // Interactive View Settings
   public showVideo: boolean = true; // Users can watch MV directly on the right side card!
+  public showPopupMode: boolean = false; // Popup mode for high-focus MV watching!
+  public showIndicator: boolean = true; // High-end fade out close indicator
+  private indicatorTimeout: any = null;
 
   // Dynamic Lyrics State
   public currentLyricIndex: number = -1;
@@ -55,7 +58,9 @@ export class MusicComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    document.body.classList.remove('mv-cinema-mode');
     this.stopTimeInterval();
+    this.clearIndicatorTimeout();
     if (this.ytPlayer && this.ytPlayer.destroy) {
       this.ytPlayer.destroy();
     }
@@ -260,8 +265,18 @@ export class MusicComponent implements OnInit, OnDestroy {
   nextTrack(): void {
     if (this.tracks.length === 0 || !this.selectedTrack) return;
     const currentIndex = this.tracks.findIndex((t) => t.id === this.selectedTrack?.id);
-    const nextIndex = (currentIndex + 1) % this.tracks.length;
-    this.selectTrack(this.tracks[nextIndex], true);
+    let nextIndex = (currentIndex + 1) % this.tracks.length;
+    
+    // Auto-skip restricted tracks gracefully to ensure continuous playback
+    let attempts = 0;
+    while ((this.tracks[nextIndex].isLocked || !this.tracks[nextIndex].previewUrl) && attempts < this.tracks.length) {
+      nextIndex = (nextIndex + 1) % this.tracks.length;
+      attempts++;
+    }
+    
+    if (attempts < this.tracks.length) {
+      this.selectTrack(this.tracks[nextIndex], true);
+    }
   }
 
   prevTrack(): void {
@@ -269,7 +284,18 @@ export class MusicComponent implements OnInit, OnDestroy {
     const currentIndex = this.tracks.findIndex((t) => t.id === this.selectedTrack?.id);
     let prevIndex = currentIndex - 1;
     if (prevIndex < 0) prevIndex = this.tracks.length - 1;
-    this.selectTrack(this.tracks[prevIndex], true);
+
+    // Auto-skip restricted tracks backwards gracefully
+    let attempts = 0;
+    while ((this.tracks[prevIndex].isLocked || !this.tracks[prevIndex].previewUrl) && attempts < this.tracks.length) {
+      prevIndex = prevIndex - 1;
+      if (prevIndex < 0) prevIndex = this.tracks.length - 1;
+      attempts++;
+    }
+
+    if (attempts < this.tracks.length) {
+      this.selectTrack(this.tracks[prevIndex], true);
+    }
   }
 
   toggleMute(): void {
@@ -287,6 +313,44 @@ export class MusicComponent implements OnInit, OnDestroy {
 
   toggleVideoMode(): void {
     this.showVideo = !this.showVideo;
+    if (!this.showVideo) {
+      this.showPopupMode = false;
+    }
+  }
+
+  togglePopupMode(): void {
+    this.showPopupMode = !this.showPopupMode;
+    if (this.showPopupMode) {
+      document.body.classList.add('mv-cinema-mode');
+      this.showIndicator = true;
+      this.resetIndicatorTimeout();
+    } else {
+      document.body.classList.remove('mv-cinema-mode');
+      this.clearIndicatorTimeout();
+    }
+    this.cdr.detectChanges();
+  }
+
+  public onBackdropMouseMove(): void {
+    if (!this.showPopupMode) return;
+    this.showIndicator = true;
+    this.resetIndicatorTimeout();
+    this.cdr.detectChanges();
+  }
+
+  private resetIndicatorTimeout(): void {
+    this.clearIndicatorTimeout();
+    this.indicatorTimeout = setTimeout(() => {
+      this.showIndicator = false;
+      this.cdr.detectChanges();
+    }, 5000);
+  }
+
+  private clearIndicatorTimeout(): void {
+    if (this.indicatorTimeout) {
+      clearTimeout(this.indicatorTimeout);
+      this.indicatorTimeout = null;
+    }
   }
 
   onVolumeChange(event: any): void {
