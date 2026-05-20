@@ -996,8 +996,7 @@
   z-index: 6;
 }
 
-.custom-player-controls.show,
-.custom-player-container:hover .custom-player-controls {
+.custom-player-controls.show {
   opacity: 1;
   pointer-events: auto;
 }
