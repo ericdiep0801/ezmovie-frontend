@@ -101,6 +101,7 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   private lastPreviewSeekTime: number = 0;
   private previewSeekTimeout: any = null;
   private skipClickTimeout: any = null;
+  private historySavedKey: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -258,28 +259,13 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
       replaceUrl: true,
     });
 
-    // Save watch history automatically if logged in
-    if (this.isLoggedIn && this.movie) {
-      this.movieService
-        .addWatchHistory({
-          movieSlug: this.movie.slug,
-          movieName: this.movie.name,
-          moviePoster: this.movie.poster_url || this.movie.thumb_url,
-          episodeName: episode.name,
-          episodeSlug: episode.slug,
-        })
-        .subscribe({
-          next: (res) => {
-            console.log('Saved watch history:', res.message);
-          },
-          error: (err) => {
-            console.error(
-              'Failed to save watch history. Status:',
-              err.status,
-              err,
-            );
-          },
-        });
+    // Reset so history is saved again when user successfully plays this episode
+    this.historySavedKey = null;
+
+    // Embed mode has no play event — treat episode load as a successful watch
+    const useEmbed = !this.isHlsMode || !episode.link_m3u8;
+    if (useEmbed) {
+      this.saveWatchHistoryOnPlaySuccess();
     }
 
     // Initialize HLS player for the selected episode if in HLS mode
@@ -603,9 +589,44 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  private saveWatchHistoryOnPlaySuccess(): void {
+    if (!this.authService.isLoggedIn() || !this.movie || !this.selectedEpisode) {
+      return;
+    }
+
+    const key = `${this.movie.slug}:${this.selectedEpisode.slug}`;
+    if (this.historySavedKey === key) {
+      return;
+    }
+    this.historySavedKey = key;
+
+    this.movieService
+      .addWatchHistory({
+        movieSlug: this.movie.slug,
+        movieName: this.movie.name,
+        moviePoster: this.movie.poster_url || this.movie.thumb_url,
+        episodeName: this.selectedEpisode.name,
+        episodeSlug: this.selectedEpisode.slug,
+      })
+      .subscribe({
+        next: (res) => {
+          console.log('Saved watch history:', res.message);
+        },
+        error: (err) => {
+          this.historySavedKey = null;
+          console.error(
+            'Failed to save watch history. Status:',
+            err.status,
+            err,
+          );
+        },
+      });
+  }
+
   onPlayStatusChange(playing: boolean): void {
     this.isPlaying = playing;
     if (playing) {
+      this.saveWatchHistoryOnPlaySuccess();
       this.startAmbientGlow();
       // Start controls auto-hide timer immediately upon play
       this.showControls = true;
@@ -616,6 +637,7 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
       }, delay);
     } else {
       this.stopAmbientGlow();
+      this.historySavedKey = null;
       // Keep controls visible when paused
       this.showControls = true;
       if (this.controlsTimeout) {
@@ -1132,7 +1154,7 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   @HostListener('document:fullscreenchange', ['$event'])
-  onFullscreenChange(): void {
+  onFullscreenChange(_event?: Event): void {
     this.isFullscreen = !!document.fullscreenElement;
   }
 

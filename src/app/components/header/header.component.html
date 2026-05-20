@@ -143,23 +143,34 @@
                   </div>
                 </div>
 
-                <!-- Dropdown tabs for real-time history/favorites list -->
-                <div class="popup-tabs">
-                  <button class="tab-btn" [class.active]="activeTab === 'history'" (click)="activeTab = 'history'">Lịch sử</button>
-                  <button class="tab-btn" [class.active]="activeTab === 'favorites'" (click)="activeTab = 'favorites'">Yêu thích</button>
-                </div>
+                <div class="profile-popup-body">
+                  <div class="popup-tabs" role="tablist">
+                    <button type="button" class="tab-btn" role="tab" [class.active]="activeTab === 'history'" (click)="activeTab = 'history'">
+                      <span>Lịch sử</span>
+                    </button>
+                    <button type="button" class="tab-btn" role="tab" [class.active]="activeTab === 'favorites'" (click)="activeTab = 'favorites'">
+                      <span>Yêu thích</span>
+                    </button>
+                  </div>
 
-                <div class="tab-content">
+                  <div class="tab-content">
                   <!-- History tab list -->
-                  <div *ngIf="activeTab === 'history'">
+                  <div *ngIf="activeTab === 'history'" class="tab-pane">
                     <div class="history-tab-header" *ngIf="watchHistory.length > 0">
                       <span class="history-section-title">Lịch sử xem</span>
                       <button class="btn-clear-history" (click)="clearAllWatchHistory($event)">Xóa sạch</button>
                     </div>
                     <div *ngIf="watchHistory.length === 0" class="empty-dropdown-list">
-                      <span>Không có lịch sử xem phim</span>
+                      <div class="empty-dropdown-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                      </div>
+                      <p class="empty-dropdown-title">Chưa có lịch sử xem phim</p>
+                      <p class="empty-dropdown-hint">Phát một tập là phim sẽ xuất hiện tại đây</p>
                     </div>
-                    <div class="history-list-dropdown">
+                    <div class="history-list-dropdown" *ngIf="watchHistory.length > 0">
                       <div class="history-item-dropdown" *ngFor="let item of watchHistory" (click)="goToMovie(item.movieSlug, item.episodeSlug)">
                         <img [src]="item.moviePoster" (error)="handlePosterError($event)" alt="Poster" class="history-thumb-dropdown">
                         <div class="history-details-dropdown">
@@ -178,14 +189,20 @@
                   </div>
 
                   <!-- Favorites tab list -->
-                  <div *ngIf="activeTab === 'favorites'">
-                    <div class="history-tab-header">
+                  <div *ngIf="activeTab === 'favorites'" class="tab-pane">
+                    <div class="history-tab-header" *ngIf="favoritesList.length > 0">
                       <span class="history-section-title">Phim đã thích</span>
                     </div>
                     <div *ngIf="favoritesList.length === 0" class="empty-dropdown-list">
-                      <span>Chưa có phim yêu thích</span>
+                      <div class="empty-dropdown-icon empty-dropdown-icon--heart" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                      </div>
+                      <p class="empty-dropdown-title">Chưa có phim yêu thích</p>
+                      <p class="empty-dropdown-hint">Ở trang chi tiết phim, nhấn biểu tượng tim để thêm vào đây</p>
                     </div>
-                    <div class="favorites-list-dropdown">
+                    <div class="favorites-list-dropdown" *ngIf="favoritesList.length > 0">
                       <div class="favorite-item-dropdown" *ngFor="let item of favoritesList" (click)="goToMovie(item.movieSlug)">
                         <img [src]="item.moviePoster" (error)="handlePosterError($event)" alt="Poster" class="favorite-thumb-dropdown">
                         <div class="favorite-details-dropdown">
@@ -199,6 +216,7 @@
                         </button>
                       </div>
                     </div>
+                  </div>
                   </div>
                 </div>
 
