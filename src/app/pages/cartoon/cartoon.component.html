@@ -107,9 +107,25 @@
               <!-- Controls Button Panel -->
               <div class="controls-panel">
                 <div class="controls-left">
+                  <!-- Previous Episode -->
+                  <button class="ctrl-btn" (click)="playPrevEpisode()" [disabled]="!hasPrevEpisode" [class.disabled-btn]="!hasPrevEpisode" title="Tập trước">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="19 20 9 12 19 4 19 20"></polygon>
+                      <line x1="5" y1="19" x2="5" y2="5"></line>
+                    </svg>
+                  </button>
+
                   <!-- Play / Pause -->
                   <button class="ctrl-btn" (click)="togglePlay()" [title]="isPlaying ? 'Tạm dừng' : 'Phát'">
                     <i class="fas" [class.fa-play]="!isPlaying" [class.fa-pause]="isPlaying"></i>
+                  </button>
+
+                  <!-- Next Episode -->
+                  <button class="ctrl-btn" (click)="playNextEpisode()" [disabled]="!hasNextEpisode" [class.disabled-btn]="!hasNextEpisode" title="Tập tiếp theo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                      <line x1="19" y1="5" x2="19" y2="19"></line>
+                    </svg>
                   </button>
 
                   <!-- Rewind 10s -->

@@ -178,6 +178,32 @@ export class CartoonComponent implements OnInit, OnDestroy {
     }
   }
 
+  get hasPrevEpisode(): boolean {
+    if (!this.selectedEpisode || !this.episodes) return false;
+    const idx = this.episodes.findIndex((ep) => ep.id === this.selectedEpisode?.id);
+    return idx > 0;
+  }
+
+  get hasNextEpisode(): boolean {
+    if (!this.selectedEpisode || !this.episodes) return false;
+    const idx = this.episodes.findIndex((ep) => ep.id === this.selectedEpisode?.id);
+    return idx !== -1 && idx < this.episodes.length - 1;
+  }
+
+  playPrevEpisode(): void {
+    if (this.hasPrevEpisode) {
+      const idx = this.episodes.findIndex((ep) => ep.id === this.selectedEpisode?.id);
+      this.selectEpisode(this.episodes[idx - 1]);
+    }
+  }
+
+  playNextEpisode(): void {
+    if (this.hasNextEpisode) {
+      const idx = this.episodes.findIndex((ep) => ep.id === this.selectedEpisode?.id);
+      this.selectEpisode(this.episodes[idx + 1]);
+    }
+  }
+
   playEpisodeEmbed(episode: CartoonEpisode): void {
     let embedUrl = episode.linkEmbed || '';
     if (embedUrl.startsWith('//')) {

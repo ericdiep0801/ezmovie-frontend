@@ -274,6 +274,43 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  get currentServerData(): any[] {
+    if (!this.selectedEpisode || !this.episodes) return [];
+    for (const server of this.episodes) {
+      if (server.server_data?.some((ep: any) => ep.slug === this.selectedEpisode.slug)) {
+        return server.server_data;
+      }
+    }
+    return [];
+  }
+
+  get currentEpisodeIndex(): number {
+    const data = this.currentServerData;
+    if (!data) return -1;
+    return data.findIndex((ep: any) => ep.slug === this.selectedEpisode?.slug);
+  }
+
+  get hasPrevEpisode(): boolean {
+    return this.currentEpisodeIndex > 0;
+  }
+
+  get hasNextEpisode(): boolean {
+    const data = this.currentServerData;
+    return this.currentEpisodeIndex !== -1 && this.currentEpisodeIndex < data.length - 1;
+  }
+
+  playPrevEpisode(): void {
+    if (this.hasPrevEpisode) {
+      this.selectEpisode(this.currentServerData[this.currentEpisodeIndex - 1]);
+    }
+  }
+
+  playNextEpisode(): void {
+    if (this.hasNextEpisode) {
+      this.selectEpisode(this.currentServerData[this.currentEpisodeIndex + 1]);
+    }
+  }
+
   goBack(event: Event): void {
     event.preventDefault();
     if (window.history.length > 1) {
