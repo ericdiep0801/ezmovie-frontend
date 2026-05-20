@@ -147,12 +147,12 @@
                 </div>
 
                 <!-- Dropdown tabs for real-time history/favorites list -->
-                <div class="dropdown-tabs">
-                  <button [class.active]="activeTab === 'history'" (click)="activeTab = 'history'">Lịch sử</button>
-                  <button [class.active]="activeTab === 'favorites'" (click)="activeTab = 'favorites'">Yêu thích</button>
+                <div class="popup-tabs">
+                  <button class="tab-btn" [class.active]="activeTab === 'history'" (click)="activeTab = 'history'">Lịch sử</button>
+                  <button class="tab-btn" [class.active]="activeTab === 'favorites'" (click)="activeTab = 'favorites'">Yêu thích</button>
                 </div>
 
-                <div class="tab-content scrollable-menu-list">
+                <div class="tab-content">
                   <!-- History tab list -->
                   <div *ngIf="activeTab === 'history'">
                     <div class="history-tab-header" *ngIf="watchHistory.length > 0">
@@ -162,19 +162,21 @@
                     <div *ngIf="watchHistory.length === 0" class="empty-dropdown-list">
                       <span>Không có lịch sử xem phim</span>
                     </div>
-                    <div class="history-item-dropdown" *ngFor="let item of watchHistory" (click)="goToMovie(item.slug, item.episodeSlug)">
-                      <img [src]="item.posterUrl" alt="Poster" class="dropdown-item-poster">
-                      <div class="item-info">
-                        <h4>{{ item.title }}</h4>
-                        <p *ngIf="item.episodeTitle">{{ item.episodeTitle }}</p>
-                        <p class="viewed-at-txt">Xem lúc: {{ item.viewedAt | date:'dd/MM HH:mm' }}</p>
+                    <div class="history-list-dropdown">
+                      <div class="history-item-dropdown" *ngFor="let item of watchHistory" (click)="goToMovie(item.movieSlug, item.episodeSlug)">
+                        <img [src]="item.moviePoster" (error)="handlePosterError($event)" alt="Poster" class="history-thumb-dropdown">
+                        <div class="history-details-dropdown">
+                          <h4 class="history-name-dropdown">{{ item.movieName }}</h4>
+                          <p class="history-ep-dropdown" *ngIf="item.episodeName">{{ item.episodeName }}</p>
+                          <p class="viewed-at-txt">Xem lúc: {{ item.updatedAt | date:'dd/MM HH:mm' }}</p>
+                        </div>
+                        <button class="btn-delete-history-item" (click)="deleteWatchHistoryItem($event, item.movieSlug)" title="Xóa">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                          </svg>
+                        </button>
                       </div>
-                      <button class="btn-delete-history-item" (click)="deleteWatchHistoryItem($event, item.slug)" title="Xóa">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                          <line x1="18" y1="6" x2="6" y2="18"></line>
-                          <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                      </button>
                     </div>
                   </div>
 
@@ -186,23 +188,25 @@
                     <div *ngIf="favoritesList.length === 0" class="empty-dropdown-list">
                       <span>Chưa có phim yêu thích</span>
                     </div>
-                    <div class="favorite-item-dropdown" *ngFor="let item of favoritesList" (click)="goToMovie(item.slug)">
-                      <img [src]="item.posterUrl" alt="Poster" class="dropdown-item-poster">
-                      <div class="item-info">
-                        <h4>{{ item.title }}</h4>
-                        <p>{{ item.category }}</p>
+                    <div class="favorites-list-dropdown">
+                      <div class="favorite-item-dropdown" *ngFor="let item of favoritesList" (click)="goToMovie(item.movieSlug)">
+                        <img [src]="item.moviePoster" (error)="handlePosterError($event)" alt="Poster" class="favorite-thumb-dropdown">
+                        <div class="favorite-details-dropdown">
+                          <h4 class="favorite-name-dropdown">{{ item.movieName }}</h4>
+                          <p class="favorite-type-dropdown">{{ item.movieType }}</p>
+                        </div>
+                        <button class="btn-unfavorite-dropdown" (click)="unfavoriteMovie($event, item.movieSlug)" title="Bỏ thích">
+                          <svg class="heart-icon-filled" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                          </svg>
+                        </button>
                       </div>
-                      <button class="btn-unfavorite-dropdown" (click)="unfavoriteMovie($event, item.slug)" title="Bỏ thích">
-                        <svg class="heart-icon-filled" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                        </svg>
-                      </button>
                     </div>
                   </div>
                 </div>
 
                 <div class="popup-footer">
-                  <button class="btn-change-password" (click)="openChangePassword()">Đổi mật khẩu</button>
+                  <button class="btn-action" (click)="openChangePassword()">Đổi mật khẩu</button>
                   <button class="btn-logout" (click)="logout()">Đăng xuất</button>
                 </div>
               </div>

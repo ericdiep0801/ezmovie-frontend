@@ -352,6 +352,10 @@ export class HeaderComponent implements OnInit {
     event.target.src = '/assets/images/default-avatar.png';
   }
 
+  handlePosterError(event: any) {
+    event.target.src = '/assets/images/default-avatar.png';
+  }
+
   isMoviesActive(): boolean {
     return !this.isTvActive() && !this.isMusicActive() && !this.isCartoonActive();
   }
