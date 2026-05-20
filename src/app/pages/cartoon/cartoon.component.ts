@@ -88,6 +88,9 @@ export class CartoonComponent implements OnInit, OnDestroy {
       this.hls.destroy();
       this.hls = null;
     }
+    if (this.controlsTimeout) {
+      clearTimeout(this.controlsTimeout);
+    }
     this.stopAmbientGlow();
   }
 
@@ -332,7 +335,9 @@ export class CartoonComponent implements OnInit, OnDestroy {
       if (this.controlsTimeout) clearTimeout(this.controlsTimeout);
       this.controlsTimeout = setTimeout(() => {
         this.showControls = false;
-      }, this.isFullscreen ? 5000 : 3000);
+        this.showResolutionMenu = false;
+        this.showSettingsMenu = false;
+      }, 5000);
     } else {
       this.stopAmbientGlow();
       this.showControls = true;
@@ -596,13 +601,19 @@ export class CartoonComponent implements OnInit, OnDestroy {
     this.showControls = true;
     if (this.controlsTimeout) clearTimeout(this.controlsTimeout);
     this.controlsTimeout = setTimeout(() => {
-      if (this.isPlaying) this.showControls = false;
-    }, this.isFullscreen ? 5000 : 3000);
+      if (this.isPlaying) {
+        this.showControls = false;
+        this.showResolutionMenu = false;
+        this.showSettingsMenu = false;
+      }
+    }, 5000);
   }
 
   onMouseLeavePlayer(): void {
     if (this.isPlaying) {
       this.showControls = false;
+      this.showResolutionMenu = false;
+      this.showSettingsMenu = false;
     }
   }
 
