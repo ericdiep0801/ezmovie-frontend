@@ -7,7 +7,7 @@
         class="series-pill-card" 
         [class.active]="selectedSeries?.id === series.id"
         (click)="selectSeries(series)"
-        [style.background-image]="'linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.85)), url(' + series.coverUrl + ')'">
+        [style.background-image]="'url(' + series.coverUrl + ')'">
         
         <div class="pill-glow-border"></div>
         <div class="series-card-details">
