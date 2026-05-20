@@ -1,4 +1,4 @@
-<div class="cartoon-dashboard-container" [class.cinema-focus]="cinemaMode">
+<div class="cartoon-dashboard-container" [class.cinema-focus]="cinemaMode" *ngIf="isLoggedIn; else authPrompt">
   
   <header class="cartoon-header-horizon">    <!-- Series Grid Carousel (Micro-Animations on Hover) -->
     <div class="series-carousel-wrapper">
@@ -393,3 +393,24 @@
   </div>
 
 </div>
+
+<ng-template #authPrompt>
+  <div class="auth-prompt-fullpage">
+    <section class="auth-prompt-section">
+      <div class="auth-prompt-wrapper">
+        <div class="auth-prompt-content">
+          <div class="lock-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lock-icon">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          
+          <h2 class="prompt-title">Bạn cần Đăng Nhập để xem phim hoạt hình</h2>
+          <p class="prompt-desc">Hãy đăng nhập để trải nghiệm xem các tập phim Anime chất lượng cao, theo dõi danh sách tập mới nhất và lưu nội dung yêu thích!</p>
+          <button class="btn-prompt-action" (click)="goToLogin()">Đăng Nhập Ngay</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</ng-template>

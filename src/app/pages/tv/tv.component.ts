@@ -43,14 +43,23 @@ export class TvComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.isLoggedIn = this.authService.isLoggedIn();
-    this.loadHlsLibrary();
-    this.loadCategories();
-    this.loadChannels();
+    this.authService.currentUser$.subscribe((user) => {
+      this.isLoggedIn = !!user;
+      if (this.isLoggedIn) {
+        this.loadHlsLibrary();
+        this.loadCategories();
+        this.loadChannels();
+      } else {
+        if (this.hlsInstance) {
+          this.hlsInstance.destroy();
+          this.hlsInstance = null;
+        }
+      }
+    });
 
     // Auto-refresh EPG and active program calculations every 60 seconds
     this.syncTimer = setInterval(() => {
-      if (this.currentChannel) {
+      if (this.currentChannel && this.isLoggedIn) {
         this.calculateActiveProgram();
       }
     }, 60000);
@@ -394,5 +403,9 @@ export class TvComponent implements OnInit, OnDestroy, AfterViewInit {
         alert(`Không thể kết nối máy chủ để đồng bộ: ${err.error?.message || err.message || err}`);
       }
     });
+  }
+
+  goToLogin(): void {
+    this.router.navigate(['/login']);
   }
 }

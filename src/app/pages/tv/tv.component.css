@@ -1214,3 +1214,106 @@
   box-shadow: 0 0 12px rgba(229, 9, 20, 0.4);
 }
 
+/* Auth Prompt Section Premium Styling */
+.auth-prompt-fullpage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 120px);
+  width: 100%;
+  background: #090a0f;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.auth-prompt-section {
+  background: #090a0f !important;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 600px;
+}
+
+.auth-prompt-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4.5rem 2rem;
+  background: radial-gradient(circle at center, rgba(229, 9, 20, 0.08) 0%, rgba(0, 0, 0, 0.95) 75%);
+}
+
+.auth-prompt-content {
+  text-align: center;
+  max-width: 500px;
+  animation: fadeInPrompt 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeInPrompt {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.lock-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(229, 9, 20, 0.05);
+  border: 2px solid rgba(229, 9, 20, 0.2);
+  color: #e50914;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 30px rgba(229, 9, 20, 0.1);
+  animation: lockPulse 2s infinite ease-in-out;
+}
+
+@keyframes lockPulse {
+  0% { transform: scale(1); box-shadow: 0 0 30px rgba(229, 9, 20, 0.1); }
+  50% { transform: scale(1.05); box-shadow: 0 0 45px rgba(229, 9, 20, 0.25); border-color: rgba(229, 9, 20, 0.4); }
+  100% { transform: scale(1); box-shadow: 0 0 30px rgba(229, 9, 20, 0.1); }
+}
+
+.lock-icon {
+  color: #e50914;
+  display: block;
+}
+
+.prompt-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 1rem;
+  letter-spacing: -0.5px;
+}
+
+.prompt-desc {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.btn-prompt-action {
+  background: linear-gradient(135deg, #e50914 0%, #ff3b4e 100%);
+  color: #fff;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.85rem 2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-prompt-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(229, 9, 20, 0.5);
+}
+
+.btn-prompt-action:active {
+  transform: translateY(0);
+}
+

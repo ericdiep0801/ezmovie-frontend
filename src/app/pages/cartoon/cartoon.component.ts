@@ -3,6 +3,8 @@ import { CartoonService, CartoonSeries, CartoonEpisode } from '../../services/ca
 import { LoadingService } from '../../services/loading.service';
 import { PopupService } from '../../services/popup.service';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 declare const Hls: any;
 
@@ -26,6 +28,7 @@ export class CartoonComponent implements OnInit, OnDestroy {
   public cinemaMode: boolean = false;
   
   public safePlayerUrl: SafeResourceUrl | null = null;
+  public isLoggedIn: boolean = false;
 
   // Custom player properties cloned from movie-detail
   public isHlsMode: boolean = true;
@@ -75,11 +78,18 @@ export class CartoonComponent implements OnInit, OnDestroy {
     private readonly loadingService: LoadingService,
     private readonly popupService: PopupService,
     private readonly sanitizer: DomSanitizer,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly authService: AuthService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loadSeries();
+    this.authService.currentUser$.subscribe((user) => {
+      this.isLoggedIn = !!user;
+      if (this.isLoggedIn) {
+        this.loadSeries();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -665,5 +675,9 @@ export class CartoonComponent implements OnInit, OnDestroy {
       return parts[1] || parts[0];
     }
     return title;
+  }
+
+  goToLogin(): void {
+    this.router.navigate(['/login']);
   }
 }

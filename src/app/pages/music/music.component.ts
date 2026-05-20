@@ -3,6 +3,8 @@ import { MusicService, Track } from '../../services/music.service';
 import { LoadingService } from '../../services/loading.service';
 import { PopupService } from '../../services/popup.service';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-music',
@@ -51,6 +53,7 @@ export class MusicComponent implements OnInit, OnDestroy {
 
   // Safe Resource URL for YouTube Embed Player
   public safeEmbedUrl: SafeResourceUrl | null = null;
+  public isLoggedIn: boolean = false;
 
   private timeInterval: any = null;
 
@@ -59,13 +62,28 @@ export class MusicComponent implements OnInit, OnDestroy {
     private readonly loadingService: LoadingService,
     private readonly popupService: PopupService,
     private readonly sanitizer: DomSanitizer,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly authService: AuthService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loadTrendingTracks();
-    this.loadYouTubeIframeAPI();
-    this.loadSearchHistory();
+    this.authService.currentUser$.subscribe((user) => {
+      this.isLoggedIn = !!user;
+      if (this.isLoggedIn) {
+        this.loadTrendingTracks();
+        this.loadYouTubeIframeAPI();
+        this.loadSearchHistory();
+      } else {
+        if (this.ytPlayer && this.isPlayerReady && this.isPlaying) {
+          try {
+            this.ytPlayer.pauseVideo();
+          } catch (e) {}
+        }
+        this.isPlaying = false;
+        this.stopTimeInterval();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -664,5 +682,9 @@ export class MusicComponent implements OnInit, OnDestroy {
       `[Nhạc dạo kết thúc êm dịu kéo dài...]`
     ];
     this.currentLyricIndex = 0;
+  }
+
+  goToLogin(): void {
+    this.router.navigate(['/login']);
   }
 }
