@@ -483,6 +483,24 @@ export class MusicComponent implements OnInit, OnDestroy {
       console.error('Error during relative seek:', e);
     }
   }
+  // Hold-to-seek logic
+  private holdSeekInterval: any = null;
+
+  startHoldSeek(seconds: number): void {
+    this.stopHoldSeek();
+    this.holdSeekInterval = setInterval(() => {
+      this.seekRelative(seconds);
+    }, 500);
+  }
+
+  stopHoldSeek(): void {
+    if (this.holdSeekInterval) {
+      clearInterval(this.holdSeekInterval);
+      this.holdSeekInterval = null;
+    }
+  }
+
+  // Genre Filters & Searching
 
   // Genre Filters & Searching
   selectGenre(genre: string): void {

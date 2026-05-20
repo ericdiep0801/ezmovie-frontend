@@ -278,7 +278,7 @@
           </button>
           
           <!-- 2. Rewind 5 seconds -->
-          <button class="player-ctrl-btn jump-btn" (click)="seekRelative(-5)" title="Tua lùi 5s">
+          <button class="player-ctrl-btn jump-btn" (click)="seekRelative(-5)" (dblclick)="seekRelative(-10)" (mousedown)="startHoldSeek(-5)" (mouseup)="stopHoldSeek()" (mouseleave)="stopHoldSeek()" title="Tua lùi 5s">
             <i class="fas fa-undo-alt"></i>
           </button>
           
@@ -288,7 +288,7 @@
           </button>
           
           <!-- 4. Fast Forward 5 seconds -->
-          <button class="player-ctrl-btn jump-btn" (click)="seekRelative(5)" title="Tua nhanh 5s">
+          <button class="player-ctrl-btn jump-btn" (click)="seekRelative(5)" (dblclick)="seekRelative(10)" (mousedown)="startHoldSeek(5)" (mouseup)="stopHoldSeek()" (mouseleave)="stopHoldSeek()" title="Tua nhanh 5s">
             <i class="fas fa-redo-alt"></i>
           </button>
           
