@@ -38,7 +38,12 @@ export class MovieService {
 
   // 3. Movie details
   getMovieDetails(slug: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/detail/${slug}`);
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return this.http.get<any>(`${this.apiUrl}/detail/${slug}`, { headers });
   }
 
   // 4. Watch movie (just get streaming links)
