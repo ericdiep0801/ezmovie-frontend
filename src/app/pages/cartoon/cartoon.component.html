@@ -25,282 +25,284 @@
     </div>
   </header>
 
-  <!-- 2. FULL WIDTH VIDEO PLAYER CONTAINER (Matches the Movie details page perfectly) -->
-  <section class="video-player-container-inner" *ngIf="selectedEpisode">
-    <!-- Player Mode Switch Tabs -->
-    <div class="player-mode-tabs" *ngIf="selectedEpisode.linkM3u8">
-      <button class="mode-tab-btn" [class.active]="isHlsMode" (click)="setPlayerMode(true)">
-        <i class="fas fa-play tab-icon"></i> VIP Player (Tua 10S)
-      </button>
-      <button class="mode-tab-btn" [class.active]="!isHlsMode" (click)="setPlayerMode(false)">
-        <i class="fas fa-tv tab-icon"></i> Dự phòng (Embed Player)
-      </button>
-    </div>
-
-    <div class="video-aspect-wrapper" [style.filter]="'brightness(' + brightness + ')'">
-      <!-- 1. VIP Player (Custom HLS Player) -->
-      <div class="custom-player-container" 
-           [class.hide-cursor]="!showControls && isPlaying"
-           *ngIf="isHlsMode && selectedEpisode.linkM3u8" 
-           (mousemove)="onMouseMovePlayer()" 
-           (mouseleave)="onMouseLeavePlayer()" 
-           (touchstart)="onMouseMovePlayer()">
-        
-        <!-- Dynamic Ambient Light Glow Canvas -->
-        <canvas #ambientCanvas class="ambient-glow"></canvas>
-
-        <video 
-          #videoPlayer 
-          class="video-element" 
-          crossorigin="anonymous"
-          (timeupdate)="onTimeUpdate()" 
-          (durationchange)="onDurationChange()" 
-          (play)="onPlayStatusChange(true)" 
-          (pause)="onPlayStatusChange(false)"
-          [style.object-fit]="currentAspectRatio === 'Default' ? 'contain' : (currentAspectRatio === 'Fill' ? 'cover' : 'fill')"
-          [style.aspect-ratio]="currentAspectRatio === '16:9' ? '16/9' : (currentAspectRatio === '4:3' ? '4/3' : 'auto')">
-        </video>
-
-        <!-- Clickable skip zones and play zones -->
-        <div class="skip-click-zone left-zone" (click)="onSkipZoneClick($event, 'left')">
-          <div class="ripple-effect" [class.animate]="showLeftRipple">
-            <i class="fas fa-backward ripple-icon"></i>
-          </div>
-        </div>
-
-        <div class="skip-click-zone right-zone" (click)="onSkipZoneClick($event, 'right')">
-          <div class="ripple-effect" [class.animate]="showRightRipple">
-            <i class="fas fa-forward ripple-icon"></i>
-          </div>
-        </div>
-
-        <div class="play-click-zone" (click)="togglePlay()"></div>
-
-        <!-- Skip Action Indicator Overlay -->
-        <div class="skip-indicator-overlay" [class.show]="showSkipFlash">
-          <div class="skip-indicator-circle">
-            <span class="skip-text">{{ skipIndicatorText }}</span>
-          </div>
-        </div>
-
-        <!-- Big Center Play Button (Visible when paused) -->
-        <div class="center-play-btn" *ngIf="!isPlaying" (click)="togglePlay()">
-          <i class="fas fa-play"></i>
-        </div>
-
-        <!-- Custom Video Controls Overlay -->
-        <div class="custom-player-controls" [class.show]="showControls">
-          <!-- Timeline / Progress Bar Wrapper -->
-          <div class="timeline-wrapper">
-            <div class="progress-bar-container" 
-                 (mousedown)="onProgressDragStart($event)"
-                 (touchstart)="onProgressDragStart($event)"
-                 (mousemove)="onProgressHover($event)"
-                 (mouseenter)="showHoverTime = true"
-                 (mouseleave)="showHoverTime = false"
-                 #progressBar>
-              <div class="progress-bar-bg"></div>
-              <div class="progress-bar-buffered" [style.width.%]="bufferedPercent"></div>
-              <div class="progress-bar-current" [style.width.%]="progressPercent"></div>
-              <div class="progress-bar-handler" [style.left.%]="progressPercent"></div>
-
-              <!-- Seekbar Hover Time Preview -->
-              <div class="timeline-preview" [style.left.px]="hoverX" [class.show]="showHoverTime">
-                <span class="preview-time-text">{{ hoverTimeText }}</span>
-              </div>
-            </div>
-            
-            <span class="time-display timeline-time">{{ formatTime(currentTime) }} / {{ formatTime(duration) }}</span>
-          </div>
-
-          <!-- Controls Button Panel -->
-          <div class="controls-panel">
-            <div class="controls-left">
-              <!-- Play / Pause -->
-              <button class="ctrl-btn" (click)="togglePlay()" [title]="isPlaying ? 'Tạm dừng' : 'Phát'">
-                <i class="fas" [class.fa-play]="!isPlaying" [class.fa-pause]="isPlaying"></i>
-              </button>
-
-              <!-- Rewind 10s -->
-              <button class="ctrl-btn" (click)="skipTime(-10)" title="Lùi 10 giây">
-                <i class="fas fa-undo"></i>
-                <span class="skip-btn-text">-10s</span>
-              </button>
-
-              <!-- Fast Forward 10s -->
-              <button class="ctrl-btn" (click)="skipTime(10)" title="Tiến 10 giây">
-                <i class="fas fa-redo"></i>
-                <span class="skip-btn-text">+10s</span>
-              </button>
-            </div>
-
-            <div class="controls-right">
-              <!-- Brightness Control -->
-              <div class="brightness-control-wrapper">
-                <button class="ctrl-btn" title="Độ sáng" (click)="brightness = 1.0">
-                  <i class="fas fa-sun"></i>
-                </button>
-                <span class="control-value-label">{{ getBrightnessPercent() }}%</span>
-                <div class="slider-container-with-tick">
-                  <input 
-                    type="range" 
-                    min="0.2" 
-                    max="2.0" 
-                    step="0.05" 
-                    class="brightness-slider" 
-                    [(ngModel)]="brightness">
-                  <div class="slider-tick-mark brightness-tick" title="Mức chuẩn 100%"></div>
-                </div>
-              </div>
-
-              <!-- Volume Control -->
-              <div class="volume-control-wrapper">
-                <button class="ctrl-btn" (click)="toggleMute()" [title]="isMuted ? 'Bật âm thanh' : 'Tắt âm thanh'">
-                  <i class="fas" [class.fa-volume-mute]="isMuted || volume === 0" [class.fa-volume-down]="!isMuted && volume > 0 && volume <= 0.5" [class.fa-volume-up]="!isMuted && volume > 0.5"></i>
-                </button>
-                <span class="control-value-label">{{ getVolumePercent() }}%</span>
-                <div class="slider-container-with-tick">
-                  <input 
-                    type="range" 
-                    min="0" 
-                    max="1" 
-                    step="0.05" 
-                    class="volume-slider" 
-                    [value]="isMuted ? 0 : volume"
-                    (input)="onSliderVolumeChange($event)">
-                  <div class="slider-tick-mark volume-tick" title="Mức chuẩn 50%"></div>
-                </div>
-              </div>
-
-              <!-- Picture-in-Picture -->
-              <button class="ctrl-btn" (click)="togglePictureInPicture()" title="Xem cửa sổ nổi (PiP)">
-                <i class="fas fa-clone"></i>
-              </button>
-
-              <!-- Resolution Selector (Quality Switcher) -->
-              <div class="resolution-control-wrapper" *ngIf="availableResolutions.length > 0">
-                <button class="ctrl-btn resolution-btn" (click)="showResolutionMenu = !showResolutionMenu" title="Độ phân giải">
-                  <i class="fas fa-layer-group"></i>
-                  <span class="resolution-active-label">{{ activeResolutionLabel }}</span>
-                </button>
-                
-                <div class="resolution-dropdown-menu" *ngIf="showResolutionMenu">
-                  <div class="resolution-dropdown-header">Độ Phân Giải</div>
-                  <div class="resolution-dropdown-list">
-                    <button *ngFor="let res of availableResolutions" 
-                            class="resolution-dropdown-item" 
-                            [class.active]="currentResolutionIndex === res.index"
-                            (click)="selectResolution(res.index)">
-                      <span class="res-label">{{ res.label }}</span>
-                      <i class="fas fa-check active-check-icon" *ngIf="currentResolutionIndex === res.index"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Settings Control (Gear Button) -->
-              <div class="settings-control-wrapper">
-                <button class="ctrl-btn settings-btn" (click)="toggleSettingsMenu()" title="Cài đặt">
-                  <i class="fas fa-cog"></i>
-                </button>
-
-                <div class="settings-dropdown-menu" *ngIf="showSettingsMenu">
-                  <div *ngIf="activeSettingsSubMenu === 'main'" class="settings-menu-content">
-                    <div class="settings-dropdown-header">Cài đặt</div>
-                    
-                    <button class="settings-item-row" (click)="activeSettingsSubMenu = 'speed'">
-                      <span class="settings-item-left">
-                        <i class="fas fa-tachometer-alt settings-item-icon"></i> Tốc độ phát
-                      </span>
-                      <span class="settings-item-right">
-                        {{ getSpeedLabel(currentSpeed) }} <i class="fas fa-chevron-right chevron-right-icon"></i>
-                      </span>
-                    </button>
-
-                    <button class="settings-item-row" (click)="activeSettingsSubMenu = 'aspect'">
-                      <span class="settings-item-left">
-                        <i class="fas fa-compress settings-item-icon"></i> Tỷ lệ khung hình
-                      </span>
-                      <span class="settings-item-right">
-                        {{ currentAspectRatio }} <i class="fas fa-chevron-right chevron-right-icon"></i>
-                      </span>
-                    </button>
-                  </div>
-
-                  <div *ngIf="activeSettingsSubMenu === 'speed'" class="settings-menu-content">
-                    <button class="settings-menu-back-btn" (click)="activeSettingsSubMenu = 'main'">
-                      <i class="fas fa-chevron-left"></i> Quay lại
-                    </button>
-                    <div class="resolution-dropdown-list">
-                      <button *ngFor="let speed of availableSpeeds" 
-                              class="resolution-dropdown-item" 
-                              [class.active]="currentSpeed === speed"
-                              (click)="setPlaySpeed(speed)">
-                        <span class="res-label">{{ speed === 1.0 ? 'Bình thường' : speed + 'x' }}</span>
-                        <i class="fas fa-check active-check-icon" *ngIf="currentSpeed === speed"></i>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div *ngIf="activeSettingsSubMenu === 'aspect'" class="settings-menu-content">
-                    <button class="settings-menu-back-btn" (click)="activeSettingsSubMenu = 'main'">
-                      <i class="fas fa-chevron-left"></i> Quay lại
-                    </button>
-                    <div class="resolution-dropdown-list">
-                      <button *ngFor="let ratio of availableAspectRatios" 
-                              class="resolution-dropdown-item" 
-                              [class.active]="currentAspectRatio === ratio"
-                              (click)="setAspectRatio(ratio)">
-                        <span class="res-label">{{ ratio === 'Default' ? 'Mặc định' : ratio }}</span>
-                        <i class="fas fa-check active-check-icon" *ngIf="currentAspectRatio === ratio"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Fullscreen -->
-              <button class="ctrl-btn" (click)="toggleFullscreen()" [title]="isFullscreen ? 'Thoát toàn màn hình' : 'Toàn màn hình'">
-                <i class="fas" [class.fa-expand]="!isFullscreen" [class.fa-compress]="isFullscreen"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 2. Backup Embed Player (Iframe) -->
-      <iframe 
-        *ngIf="!isHlsMode || !selectedEpisode.linkM3u8"
-        [src]="safePlayerUrl" 
-        class="cartoon-iframe-video"
-        width="100%" 
-        height="100%" 
-        frameborder="0" 
-        allowfullscreen 
-        scrolling="no">
-      </iframe>
-    </div>
-
-    <!-- Video Metadata / Playing Title Panel -->
-    <div class="player-metadata-bar">
-      <div class="meta-left">
-        <span class="playing-tag"><i class="fas fa-play"></i> Đang Phát</span>
-        <h2 class="playing-title">{{ selectedEpisode.title }}</h2>
-      </div>
-      <div class="meta-right">
-        <button class="cinema-mode-btn" (click)="toggleCinemaMode()" title="Chế độ Rạp Chiếu">
-          <i class="fas" [class.fa-expand]="!cinemaMode" [class.fa-compress]="cinemaMode"></i>
-          {{ cinemaMode ? 'Thu nhỏ' : 'Rạp Chiếu' }}
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3. MAIN LAYOUT: Split 2-Columns BELOW Player -->
+  <!-- 3. MAIN LAYOUT: Split 2-Columns Side-by-Side (Player + Playlist) -->
   <div class="cartoon-main-layout">
     
-    <!-- Left Column: Sleek Compact Series Description Card -->
+    <!-- Left Column: Player & Series Details Card -->
     <main class="cartoon-player-column" *ngIf="selectedSeries">
+      
+      <!-- 2. VIDEO PLAYER CONTAINER (Moved here to sit side-by-side with Playlist) -->
+      <section class="video-player-container-inner" *ngIf="selectedEpisode">
+        <!-- Player Mode Switch Tabs -->
+        <div class="player-mode-tabs" *ngIf="selectedEpisode.linkM3u8">
+          <button class="mode-tab-btn" [class.active]="isHlsMode" (click)="setPlayerMode(true)">
+            <i class="fas fa-play tab-icon"></i> VIP Player (Tua 10S)
+          </button>
+          <button class="mode-tab-btn" [class.active]="!isHlsMode" (click)="setPlayerMode(false)">
+            <i class="fas fa-tv tab-icon"></i> Dự phòng (Embed Player)
+          </button>
+        </div>
+
+        <div class="video-aspect-wrapper" [style.filter]="'brightness(' + brightness + ')'">
+          <!-- 1. VIP Player (Custom HLS Player) -->
+          <div class="custom-player-container" 
+               [class.hide-cursor]="!showControls && isPlaying"
+               *ngIf="isHlsMode && selectedEpisode.linkM3u8" 
+               (mousemove)="onMouseMovePlayer()" 
+               (mouseleave)="onMouseLeavePlayer()" 
+               (touchstart)="onMouseMovePlayer()">
+            
+            <!-- Dynamic Ambient Light Glow Canvas -->
+            <canvas #ambientCanvas class="ambient-glow"></canvas>
+
+            <video 
+              #videoPlayer 
+              class="video-element" 
+              crossorigin="anonymous"
+              (timeupdate)="onTimeUpdate()" 
+              (durationchange)="onDurationChange()" 
+              (play)="onPlayStatusChange(true)" 
+              (pause)="onPlayStatusChange(false)"
+              [style.object-fit]="currentAspectRatio === 'Default' ? 'contain' : (currentAspectRatio === 'Fill' ? 'cover' : 'fill')"
+              [style.aspect-ratio]="currentAspectRatio === '16:9' ? '16/9' : (currentAspectRatio === '4:3' ? '4/3' : 'auto')">
+            </video>
+
+            <!-- Clickable skip zones and play zones -->
+            <div class="skip-click-zone left-zone" (click)="onSkipZoneClick($event, 'left')">
+              <div class="ripple-effect" [class.animate]="showLeftRipple">
+                <i class="fas fa-backward ripple-icon"></i>
+              </div>
+            </div>
+
+            <div class="skip-click-zone right-zone" (click)="onSkipZoneClick($event, 'right')">
+              <div class="ripple-effect" [class.animate]="showRightRipple">
+                <i class="fas fa-forward ripple-icon"></i>
+              </div>
+            </div>
+
+            <div class="play-click-zone" (click)="togglePlay()"></div>
+
+            <!-- Skip Action Indicator Overlay -->
+            <div class="skip-indicator-overlay" [class.show]="showSkipFlash">
+              <div class="skip-indicator-circle">
+                <span class="skip-text">{{ skipIndicatorText }}</span>
+              </div>
+            </div>
+
+            <!-- Big Center Play Button (Visible when paused) -->
+            <div class="center-play-btn" *ngIf="!isPlaying" (click)="togglePlay()">
+              <i class="fas fa-play"></i>
+            </div>
+
+            <!-- Custom Video Controls Overlay -->
+            <div class="custom-player-controls" [class.show]="showControls">
+              <!-- Timeline / Progress Bar Wrapper -->
+              <div class="timeline-wrapper">
+                <div class="progress-bar-container" 
+                     (mousedown)="onProgressDragStart($event)"
+                     (touchstart)="onProgressDragStart($event)"
+                     (mousemove)="onProgressHover($event)"
+                     (mouseenter)="showHoverTime = true"
+                     (mouseleave)="showHoverTime = false"
+                     #progressBar>
+                  <div class="progress-bar-bg"></div>
+                  <div class="progress-bar-buffered" [style.width.%]="bufferedPercent"></div>
+                  <div class="progress-bar-current" [style.width.%]="progressPercent"></div>
+                  <div class="progress-bar-handler" [style.left.%]="progressPercent"></div>
+
+                  <!-- Seekbar Hover Time Preview -->
+                  <div class="timeline-preview" [style.left.px]="hoverX" [class.show]="showHoverTime">
+                    <span class="preview-time-text">{{ hoverTimeText }}</span>
+                  </div>
+                </div>
+                
+                <span class="time-display timeline-time">{{ formatTime(currentTime) }} / {{ formatTime(duration) }}</span>
+              </div>
+
+              <!-- Controls Button Panel -->
+              <div class="controls-panel">
+                <div class="controls-left">
+                  <!-- Play / Pause -->
+                  <button class="ctrl-btn" (click)="togglePlay()" [title]="isPlaying ? 'Tạm dừng' : 'Phát'">
+                    <i class="fas" [class.fa-play]="!isPlaying" [class.fa-pause]="isPlaying"></i>
+                  </button>
+
+                  <!-- Rewind 10s -->
+                  <button class="ctrl-btn" (click)="skipTime(-10)" title="Lùi 10 giây">
+                    <i class="fas fa-undo"></i>
+                    <span class="skip-btn-text">-10s</span>
+                  </button>
+
+                  <!-- Fast Forward 10s -->
+                  <button class="ctrl-btn" (click)="skipTime(10)" title="Tiến 10 giây">
+                    <i class="fas fa-redo"></i>
+                    <span class="skip-btn-text">+10s</span>
+                  </button>
+                </div>
+
+                <div class="controls-right">
+                  <!-- Brightness Control -->
+                  <div class="brightness-control-wrapper">
+                    <button class="ctrl-btn" title="Độ sáng" (click)="brightness = 1.0">
+                      <i class="fas fa-sun"></i>
+                    </button>
+                    <span class="control-value-label">{{ getBrightnessPercent() }}%</span>
+                    <div class="slider-container-with-tick">
+                      <input 
+                        type="range" 
+                        min="0.2" 
+                        max="2.0" 
+                        step="0.05" 
+                        class="brightness-slider" 
+                        [(ngModel)]="brightness">
+                      <div class="slider-tick-mark brightness-tick" title="Mức chuẩn 100%"></div>
+                    </div>
+                  </div>
+
+                  <!-- Volume Control -->
+                  <div class="volume-control-wrapper">
+                    <button class="ctrl-btn" (click)="toggleMute()" [title]="isMuted ? 'Bật âm thanh' : 'Tắt âm thanh'">
+                      <i class="fas" [class.fa-volume-mute]="isMuted || volume === 0" [class.fa-volume-down]="!isMuted && volume > 0 && volume <= 0.5" [class.fa-volume-up]="!isMuted && volume > 0.5"></i>
+                    </button>
+                    <span class="control-value-label">{{ getVolumePercent() }}%</span>
+                    <div class="slider-container-with-tick">
+                      <input 
+                        type="range" 
+                        min="0" 
+                        max="1" 
+                        step="0.05" 
+                        class="volume-slider" 
+                        [value]="isMuted ? 0 : volume"
+                        (input)="onSliderVolumeChange($event)">
+                      <div class="slider-tick-mark volume-tick" title="Mức chuẩn 50%"></div>
+                    </div>
+                  </div>
+
+                  <!-- Picture-in-Picture -->
+                  <button class="ctrl-btn" (click)="togglePictureInPicture()" title="Xem cửa sổ nổi (PiP)">
+                    <i class="fas fa-clone"></i>
+                  </button>
+
+                  <!-- Resolution Selector (Quality Switcher) -->
+                  <div class="resolution-control-wrapper" *ngIf="availableResolutions.length > 0">
+                    <button class="ctrl-btn resolution-btn" (click)="showResolutionMenu = !showResolutionMenu" title="Độ phân giải">
+                      <i class="fas fa-layer-group"></i>
+                      <span class="resolution-active-label">{{ activeResolutionLabel }}</span>
+                    </button>
+                    
+                    <div class="resolution-dropdown-menu" *ngIf="showResolutionMenu">
+                      <div class="resolution-dropdown-header">Độ Phân Giải</div>
+                      <div class="resolution-dropdown-list">
+                        <button *ngFor="let res of availableResolutions" 
+                                class="resolution-dropdown-item" 
+                                [class.active]="currentResolutionIndex === res.index"
+                                (click)="selectResolution(res.index)">
+                          <span class="res-label">{{ res.label }}</span>
+                          <i class="fas fa-check active-check-icon" *ngIf="currentResolutionIndex === res.index"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Settings Control (Gear Button) -->
+                  <div class="settings-control-wrapper">
+                    <button class="ctrl-btn settings-btn" (click)="toggleSettingsMenu()" title="Cài đặt">
+                      <i class="fas fa-cog"></i>
+                    </button>
+
+                    <div class="settings-dropdown-menu" *ngIf="showSettingsMenu">
+                      <div *ngIf="activeSettingsSubMenu === 'main'" class="settings-menu-content">
+                        <div class="settings-dropdown-header">Cài đặt</div>
+                        
+                        <button class="settings-item-row" (click)="activeSettingsSubMenu = 'speed'">
+                          <span class="settings-item-left">
+                            <i class="fas fa-tachometer-alt settings-item-icon"></i> Tốc độ phát
+                          </span>
+                          <span class="settings-item-right">
+                            {{ getSpeedLabel(currentSpeed) }} <i class="fas fa-chevron-right chevron-right-icon"></i>
+                          </span>
+                        </button>
+
+                        <button class="settings-item-row" (click)="activeSettingsSubMenu = 'aspect'">
+                          <span class="settings-item-left">
+                            <i class="fas fa-compress settings-item-icon"></i> Tỷ lệ khung hình
+                          </span>
+                          <span class="settings-item-right">
+                            {{ currentAspectRatio }} <i class="fas fa-chevron-right chevron-right-icon"></i>
+                          </span>
+                        </button>
+                      </div>
+
+                      <div *ngIf="activeSettingsSubMenu === 'speed'" class="settings-menu-content">
+                        <button class="settings-menu-back-btn" (click)="activeSettingsSubMenu = 'main'">
+                          <i class="fas fa-chevron-left"></i> Quay lại
+                        </button>
+                        <div class="resolution-dropdown-list">
+                          <button *ngFor="let speed of availableSpeeds" 
+                                  class="resolution-dropdown-item" 
+                                  [class.active]="currentSpeed === speed"
+                                  (click)="setPlaySpeed(speed)">
+                            <span class="res-label">{{ speed === 1.0 ? 'Bình thường' : speed + 'x' }}</span>
+                            <i class="fas fa-check active-check-icon" *ngIf="currentSpeed === speed"></i>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div *ngIf="activeSettingsSubMenu === 'aspect'" class="settings-menu-content">
+                        <button class="settings-menu-back-btn" (click)="activeSettingsSubMenu = 'main'">
+                          <i class="fas fa-chevron-left"></i> Quay lại
+                        </button>
+                        <div class="resolution-dropdown-list">
+                          <button *ngFor="let ratio of availableAspectRatios" 
+                                  class="resolution-dropdown-item" 
+                                  [class.active]="currentAspectRatio === ratio"
+                                  (click)="setAspectRatio(ratio)">
+                            <span class="res-label">{{ ratio === 'Default' ? 'Mặc định' : ratio }}</span>
+                            <i class="fas fa-check active-check-icon" *ngIf="currentAspectRatio === ratio"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Fullscreen -->
+                  <button class="ctrl-btn" (click)="toggleFullscreen()" [title]="isFullscreen ? 'Thoát toàn màn hình' : 'Toàn màn hình'">
+                    <i class="fas" [class.fa-expand]="!isFullscreen" [class.fa-compress]="isFullscreen"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Backup Embed Player (Iframe) -->
+          <iframe 
+            *ngIf="!isHlsMode || !selectedEpisode.linkM3u8"
+            [src]="safePlayerUrl" 
+            class="cartoon-iframe-video"
+            width="100%" 
+            height="100%" 
+            frameborder="0" 
+            allowfullscreen 
+            scrolling="no">
+          </iframe>
+        </div>
+
+        <!-- Video Metadata / Playing Title Panel -->
+        <div class="player-metadata-bar">
+          <div class="meta-left">
+            <span class="playing-tag"><i class="fas fa-play"></i> Đang Phát</span>
+            <h2 class="playing-title">{{ selectedEpisode.title }}</h2>
+          </div>
+          <div class="meta-right">
+            <button class="cinema-mode-btn" (click)="toggleCinemaMode()" title="Chế độ Rạp Chiếu">
+              <i class="fas" [class.fa-expand]="!cinemaMode" [class.fa-compress]="cinemaMode"></i>
+              {{ cinemaMode ? 'Thu nhỏ' : 'Rạp Chiếu' }}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sleek Compact Series Description Card -->
       <div class="compact-series-details-card">
         <div class="compact-details-header">
           <span class="original-title">{{ selectedSeries.originalName }}</span>
