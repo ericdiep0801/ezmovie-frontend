@@ -2,12 +2,10 @@
    EZMOVIE ENTERTAINMENT STYLING SYSTEM (WARM ORANGE THEME & STABLE LAYOUT)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 :host {
   display: flex;
   flex-direction: column;
-  font-family: 'Outfit', sans-serif;
   color: #f1f3f5;
   background-color: #07070a;
   overflow: hidden;
@@ -71,7 +69,6 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: rgba(255, 255, 255, 0.6);
   white-space: nowrap;
-  font-family: 'Outfit', sans-serif;
   font-size: 13px;
   font-weight: 600;
 }
