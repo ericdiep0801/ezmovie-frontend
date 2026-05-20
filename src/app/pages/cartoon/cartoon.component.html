@@ -1,14 +1,10 @@
 <div class="cartoon-dashboard-container" [class.cinema-focus]="cinemaMode" *ngIf="isLoggedIn; else authPrompt">
-  
-  <header class="cartoon-header-horizon">    <!-- Series Grid Carousel (Micro-Animations on Hover) -->
+
+  <header class="cartoon-header-horizon"> <!-- Series Grid Carousel (Micro-Animations on Hover) -->
     <div class="series-carousel-wrapper">
-      <div 
-        *ngFor="let series of seriesList" 
-        class="series-pill-card" 
-        [class.active]="selectedSeries?.id === series.id"
-        (click)="selectSeries(series)"
-        [style.background-image]="'url(' + series.coverUrl + ')'">
-        
+      <div *ngFor="let series of seriesList" class="series-pill-card" [class.active]="selectedSeries?.id === series.id"
+        (click)="selectSeries(series)" [style.background-image]="'url(' + series.coverUrl + ')'">
+
         <div class="pill-glow-border"></div>
         <div class="series-card-details">
           <span class="series-count">{{ series.episodesCount }}</span>
@@ -27,10 +23,10 @@
 
   <!-- 3. MAIN LAYOUT: Split 2-Columns Side-by-Side (Player + Playlist) -->
   <div class="cartoon-main-layout">
-    
+
     <!-- Left Column: Player & Series Details Card -->
     <main class="cartoon-player-column" *ngIf="selectedSeries">
-      
+
       <!-- 2. VIDEO PLAYER CONTAINER (Moved here to sit side-by-side with Playlist) -->
       <section class="video-player-container-inner" *ngIf="selectedEpisode">
         <!-- Player Mode Switch Tabs -->
@@ -45,23 +41,15 @@
 
         <div class="video-aspect-wrapper" [style.filter]="'brightness(' + brightness + ')'">
           <!-- 1. VIP Player (Custom HLS Player) -->
-          <div class="custom-player-container" 
-               [class.hide-cursor]="!showControls && isPlaying"
-               *ngIf="isHlsMode && selectedEpisode.linkM3u8" 
-               (mousemove)="onMouseMovePlayer()" 
-               (mouseleave)="onMouseLeavePlayer()" 
-               (touchstart)="onMouseMovePlayer()">
-            
+          <div class="custom-player-container" [class.hide-cursor]="!showControls && isPlaying"
+            *ngIf="isHlsMode && selectedEpisode.linkM3u8" (mousemove)="onMouseMovePlayer()"
+            (mouseleave)="onMouseLeavePlayer()" (touchstart)="onMouseMovePlayer()">
+
             <!-- Dynamic Ambient Light Glow Canvas -->
             <canvas #ambientCanvas class="ambient-glow"></canvas>
 
-            <video 
-              #videoPlayer 
-              class="video-element" 
-              crossorigin="anonymous"
-              (timeupdate)="onTimeUpdate()" 
-              (durationchange)="onDurationChange()" 
-              (play)="onPlayStatusChange(true)" 
+            <video #videoPlayer class="video-element" crossorigin="anonymous" (timeupdate)="onTimeUpdate()"
+              (durationchange)="onDurationChange()" (play)="onPlayStatusChange(true)"
               (pause)="onPlayStatusChange(false)"
               [style.object-fit]="currentAspectRatio === 'Default' ? 'contain' : (currentAspectRatio === 'Fill' ? 'cover' : 'fill')"
               [style.aspect-ratio]="currentAspectRatio === '16:9' ? '16/9' : (currentAspectRatio === '4:3' ? '4/3' : 'auto')">
@@ -98,13 +86,9 @@
             <div class="custom-player-controls" [class.show]="showControls">
               <!-- Timeline / Progress Bar Wrapper -->
               <div class="timeline-wrapper">
-                <div class="progress-bar-container" 
-                     (mousedown)="onProgressDragStart($event)"
-                     (touchstart)="onProgressDragStart($event)"
-                     (mousemove)="onProgressHover($event)"
-                     (mouseenter)="showHoverTime = true"
-                     (mouseleave)="showHoverTime = false"
-                     #progressBar>
+                <div class="progress-bar-container" (mousedown)="onProgressDragStart($event)"
+                  (touchstart)="onProgressDragStart($event)" (mousemove)="onProgressHover($event)"
+                  (mouseenter)="showHoverTime = true" (mouseleave)="showHoverTime = false" #progressBar>
                   <div class="progress-bar-bg"></div>
                   <div class="progress-bar-buffered" [style.width.%]="bufferedPercent"></div>
                   <div class="progress-bar-current" [style.width.%]="progressPercent"></div>
@@ -115,8 +99,9 @@
                     <span class="preview-time-text">{{ hoverTimeText }}</span>
                   </div>
                 </div>
-                
-                <span class="time-display timeline-time">{{ formatTime(currentTime) }} / {{ formatTime(duration) }}</span>
+
+                <span class="time-display timeline-time">{{ formatTime(currentTime) }} / {{ formatTime(duration)
+                  }}</span>
               </div>
 
               <!-- Controls Button Panel -->
@@ -148,12 +133,7 @@
                     </button>
                     <span class="control-value-label">{{ getBrightnessPercent() }}%</span>
                     <div class="slider-container-with-tick">
-                      <input 
-                        type="range" 
-                        min="0.2" 
-                        max="2.0" 
-                        step="0.05" 
-                        class="brightness-slider" 
+                      <input type="range" min="0.2" max="2.0" step="0.05" class="brightness-slider"
                         [(ngModel)]="brightness">
                       <div class="slider-tick-mark brightness-tick" title="Mức chuẩn 100%"></div>
                     </div>
@@ -162,18 +142,14 @@
                   <!-- Volume Control -->
                   <div class="volume-control-wrapper">
                     <button class="ctrl-btn" (click)="toggleMute()" [title]="isMuted ? 'Bật âm thanh' : 'Tắt âm thanh'">
-                      <i class="fas" [class.fa-volume-mute]="isMuted || volume === 0" [class.fa-volume-down]="!isMuted && volume > 0 && volume <= 0.5" [class.fa-volume-up]="!isMuted && volume > 0.5"></i>
+                      <i class="fas" [class.fa-volume-mute]="isMuted || volume === 0"
+                        [class.fa-volume-down]="!isMuted && volume > 0 && volume <= 0.5"
+                        [class.fa-volume-up]="!isMuted && volume > 0.5"></i>
                     </button>
                     <span class="control-value-label">{{ getVolumePercent() }}%</span>
                     <div class="slider-container-with-tick">
-                      <input 
-                        type="range" 
-                        min="0" 
-                        max="1" 
-                        step="0.05" 
-                        class="volume-slider" 
-                        [value]="isMuted ? 0 : volume"
-                        (input)="onSliderVolumeChange($event)">
+                      <input type="range" min="0" max="1" step="0.05" class="volume-slider"
+                        [value]="isMuted ? 0 : volume" (input)="onSliderVolumeChange($event)">
                       <div class="slider-tick-mark volume-tick" title="Mức chuẩn 50%"></div>
                     </div>
                   </div>
@@ -185,18 +161,17 @@
 
                   <!-- Resolution Selector (Quality Switcher) -->
                   <div class="resolution-control-wrapper" *ngIf="availableResolutions.length > 0">
-                    <button class="ctrl-btn resolution-btn" (click)="showResolutionMenu = !showResolutionMenu" title="Độ phân giải">
+                    <button class="ctrl-btn resolution-btn" (click)="showResolutionMenu = !showResolutionMenu"
+                      title="Độ phân giải">
                       <i class="fas fa-layer-group"></i>
                       <span class="resolution-active-label">{{ activeResolutionLabel }}</span>
                     </button>
-                    
+
                     <div class="resolution-dropdown-menu" *ngIf="showResolutionMenu">
                       <div class="resolution-dropdown-header">Độ Phân Giải</div>
                       <div class="resolution-dropdown-list">
-                        <button *ngFor="let res of availableResolutions" 
-                                class="resolution-dropdown-item" 
-                                [class.active]="currentResolutionIndex === res.index"
-                                (click)="selectResolution(res.index)">
+                        <button *ngFor="let res of availableResolutions" class="resolution-dropdown-item"
+                          [class.active]="currentResolutionIndex === res.index" (click)="selectResolution(res.index)">
                           <span class="res-label">{{ res.label }}</span>
                           <i class="fas fa-check active-check-icon" *ngIf="currentResolutionIndex === res.index"></i>
                         </button>
@@ -213,7 +188,7 @@
                     <div class="settings-dropdown-menu" *ngIf="showSettingsMenu">
                       <div *ngIf="activeSettingsSubMenu === 'main'" class="settings-menu-content">
                         <div class="settings-dropdown-header">Cài đặt</div>
-                        
+
                         <button class="settings-item-row" (click)="activeSettingsSubMenu = 'speed'">
                           <span class="settings-item-left">
                             <i class="fas fa-tachometer-alt settings-item-icon"></i> Tốc độ phát
@@ -238,10 +213,8 @@
                           <i class="fas fa-chevron-left"></i> Quay lại
                         </button>
                         <div class="resolution-dropdown-list">
-                          <button *ngFor="let speed of availableSpeeds" 
-                                  class="resolution-dropdown-item" 
-                                  [class.active]="currentSpeed === speed"
-                                  (click)="setPlaySpeed(speed)">
+                          <button *ngFor="let speed of availableSpeeds" class="resolution-dropdown-item"
+                            [class.active]="currentSpeed === speed" (click)="setPlaySpeed(speed)">
                             <span class="res-label">{{ speed === 1.0 ? 'Bình thường' : speed + 'x' }}</span>
                             <i class="fas fa-check active-check-icon" *ngIf="currentSpeed === speed"></i>
                           </button>
@@ -253,10 +226,8 @@
                           <i class="fas fa-chevron-left"></i> Quay lại
                         </button>
                         <div class="resolution-dropdown-list">
-                          <button *ngFor="let ratio of availableAspectRatios" 
-                                  class="resolution-dropdown-item" 
-                                  [class.active]="currentAspectRatio === ratio"
-                                  (click)="setAspectRatio(ratio)">
+                          <button *ngFor="let ratio of availableAspectRatios" class="resolution-dropdown-item"
+                            [class.active]="currentAspectRatio === ratio" (click)="setAspectRatio(ratio)">
                             <span class="res-label">{{ ratio === 'Default' ? 'Mặc định' : ratio }}</span>
                             <i class="fas fa-check active-check-icon" *ngIf="currentAspectRatio === ratio"></i>
                           </button>
@@ -266,7 +237,8 @@
                   </div>
 
                   <!-- Fullscreen -->
-                  <button class="ctrl-btn" (click)="toggleFullscreen()" [title]="isFullscreen ? 'Thoát toàn màn hình' : 'Toàn màn hình'">
+                  <button class="ctrl-btn" (click)="toggleFullscreen()"
+                    [title]="isFullscreen ? 'Thoát toàn màn hình' : 'Toàn màn hình'">
                     <i class="fas" [class.fa-expand]="!isFullscreen" [class.fa-compress]="isFullscreen"></i>
                   </button>
                 </div>
@@ -275,15 +247,8 @@
           </div>
 
           <!-- 2. Backup Embed Player (Iframe) -->
-          <iframe 
-            *ngIf="!isHlsMode || !selectedEpisode.linkM3u8"
-            [src]="safePlayerUrl" 
-            class="cartoon-iframe-video"
-            width="100%" 
-            height="100%" 
-            frameborder="0" 
-            allowfullscreen 
-            scrolling="no">
+          <iframe *ngIf="!isHlsMode || !selectedEpisode.linkM3u8" [src]="safePlayerUrl" class="cartoon-iframe-video"
+            width="100%" height="100%" frameborder="0" allowfullscreen scrolling="no">
           </iframe>
         </div>
 
@@ -308,9 +273,9 @@
           <span class="original-title">{{ selectedSeries.originalName }}</span>
           <h2 class="details-name">{{ selectedSeries.name }}</h2>
         </div>
-        
+
         <p class="details-desc">{{ selectedSeries.description }}</p>
-        
+
         <div class="details-meta-tags">
           <span class="details-tag" *ngFor="let t of selectedSeries.tags">
             <i class="fas fa-tag"></i> {{ t }}
@@ -321,22 +286,18 @@
 
     <!-- Right Column: Episodes Playlist Drawer & Inside Search -->
     <aside class="cartoon-playlist-column">
-      
+
       <!-- Inside List Header & Quick Search -->
       <div class="playlist-header-container">
         <div class="playlist-header">
           <h3 class="panel-subtitle"><i class="fas fa-th-list"></i> Danh Sách Tập</h3>
           <span class="total-episodes" *ngIf="episodes">{{ episodes.length }} tập được tìm thấy</span>
         </div>
-        
+
         <div class="playlist-search-box">
           <i class="fas fa-search search-icon"></i>
-          <input 
-            type="text" 
-            [(ngModel)]="searchQuery" 
-            (keyup.enter)="onSearch()" 
-            placeholder="Tìm theo tập, phần phim..." 
-            class="playlist-search-input">
+          <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()"
+            placeholder="Tìm theo tập, phần phim..." class="playlist-search-input">
           <button (click)="onSearch()" class="playlist-search-btn" title="Tìm tập phim">
             <i class="fas fa-chevron-right"></i>
           </button>
@@ -346,13 +307,9 @@
       <!-- Episodes List Box (Scrollable) -->
       <div class="episodes-scroller-box">
         <ng-container *ngIf="episodes.length > 0; else noEpisodes">
-          <div 
-            *ngFor="let ep of episodes; let i = index" 
-            class="episode-card" 
-            [class.active]="selectedEpisode?.id === ep.id"
-            (click)="selectEpisode(ep)"
-            [id]="'episode-card-' + ep.id">
-            
+          <div *ngFor="let ep of episodes; let i = index" class="episode-card"
+            [class.active]="selectedEpisode?.id === ep.id" (click)="selectEpisode(ep)" [id]="'episode-card-' + ep.id">
+
             <!-- Episode Image Frame with Duration Badge -->
             <div class="episode-thumb-frame">
               <img [src]="ep.thumbnailUrl" [alt]="ep.title" class="episode-thumb">
@@ -372,7 +329,7 @@
                 <span class="stat-item"><i class="far fa-calendar-alt"></i> {{ ep.publishDate }}</span>
               </div>
             </div>
-            
+
             <!-- Active Playing Waveform Indicator -->
             <div class="playing-indicator-wave" *ngIf="selectedEpisode?.id === ep.id">
               <span class="wave-bar wave-1"></span>
@@ -402,14 +359,16 @@
       <div class="auth-prompt-wrapper">
         <div class="auth-prompt-content">
           <div class="lock-icon-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lock-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lock-icon">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
           </div>
-          
+
           <h2 class="prompt-title">Bạn cần Đăng Nhập để xem phim hoạt hình</h2>
-          <p class="prompt-desc">Hãy đăng nhập để trải nghiệm xem các tập phim Anime chất lượng cao, theo dõi danh sách tập mới nhất và lưu nội dung yêu thích!</p>
+          <p class="prompt-desc">Hãy đăng nhập để trải nghiệm xem các tập phim Anime chất lượng cao, theo dõi danh sách
+            tập mới nhất và lưu nội dung yêu thích!</p>
           <button class="btn-prompt-action" (click)="goToLogin()">Đăng Nhập Ngay</button>
         </div>
       </div>
