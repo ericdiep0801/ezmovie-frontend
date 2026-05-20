@@ -10,47 +10,44 @@
         </div>
       </div>
 
-      <!-- Center: Perfectly Centered Navigation Dropdown Hub -->
+      <!-- Center: Perfectly Centered Navigation Segmented Capsule Bar -->
       <div class="header-center">
-        <div class="nav-dropdown-wrapper">
-          <button class="nav-dropdown-toggle-btn" (click)="toggleNavMenu()" [class.active]="isMoviesActive() || isTvActive() || isMusicActive() || isCartoonActive()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="nav-menu-icon">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
+        <nav class="nav-segment-bar">
+          <a routerLink="/home" [queryParams]="{type: 'catalog'}" class="nav-segment-item" [class.active]="isMoviesActive()">
+            <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+              <line x1="7" y1="2" x2="7" y2="22"></line>
+              <line x1="17" y1="2" x2="17" y2="22"></line>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <line x1="2" y1="7" x2="7" y2="7"></line>
+              <line x1="2" y1="17" x2="7" y2="17"></line>
+              <line x1="17" y1="17" x2="22" y2="17"></line>
+              <line x1="17" y1="7" x2="22" y2="7"></line>
             </svg>
-            <span class="dropdown-label">
-              <span class="hub-active-text">
-                <ng-container *ngIf="isMoviesActive()">Phim</ng-container>
-                <ng-container *ngIf="isTvActive()">TV Show</ng-container>
-                <ng-container *ngIf="isMusicActive()">Âm nhạc</ng-container>
-                <ng-container *ngIf="isCartoonActive()">Anime</ng-container>
-              </span>
-            </span>
-            <svg class="chevron-icon" [class.open]="isNavMenuOpen" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="6 9 12 15 18 9"></polyline>
+            <span class="segment-label">Phim</span>
+          </a>
+          <a routerLink="/tv" class="nav-segment-item" [class.active]="isTvActive()">
+            <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
+              <polyline points="17 2 12 7 7 2"></polyline>
             </svg>
-          </button>
-
-          <div class="nav-dropdown-menu" *ngIf="isNavMenuOpen" (click)="$event.stopPropagation()">
-            <a routerLink="/home" [queryParams]="{type: 'catalog'}" (click)="closeNavMenu()" [class.active]="isMoviesActive()">
-              <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>
-              <span>Phim Điện Ảnh</span>
-            </a>
-            <a routerLink="/tv" (click)="closeNavMenu()" [class.active]="isTvActive()">
-              <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline></svg>
-              <span>Truyền Hình TV</span>
-            </a>
-            <a routerLink="/music" (click)="closeNavMenu()" [class.active]="isMusicActive()">
-              <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
-              <span>Thế Giới Âm Nhạc</span>
-            </a>
-            <a routerLink="/cartoon" (click)="closeNavMenu()" [class.active]="isCartoonActive()">
-              <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-              <span>Thế Giới Anime</span>
-            </a>
-          </div>
-        </div>
+            <span class="segment-label">TV Show</span>
+          </a>
+          <a routerLink="/music" class="nav-segment-item" [class.active]="isMusicActive()">
+            <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18V5l12-2v13"></path>
+              <circle cx="6" cy="18" r="3"></circle>
+              <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+            <span class="segment-label">Âm nhạc</span>
+          </a>
+          <a routerLink="/cartoon" class="nav-segment-item" [class.active]="isCartoonActive()">
+            <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+            </svg>
+            <span class="segment-label">Anime</span>
+          </a>
+        </nav>
       </div>
 
       <!-- Right: Desktop Search Bar & Auth Menu -->

@@ -17,7 +17,6 @@ import { environment } from '../../../environments/environment';
 export class HeaderComponent implements OnInit {
   currentUser: User | null = null;
   isProfileOpen = false;
-  isNavMenuOpen = false;
   isScrolled = false;
   isVisible = true;
   searchQuery: string = '';
@@ -162,22 +161,11 @@ export class HeaderComponent implements OnInit {
   clickout(event: any) {
     if (!this.eRef.nativeElement.contains(event.target)) {
       this.isProfileOpen = false;
-      this.isNavMenuOpen = false;
     }
   }
 
   toggleProfile() {
     this.isProfileOpen = !this.isProfileOpen;
-    this.isNavMenuOpen = false;
-  }
-
-  toggleNavMenu() {
-    this.isNavMenuOpen = !this.isNavMenuOpen;
-    this.isProfileOpen = false;
-  }
-
-  closeNavMenu() {
-    this.isNavMenuOpen = false;
   }
 
   clearSearchQuery(event: MouseEvent) {
