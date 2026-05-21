@@ -388,12 +388,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   gotoPage(type: string) {
     this.isProfileOpen = false;
-    this.router.navigate([], {
-      relativeTo: this.route,
+    this.router.navigate(['/home'], {
       queryParams: {
         type: type,
       },
-      queryParamsHandling: 'merge',
     });
   }
 }
