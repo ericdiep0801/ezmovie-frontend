@@ -179,6 +179,19 @@ export class AdminComponent implements OnInit {
     return false;
   }
 
+  formatDisplayValue(value: any): string {
+    if (value === null || value === undefined) return '';
+    
+    if (typeof value === 'string' && value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) {
+      const d = new Date(value);
+      if (!isNaN(d.getTime())) {
+        const pad = (n: number) => n.toString().padStart(2, '0');
+        return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())} - ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+      }
+    }
+    return String(value);
+  }
+
   openCellValue(colName: string, item: any, isPrimary: boolean) {
     this.selectedRowItem = item;
     this.selectedCellValue = { colName, value: item[colName] != null ? String(item[colName]) : '', isPrimary };

@@ -72,7 +72,7 @@
               <td *ngFor="let col of activeTable.columns" [class.is-primary]="col.isPrimary">
                 <div class="input-wrapper" (click)="openCellValue(col.name, item, !!col.isPrimary)">
                   <input type="text" 
-                         [value]="item[col.name]" 
+                         [value]="formatDisplayValue(item[col.name])" 
                          class="grid-input"
                          [class.primary-input]="col.isPrimary"
                          readonly
