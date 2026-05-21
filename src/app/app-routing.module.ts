@@ -12,6 +12,7 @@ import { MusicComponent } from './pages/music/music.component';
 import { CartoonComponent } from './pages/cartoon/cartoon.component';
 
 import { GuestGuard } from './guards/guest.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -34,6 +35,11 @@ const routes: Routes = [
     path: 'forgot-password', 
     component: ForgotPasswordComponent,
     canActivate: [GuestGuard]
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('./pages/admin/admin.module').then(m => m.AdminModule),
+    canActivate: [AdminGuard]
   }
 ];
 

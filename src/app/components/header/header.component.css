@@ -480,6 +480,39 @@
   word-break: break-word;
 }
 
+.btn-goto-admin {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 8px 18px;
+  background: rgba(255, 87, 34, 0.1);
+  border: 1px solid rgba(255, 87, 34, 0.25);
+  border-radius: 30px;
+  color: var(--color-primary, #ff5722);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-goto-admin:hover {
+  background: rgba(255, 87, 34, 0.2);
+  border-color: var(--color-primary, #ff5722);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 87, 34, 0.25);
+}
+
+.btn-goto-admin i {
+  font-size: 0.85em;
+  transition: transform 0.3s ease;
+}
+
+.btn-goto-admin:hover i {
+  transform: translateX(4px);
+}
+
 /* Tabs + lists: có padding đồng nhất, tách khỏi avatar/email */
 .profile-popup-body {
   padding: 1.1rem 1.25rem 1rem;

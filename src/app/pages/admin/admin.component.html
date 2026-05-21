@@ -1,0 +1,107 @@
+<div class="admin-dashboard">
+  <!-- Dynamic Background elements for Glassmorphism -->
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+  <div class="bg-shape shape-3"></div>
+
+  <!-- Glass Sidebar -->
+  <aside class="admin-sidebar glass-panel">
+    <div class="sidebar-header">
+      <div class="logo-wrapper">
+        <i class="fas fa-database glow-icon"></i>
+        <h2>EZAdmin</h2>
+      </div>
+      <a routerLink="/" class="btn-back"><i class="fas fa-arrow-left"></i> Về web</a>
+    </div>
+    
+    <div class="tables-list custom-scrollbar">
+      <div class="table-item" 
+           *ngFor="let table of tables" 
+           [class.active]="activeTable?.name === table.name"
+           (click)="selectTable(table)">
+        <i class="fas fa-table table-icon"></i>
+        <span>{{ table.name }}</span>
+        <div class="active-indicator"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="glass-panel main-content-wrapper">
+      <div class="main-header" *ngIf="activeTable">
+        <div class="header-title">
+          <h3>Bảng <span class="highlight">{{ activeTable.name }}</span></h3>
+          <span class="record-badge"><i class="fas fa-list-ul"></i> {{ tableData.length }} bản ghi</span>
+        </div>
+        <button class="btn-refresh glow-button" (click)="loadTableData()">
+          <i class="fas fa-sync-alt" [class.fa-spin]="isLoading"></i> <span>Tải lại</span>
+        </button>
+      </div>
+
+      <!-- Loading State -->
+      <div class="loading-overlay" *ngIf="isLoading">
+        <div class="loader-ring"></div>
+        <span>Đang đồng bộ...</span>
+      </div>
+
+      <!-- Data Grid -->
+      <div class="data-grid-container custom-scrollbar" *ngIf="activeTable && !isLoading">
+        <table class="data-grid">
+          <thead>
+            <tr>
+              <th *ngFor="let col of activeTable.columns">
+                <div class="th-content">
+                  <span class="col-name">
+                    <i class="fas fa-key primary-key-icon" *ngIf="col.isPrimary" title="Khóa chính"></i>
+                    {{ col.name }}
+                  </span>
+                  <span class="col-type badge-type">{{ col.type?.name || col.type }}</span>
+                </div>
+              </th>
+              <th class="actions-col">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of tableData" class="data-row">
+              <td *ngFor="let col of activeTable.columns" [class.is-primary]="col.isPrimary">
+                <!-- If Primary Key, disable editing -->
+                <input *ngIf="col.isPrimary; else editInput" 
+                       type="text" 
+                       [value]="item[col.name]" 
+                       class="grid-input primary-input" 
+                       readonly>
+                
+                <!-- Editable Field -->
+                <ng-template #editInput>
+                  <input type="text" 
+                         [(ngModel)]="item[col.name]" 
+                         class="grid-input editable-input" 
+                         [placeholder]="col.isNullable ? 'NULL' : ''">
+                </ng-template>
+              </td>
+              <td class="actions-cell">
+                <div class="action-buttons">
+                  <button class="action-btn btn-save" (click)="saveRow(item)" title="Lưu thay đổi">
+                    <i class="fas fa-save"></i>
+                  </button>
+                  <button class="action-btn btn-delete" (click)="deleteRow(item)" title="Xóa dòng">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="tableData.length === 0">
+              <td [attr.colspan]="activeTable.columns.length + 1" class="empty-state">
+                <div class="empty-content">
+                  <i class="fas fa-folder-open"></i>
+                  <p>Bảng này chưa có dữ liệu.</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
