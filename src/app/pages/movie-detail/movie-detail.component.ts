@@ -77,6 +77,7 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   public currentAspectRatio: string = 'Default';
   public availableAspectRatios: string[] = ['Default', '16:9', '4:3', 'Fill'];
   public skipAccumulator: number = 0;
+  public skipIndicatorSide: 'left' | 'right' = 'right';
 
   // Drag gestures (Brightness / Volume)
   public brightness: number = 1.0;
@@ -709,10 +710,13 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.skipAccumulator += seconds;
 
+    // Track which side to show the indicator
+    this.skipIndicatorSide = seconds > 0 ? 'right' : 'left';
+
     const isForward = this.skipAccumulator > 0;
     const absSeconds = Math.abs(this.skipAccumulator);
 
-    this.skipIndicatorText = `${isForward ? '▶▶' : '◀◀'} ${isForward ? '+' : '-'}${absSeconds}s`;
+    this.skipIndicatorText = `${isForward ? '+' : '-'}${absSeconds}s`;
     this.showSkipFlash = true;
 
     // Trigger zone ripple visual effect
@@ -749,6 +753,27 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
         this.togglePlay();
       }, 250);
     }
+  }
+
+  /**
+   * Bấm vào vùng trung tâm màn hình:
+   * - Nếu controls đang ẩn → chỉ hiện controls, KHÔNG toggle play
+   * - Nếu controls đang hiện → không làm gì (user phải bấm đúng nút pause)
+   */
+  onCenterZoneClick(): void {
+    if (!this.showControls) {
+      // Controls đang ẩn: onMouseMovePlayer() đã gọi show trước đó (từ touchstart/mousemove)
+      // Chỉ cần reset auto-hide timer
+      this.showControls = true;
+      if (this.controlsTimeout) clearTimeout(this.controlsTimeout);
+      if (this.isPlaying) {
+        const delay = this.isFullscreen ? 5000 : 3000;
+        this.controlsTimeout = setTimeout(() => {
+          this.showControls = false;
+        }, delay);
+      }
+    }
+    // Nếu controls đang hiện: không làm gì — user phải bấm đúng nút Pause/Play
   }
 
   // Drag adjustment methods (Swipe up/down)

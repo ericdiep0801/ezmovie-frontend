@@ -804,82 +804,102 @@
   cursor: pointer;
 }
 
-/* Big center play button */
+/* Big center play/pause button - Premium glassmorphism */
 .center-play-btn {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 70px;
-  height: 70px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
-  background-color: rgba(255, 87, 34, 0.95);
-  color: white;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.92);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 0 25px rgba(255, 87, 34, 0.5);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+  transition: background 0.25s ease, border-color 0.25s ease,
+              box-shadow 0.25s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 10;
+  animation: centerBtnAppear 0.2s ease;
+}
+
+@keyframes centerBtnAppear {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.75); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
 .center-play-btn:hover {
+  background: rgba(255, 87, 34, 0.28);
+  border-color: rgba(255, 87, 34, 0.45);
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.5), 0 0 18px rgba(255, 87, 34, 0.22);
   transform: translate(-50%, -50%) scale(1.1);
-  background-color: var(--color-primary-hover);
-  box-shadow: 0 0 35px rgba(255, 87, 34, 0.7);
+  color: #fff;
 }
 
-.center-play-btn svg {
-  margin-left: 3px;
+.center-play-btn:active {
+  transform: translate(-50%, -50%) scale(0.93);
 }
 
-/* Skip Action Indicator Overlay */
+/* Fix alignment: play triangle cần lệch phải nhẹ để trông có vẻ căn giữa */
+.center-play-btn .play-icon {
+  margin-left: 4px;
+}
+
+/* Pause icon đã cân đối, không cần offset */
+.center-play-btn .pause-icon {
+  margin-left: 0;
+}
+
+/* Skip Action Indicator Overlay - Side positioned, subtle */
 .skip-indicator-overlay {
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateY(-60%);
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.2s ease;
   z-index: 12;
+}
+
+.skip-indicator-overlay.skip-left {
+  left: 6%;
+}
+
+.skip-indicator-overlay.skip-right {
+  right: 6%;
 }
 
 .skip-indicator-overlay.show {
   opacity: 1;
 }
 
-.skip-indicator-circle {
-  background: rgba(10, 11, 15, 0.88);
-  border: 1.5px solid rgba(255, 87, 34, 0.6);
-  border-radius: 50px; /* Modern capsule shape */
-  padding: 0.9rem 1.8rem;
-  box-shadow: 0 8px 32px rgba(255, 87, 34, 0.25), inset 0 0 10px rgba(255, 255, 255, 0.05);
+.skip-indicator-pill {
+  background: rgba(0, 0, 0, 0.32);
+  border-radius: 10px;
+  padding: 0.45rem 0.85rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  animation: skipBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: skipFadeIn 0.2s ease;
 }
 
-@keyframes skipBounce {
-  0% { transform: scale(0.6); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+@keyframes skipFadeIn {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 .skip-text {
-  color: #ffffff;
-  font-size: 1.2rem;
-  font-weight: 800;
-  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
   white-space: nowrap;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
 /* Clickable Skip Zones & Ripple Effects */
