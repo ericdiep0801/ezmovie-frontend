@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
 import { AuthService, User } from '../../services/auth.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
@@ -14,7 +14,7 @@ import { environment } from '../../../environments/environment';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   isProfileOpen = false;
   isScrolled = false;
@@ -66,10 +66,12 @@ export class HeaderComponent implements OnInit {
           const q = parsed.queryParams['q'];
           this.searchQuery = q ? q : '';
         } catch(e) {}
+        this.syncPageLayoutClass();
       });
   }
 
   ngOnInit(): void {
+    this.syncPageLayoutClass();
     this.loadSearchHistory();
     this.authService.currentUser$.subscribe((user) => {
       this.currentUser = user;
@@ -93,6 +95,26 @@ export class HeaderComponent implements OnInit {
         this.loadFavorites();
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    document.body.classList.remove('header-search-stacked');
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.syncPageLayoutClass();
+  }
+
+  /** Đồng bộ class body để mọi trang dùng chung offset dưới header fixed */
+  private syncPageLayoutClass(): void {
+    const showSearch =
+      this.isVisible &&
+      !this.isTvActive() &&
+      !this.isMusicActive() &&
+      !this.isCartoonActive();
+    const stacked = showSearch && window.innerWidth <= 1320;
+    document.body.classList.toggle('header-search-stacked', stacked);
   }
 
   loadHistory() {

@@ -9,12 +9,37 @@
   --color-text-muted: #b3b3b3;
   --color-border: #333333;
   --color-error: #f44336;
+  /* Chiều cao header fixed — đồng bộ với header.component.css */
+  --app-header-height: 64px;
+  --app-header-height-expanded: 124px;
+  --header-stack-bp: 1320px;
+  --page-offset-top: var(--app-header-height);
+}
+
+@media screen and (max-width: 768px) {
+  :root {
+    --app-header-height-expanded: 130px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  :root {
+    --app-header-height-expanded: 134px;
+  }
+}
+
+body.header-search-stacked {
+  --page-offset-top: var(--app-header-height-expanded);
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html {
+  scroll-padding-top: var(--page-offset-top);
 }
 
 body {
@@ -24,6 +49,16 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* Offset nội dung dưới header fixed (class body gắn từ app-header) */
+.home-container.no-hero {
+  padding-top: var(--page-offset-top);
+}
+
+.home-container .hero {
+  padding-top: var(--page-offset-top);
+  box-sizing: border-box;
 }
 
 a {
