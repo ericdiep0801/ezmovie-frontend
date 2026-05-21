@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
 import { AuthService, User } from '../../services/auth.service';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs';
 import { LoadingService } from '../../services/loading.service';
 import { PopupService } from '../../services/popup.service';
@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   watchHistory: any[] = [];
   searchHistory: string[] = [];
   showSearchHistory = false;
-  
+
   // Real-time synchronization tab state
   activeTab: 'history' | 'favorites' = 'history';
   favoritesList: any[] = [];
@@ -37,6 +37,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private changePasswordService: ChangePasswordService,
     private updateProfileService: UpdateProfileService,
     private movieService: MovieService,
+    private route: ActivatedRoute,
   ) {
     // Initial check
     const currentUrl = window.location.pathname;
@@ -53,19 +54,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
       const parsed = this.router.parseUrl(window.location.search || '');
       const q = parsed.queryParams['q'];
       this.searchQuery = q ? q : '';
-    } catch(e) {}
+    } catch (e) { }
 
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
         this.isVisible = !authRoutes.includes(event.urlAfterRedirects);
-        
+
         // Sync search input with URL search parameter
         try {
           const parsed = this.router.parseUrl(event.urlAfterRedirects);
           const q = parsed.queryParams['q'];
           this.searchQuery = q ? q : '';
-        } catch(e) {}
+        } catch (e) { }
         this.syncPageLayoutClass();
       });
   }
@@ -248,7 +249,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     ].slice(0, 8);
     try {
       localStorage.setItem('ezmovie_search_history', JSON.stringify(this.searchHistory));
-    } catch(e) {}
+    } catch (e) { }
   }
 
   deleteSearchHistoryItem(event: Event, item: string) {
@@ -257,7 +258,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.searchHistory = this.searchHistory.filter(h => h !== item);
     try {
       localStorage.setItem('ezmovie_search_history', JSON.stringify(this.searchHistory));
-    } catch(e) {}
+    } catch (e) { }
   }
 
   clearAllSearchHistory(event: Event) {
@@ -266,7 +267,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.searchHistory = [];
     try {
       localStorage.removeItem('ezmovie_search_history');
-    } catch(e) {}
+    } catch (e) { }
   }
 
   selectSearchHistoryItem(event: Event, item: string) {
@@ -383,5 +384,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isCartoonActive(): boolean {
     return this.router.url.split('?')[0].startsWith('/cartoon');
+  }
+
+  gotoPage(type: string) {
+    this.isProfileOpen = false;
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        type: type,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 }

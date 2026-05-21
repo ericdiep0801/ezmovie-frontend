@@ -102,7 +102,8 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   private lastPreviewSeekTime: number = 0;
   private previewSeekTimeout: any = null;
   private skipClickTimeout: any = null;
-  private historySavedKey: string | null = null;
+  public historySavedKey: string | null = null;
+  public userRole: string = 'user';
 
   constructor(
     private route: ActivatedRoute,
@@ -111,7 +112,7 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     private authService: AuthService,
     private loadingService: LoadingService,
     private popupService: PopupService,
-  ) {}
+  ) { }
 
   ngAfterViewInit(): void {
     if (this.isHlsMode && this.selectedEpisode) {
@@ -158,6 +159,7 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     // Check if user is logged in
     this.authService.currentUser$.subscribe((user) => {
       this.isLoggedIn = !!user;
+      this.userRole = user?.role || 'user';
     });
 
     // Load movie based on slug in URL
@@ -365,6 +367,31 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
 
   goToLogin(): void {
     this.router.navigate(['/login']);
+  }
+
+  downloadMovie(): void {
+    if (!this.selectedEpisode || !this.selectedEpisode.link_m3u8) {
+      this.popupService.showError('Không có dữ liệu tải về cho tập này.', 'Lỗi tải phim');
+      return;
+    }
+
+    const url = this.selectedEpisode.link_m3u8;
+    const fileName = `${this.movie?.slug || 'movie'}-${this.selectedEpisode.slug || 'episode'}`;
+
+    this.popupService.showSuccess('Đang tải video..', 'Vui lòng đợi');
+
+    // Use environment API url for the download endpoint
+    import('../../../environments/environment').then(({ environment }) => {
+      const token = localStorage.getItem('token') || '';
+      const downloadUrl = `${environment.apiUrl}/movies/download-stream?url=${encodeURIComponent(url)}&name=${encodeURIComponent(fileName)}&token=${encodeURIComponent(token)}`;
+
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.target = '_blank';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
   }
 
   handleSessionExpiredLogin(): void {
@@ -1131,7 +1158,7 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.isMobile()) {
       this.isFakeFullscreen = !this.isFakeFullscreen;
       this.isFullscreen = this.isFakeFullscreen;
-      
+
       // Lock or unlock body scroll to prevent background scrolling during fake fullscreen
       if (this.isFakeFullscreen) {
         document.body.style.overflow = 'hidden';
@@ -1151,7 +1178,7 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
               if (screen && (screen as any).orientation && (screen as any).orientation.lock) {
                 (screen as any).orientation.lock('landscape').catch((err: any) => console.warn('Orientation lock failed:', err));
               }
-            } catch (e) {}
+            } catch (e) { }
           })
           .catch((err: any) => {
             console.error('Fullscreen request failed:', err);
@@ -1167,7 +1194,7 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
               if (screen && (screen as any).orientation && (screen as any).orientation.unlock) {
                 (screen as any).orientation.unlock();
               }
-            } catch (e) {}
+            } catch (e) { }
           })
           .catch((err) => {
             console.error('Exit fullscreen failed:', err);

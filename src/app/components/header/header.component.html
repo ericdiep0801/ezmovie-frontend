@@ -164,7 +164,8 @@
                     <!-- History tab list -->
                     <div *ngIf="activeTab === 'history'" class="tab-pane">
                       <div class="history-tab-header" *ngIf="watchHistory.length > 0">
-                        <span class="history-section-title">Lịch sử xem</span>
+                        <span class="history-section-title" (click)="gotoPage('history')">Lịch sử xem <i
+                            class="fas fa-arrow-right"></i></span>
                         <button class="btn-clear-history" (click)="clearAllWatchHistory($event)">Xóa toàn bộ</button>
                       </div>
                       <div *ngIf="watchHistory.length === 0" class="empty-dropdown-list">
@@ -203,7 +204,8 @@
                     <!-- Favorites tab list -->
                     <div *ngIf="activeTab === 'favorites'" class="tab-pane">
                       <div class="history-tab-header" *ngIf="favoritesList.length > 0">
-                        <span class="history-section-title">Phim đã thích</span>
+                        <span class="history-section-title" (click)="gotoPage('favorites')">Phim đã thích <i
+                            class="fas fa-arrow-right"></i></span>
                       </div>
                       <div *ngIf="favoritesList.length === 0" class="empty-dropdown-list">
                         <div class="empty-dropdown-icon empty-dropdown-icon--heart" aria-hidden="true">
