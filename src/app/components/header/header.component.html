@@ -185,8 +185,8 @@
                             class="history-thumb-dropdown">
                           <div class="history-details-dropdown">
                             <h4 class="history-name-dropdown">{{ item.movieName }}</h4>
-                            <p class="history-ep-dropdown" *ngIf="item.episodeName">{{ item.episodeName }}</p>
-                            <p class="viewed-at-txt">Xem lúc: {{ item.updatedAt | date:'dd/MM HH:mm' }}</p>
+                            <p class="history-ep-dropdown" *ngIf="item.episodeName">Tập {{ item.episodeName }}</p>
+                            <p class="history-time-dropdown">Xem lúc: {{ item.updatedAt | date:'dd/MM/yyyy HH:mm' }}</p>
                           </div>
                           <button class="btn-delete-history-item"
                             (click)="deleteWatchHistoryItem($event, item.movieSlug)" title="Xóa">

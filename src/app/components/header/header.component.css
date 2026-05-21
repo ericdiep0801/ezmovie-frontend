@@ -761,6 +761,13 @@
 .history-ep-dropdown {
   font-size: 0.75rem;
   color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+.history-time-dropdown {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
   margin-top: 2px;
 }
 
