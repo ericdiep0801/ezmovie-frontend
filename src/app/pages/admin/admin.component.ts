@@ -13,6 +13,10 @@ export class AdminComponent implements OnInit {
   tableData: any[] = [];
   isLoading = false;
 
+  isSidebarCollapsed = false;
+  selectedCellValue: { colName: string, value: string, isPrimary: boolean } | null = null;
+  selectedRowItem: any = null;
+
   constructor(private adminService: AdminService, private popupService: PopupService) {}
 
   ngOnInit(): void {
@@ -46,7 +50,7 @@ export class AdminComponent implements OnInit {
     this.isLoading = true;
     this.adminService.getTableData(this.activeTable.name).subscribe({
       next: (res) => {
-        this.tableData = res;
+        this.tableData = this.sortData(res);
         this.isLoading = false;
       },
       error: (err) => {
@@ -56,42 +60,155 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  saveRow(item: any) {
-    if (!this.activeTable) return;
-    const primaryCol = this.activeTable.columns.find(c => c.isPrimary);
-    if (!primaryCol) {
-      this.popupService.showError('Bảng không có khóa chính', 'Lỗi');
-      return;
+  sortData(data: any[]): any[] {
+    if (!data || data.length === 0) return data;
+    
+    // Check for common date fields
+    const dateFields = ['createdAt', 'created_at', 'create_time', 'createdDate'];
+    const hasDate = dateFields.find(f => data[0] && data[0][f] !== undefined);
+    
+    if (hasDate) {
+      return data.sort((a, b) => new Date(b[hasDate]).getTime() - new Date(a[hasDate]).getTime());
     }
     
-    const id = item[primaryCol.name];
-    
-    // Call update API
-    this.adminService.updateData(this.activeTable.name, id, item).subscribe({
-      next: () => {
-        this.popupService.showSuccess('Lưu thành công', 'Cập nhật DB');
-      },
-      error: (err) => {
-        this.popupService.showError('Lỗi cập nhật', 'Lỗi');
+    // If no date field, sort by primary key descending (usually ID)
+    const primaryCol = this.activeTable?.columns.find(c => c.isPrimary);
+    if (primaryCol) {
+      const pk = primaryCol.name;
+      if (data[0] && typeof data[0][pk] === 'number') {
+        return data.sort((a, b) => b[pk] - a[pk]);
       }
-    });
+    }
+    
+    return data;
+  }
+
+  confirmConfig: { action: 'save' | 'delete', message: string, data?: any } | null = null;
+
+  saveCellValue() {
+    if (!this.selectedCellValue || !this.selectedRowItem || !this.activeTable) return;
+    this.confirmConfig = {
+      action: 'save',
+      message: `Bạn có chắc chắn muốn lưu thay đổi cho trường "${this.selectedCellValue.colName}" không?`
+    };
   }
 
   deleteRow(item: any) {
-    if (!this.activeTable || !confirm('Cảnh báo: Hành động này không thể hoàn tác. Bạn có chắc muốn xóa?')) return;
+    if (!this.activeTable) return;
+    this.confirmConfig = {
+      action: 'delete',
+      message: 'Cảnh báo: Hành động này không thể hoàn tác. Bạn có chắc muốn xóa?',
+      data: item
+    };
+  }
+
+  cancelConfirm() {
+    this.confirmConfig = null;
+  }
+
+  processConfirm() {
+    if (!this.confirmConfig || !this.activeTable) return;
     
-    const primaryCol = this.activeTable.columns.find(c => c.isPrimary);
-    if (!primaryCol) return;
-    
-    const id = item[primaryCol.name];
-    this.adminService.deleteData(this.activeTable.name, id).subscribe({
-      next: () => {
-        this.popupService.showSuccess('Đã xóa', 'Thành công');
-        this.loadTableData();
-      },
-      error: (err) => {
-        this.popupService.showError('Không thể xóa dữ liệu', 'Lỗi');
+    if (this.confirmConfig.action === 'delete') {
+      const item = this.confirmConfig.data;
+      const primaryCol = this.activeTable.columns.find(c => c.isPrimary);
+      if (!primaryCol) {
+        this.confirmConfig = null;
+        return;
       }
-    });
+      
+      const id = item[primaryCol.name];
+      this.adminService.deleteData(this.activeTable.name, id).subscribe({
+        next: () => {
+          this.popupService.showSuccess('Đã xóa', 'Thành công');
+          this.loadTableData();
+          this.confirmConfig = null;
+        },
+        error: (err) => {
+          this.popupService.showError('Không thể xóa dữ liệu', 'Lỗi');
+          this.confirmConfig = null;
+        }
+      });
+    } else if (this.confirmConfig.action === 'save') {
+      if (!this.selectedCellValue || !this.selectedRowItem) return;
+      
+      // Cập nhật giá trị vào object dòng hiện tại
+      this.selectedRowItem[this.selectedCellValue.colName] = this.selectedCellValue.value;
+      
+      const primaryCol = this.activeTable.columns.find(c => c.isPrimary);
+      if (!primaryCol) {
+        this.popupService.showError('Bảng không có khóa chính', 'Lỗi');
+        this.confirmConfig = null;
+        return;
+      }
+      
+      const id = this.selectedRowItem[primaryCol.name];
+      
+      // Gọi API cập nhật
+      this.adminService.updateData(this.activeTable.name, id, this.selectedRowItem).subscribe({
+        next: () => {
+          this.popupService.showSuccess('Lưu thành công', 'Cập nhật DB');
+          this.closeCellValue();
+          this.confirmConfig = null;
+        },
+        error: (err) => {
+          this.popupService.showError('Lỗi cập nhật', 'Lỗi');
+          this.confirmConfig = null;
+        }
+      });
+    }
+  }
+
+  toggleSidebar() {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+  }
+
+  isNewToday(item: any): boolean {
+    const dateFields = ['createdAt', 'created_at', 'create_time', 'createdDate'];
+    for (const field of dateFields) {
+      if (item[field]) {
+        const itemDate = new Date(item[field]);
+        const today = new Date();
+        if (itemDate.getDate() === today.getDate() &&
+            itemDate.getMonth() === today.getMonth() &&
+            itemDate.getFullYear() === today.getFullYear()) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  openCellValue(colName: string, item: any, isPrimary: boolean) {
+    this.selectedRowItem = item;
+    this.selectedCellValue = { colName, value: item[colName] != null ? String(item[colName]) : '', isPrimary };
+  }
+
+  closeCellValue() {
+    this.selectedCellValue = null;
+    this.selectedRowItem = null;
+  }
+
+  copyToClipboard(text: string) {
+    if (navigator && navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        this.popupService.showSuccess('Đã copy nội dung', 'Thành công');
+      }).catch(err => {
+        this.popupService.showError('Không thể copy', 'Lỗi');
+      });
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        this.popupService.showSuccess('Đã copy nội dung', 'Thành công');
+      } catch (err) {
+        this.popupService.showError('Không thể copy', 'Lỗi');
+      }
+      document.body.removeChild(textArea);
+    }
   }
 }

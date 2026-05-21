@@ -5,13 +5,18 @@
   <div class="bg-shape shape-3"></div>
 
   <!-- Glass Sidebar -->
-  <aside class="admin-sidebar glass-panel">
+  <aside class="admin-sidebar glass-panel" [class.collapsed]="isSidebarCollapsed">
     <div class="sidebar-header">
       <div class="logo-wrapper">
         <i class="fas fa-database glow-icon"></i>
-        <h2>EZAdmin</h2>
+        <h2 class="sidebar-title">EZAdmin</h2>
       </div>
-      <a routerLink="/" class="btn-back"><i class="fas fa-arrow-left"></i> Về web</a>
+      <button class="btn-toggle-sidebar" (click)="toggleSidebar()" title="Thu gọn/Mở rộng">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <div class="sidebar-back-action">
+      <a routerLink="/" class="btn-back"><i class="fas fa-arrow-left"></i> <span class="sidebar-text">Về web</span></a>
     </div>
     
     <div class="tables-list custom-scrollbar">
@@ -20,7 +25,7 @@
            [class.active]="activeTable?.name === table.name"
            (click)="selectTable(table)">
         <i class="fas fa-table table-icon"></i>
-        <span>{{ table.name }}</span>
+        <span class="sidebar-text">{{ table.name }}</span>
         <div class="active-indicator"></div>
       </div>
     </div>
@@ -63,28 +68,22 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of tableData" class="data-row">
+            <tr *ngFor="let item of tableData" class="data-row" [class.row-new]="isNewToday(item)">
               <td *ngFor="let col of activeTable.columns" [class.is-primary]="col.isPrimary">
-                <!-- If Primary Key, disable editing -->
-                <input *ngIf="col.isPrimary; else editInput" 
-                       type="text" 
-                       [value]="item[col.name]" 
-                       class="grid-input primary-input" 
-                       readonly>
-                
-                <!-- Editable Field -->
-                <ng-template #editInput>
+                <div class="input-wrapper" (click)="openCellValue(col.name, item, !!col.isPrimary)">
                   <input type="text" 
-                         [(ngModel)]="item[col.name]" 
-                         class="grid-input editable-input" 
+                         [value]="item[col.name]" 
+                         class="grid-input"
+                         [class.primary-input]="col.isPrimary"
+                         readonly
                          [placeholder]="col.isNullable ? 'NULL' : ''">
-                </ng-template>
+                  <button class="btn-view-value" title="Xem/Sửa chi tiết">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                </div>
               </td>
               <td class="actions-cell">
                 <div class="action-buttons">
-                  <button class="action-btn btn-save" (click)="saveRow(item)" title="Lưu thay đổi">
-                    <i class="fas fa-save"></i>
-                  </button>
                   <button class="action-btn btn-delete" (click)="deleteRow(item)" title="Xóa dòng">
                     <i class="fas fa-trash"></i>
                   </button>
@@ -104,4 +103,46 @@
       </div>
     </div>
   </main>
+
+  <!-- Cell Value Viewer Modal -->
+  <div class="value-viewer-modal" *ngIf="selectedCellValue">
+    <div class="modal-backdrop" (click)="closeCellValue()"></div>
+    <div class="modal-content glass-panel">
+      <div class="modal-header">
+        <h3>Giá trị của <span class="highlight">{{ selectedCellValue.colName }}</span></h3>
+        <button class="btn-close-modal" (click)="closeCellValue()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <textarea class="value-textarea custom-scrollbar" 
+                  [(ngModel)]="selectedCellValue.value" 
+                  [readonly]="selectedCellValue.isPrimary"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-copy glow-button" (click)="copyToClipboard(selectedCellValue.value)">
+          <i class="fas fa-copy"></i> <span>Copy</span>
+        </button>
+        <button class="btn-save-modal glow-button" *ngIf="!selectedCellValue.isPrimary" (click)="saveCellValue()">
+          <i class="fas fa-save"></i> <span>Lưu thay đổi</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Modal -->
+  <div class="value-viewer-modal" *ngIf="confirmConfig">
+    <div class="modal-backdrop" (click)="cancelConfirm()"></div>
+    <div class="modal-content glass-panel confirm-modal-content">
+      <div class="modal-header">
+        <h3>Xác nhận</h3>
+        <button class="btn-close-modal" (click)="cancelConfirm()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body confirm-body">
+        <p>{{ confirmConfig.message }}</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel glow-button" (click)="cancelConfirm()">Hủy</button>
+        <button class="btn-confirm glow-button" (click)="processConfirm()">Xác nhận</button>
+      </div>
+    </div>
+  </div>
 </div>
