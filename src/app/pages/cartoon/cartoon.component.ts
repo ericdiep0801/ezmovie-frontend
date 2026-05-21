@@ -22,11 +22,11 @@ export class CartoonComponent implements OnInit, OnDestroy {
   public selectedSeries: CartoonSeries | null = null;
   public episodes: CartoonEpisode[] = [];
   public selectedEpisode: CartoonEpisode | null = null;
-  
+
   public searchQuery: string = '';
   public activeTab: string = 'Thiếu Nhi';
   public cinemaMode: boolean = false;
-  
+
   public safePlayerUrl: SafeResourceUrl | null = null;
   public isLoggedIn: boolean = false;
 
@@ -69,7 +69,7 @@ export class CartoonComponent implements OnInit, OnDestroy {
   private rightRippleTimeout: any = null;
   private skipClickTimeout: any = null;
   private ambientInterval: any = null;
-  
+
   // Expose Math to template
   public Math = Math;
 
@@ -81,7 +81,7 @@ export class CartoonComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly authService: AuthService,
     private readonly router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.authService.currentUser$.subscribe((user) => {
@@ -155,7 +155,7 @@ export class CartoonComponent implements OnInit, OnDestroy {
 
   selectEpisode(episode: CartoonEpisode): void {
     this.selectedEpisode = episode;
-    
+
     if (!episode.linkM3u8 && episode.slug) {
       this.loadingService.show();
       this.cartoonService.getEpisodeEmbed(episode.slug).subscribe({
@@ -209,9 +209,9 @@ export class CartoonComponent implements OnInit, OnDestroy {
     if (embedUrl.startsWith('//')) {
       embedUrl = 'https:' + embedUrl;
     }
-    
+
     this.safePlayerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
-    
+
     this.isPlaying = false;
     this.currentTime = 0;
     this.duration = 0;
@@ -221,7 +221,7 @@ export class CartoonComponent implements OnInit, OnDestroy {
     if (this.isHlsMode && episode.linkM3u8) {
       this.initializeHlsPlayer();
     }
-    
+
     this.cdr.detectChanges();
   }
 

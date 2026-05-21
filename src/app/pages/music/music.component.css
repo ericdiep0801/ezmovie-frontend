@@ -654,7 +654,8 @@
 }
 
 .col-duration {
-  width: 80px;
+  width: 160px;
+  text-align: center;
   color: rgba(255, 255, 255, 0.55);
 }
 
