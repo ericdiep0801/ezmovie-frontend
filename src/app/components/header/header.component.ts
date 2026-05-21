@@ -73,25 +73,23 @@ export class HeaderComponent implements OnInit {
     this.loadSearchHistory();
     this.authService.currentUser$.subscribe((user) => {
       this.currentUser = user;
-      if (user) {
-        this.loadHistory();
-        this.loadFavorites();
-      } else {
+      if (!user) {
         this.watchHistory = [];
         this.favoritesList = [];
       }
+      // Không gọi API ngay - chỉ gọi khi user bấm mở profile dropdown
     });
 
-    // Sync watch history dropdown on header in real-time
+    // Sync watch history dropdown - chỉ reload khi profile đang mở
     this.movieService.historyUpdated$.subscribe(() => {
-      if (this.currentUser) {
+      if (this.currentUser && this.isProfileOpen) {
         this.loadHistory();
       }
     });
 
-    // Sync favorites dropdown on header in real-time
+    // Sync favorites dropdown - chỉ reload khi profile đang mở
     this.movieService.favoriteUpdated$.subscribe(() => {
-      if (this.currentUser) {
+      if (this.currentUser && this.isProfileOpen) {
         this.loadFavorites();
       }
     });
@@ -166,6 +164,11 @@ export class HeaderComponent implements OnInit {
 
   toggleProfile() {
     this.isProfileOpen = !this.isProfileOpen;
+    // Gọi API lấy dữ liệu mới nhất khi bấm mở profile dropdown
+    if (this.isProfileOpen && this.currentUser) {
+      this.loadHistory();
+      this.loadFavorites();
+    }
   }
 
   clearSearchQuery(event: MouseEvent) {
