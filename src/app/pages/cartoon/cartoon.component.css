@@ -9,7 +9,8 @@
   color: #f1f3f5;
   background-color: #07070a;
   min-height: 100vh;
-  padding-top: 64px; /* Space for the floating top header */
+  padding-top: 64px;
+  /* Space for the floating top header */
   box-sizing: border-box;
 
   /* Color Palette matching the cartoon theme */
@@ -36,13 +37,16 @@
 ::-webkit-scrollbar {
   width: 5px;
 }
+
 ::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.01);
 }
+
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 87, 34, 0.2);
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 87, 34, 0.4);
 }
@@ -99,11 +103,13 @@
   display: flex;
   gap: 12px;
   overflow-x: auto;
-  scrollbar-width: none; /* Hide scrollbar for layout purity */
+  scrollbar-width: none;
+  /* Hide scrollbar for layout purity */
   padding: 4px 0;
   flex: 1;
   justify-content: flex-start;
-  -webkit-overflow-scrolling: touch; /* Smooth kinetic scrolling on touch devices */
+  -webkit-overflow-scrolling: touch;
+  /* Smooth kinetic scrolling on touch devices */
 }
 
 .series-carousel-wrapper::-webkit-scrollbar {
@@ -114,7 +120,8 @@
   position: relative;
   width: 220px;
   height: 110px;
-  flex-shrink: 0; /* Prevent card squishing on smaller layouts */
+  flex-shrink: 0;
+  /* Prevent card squishing on smaller layouts */
   border-radius: 16px;
   background-size: cover;
   background-position: center;
@@ -128,14 +135,20 @@
 .series-pill-card::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.4) 100%);
   z-index: 1;
 }
 
 .pill-glow-border {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   border: 2px solid transparent;
   border-radius: 16px;
   transition: all 0.4s ease;
@@ -166,8 +179,13 @@
 }
 
 @keyframes borderGlowPulse {
-  0% { box-shadow: inset 0 0 5px rgba(255, 87, 34, 0.4), 0 0 10px rgba(255, 87, 34, 0.4); }
-  100% { box-shadow: inset 0 0 15px rgba(255, 87, 34, 0.7), 0 0 20px rgba(255, 87, 34, 0.7); }
+  0% {
+    box-shadow: inset 0 0 5px rgba(255, 87, 34, 0.4), 0 0 10px rgba(255, 87, 34, 0.4);
+  }
+
+  100% {
+    box-shadow: inset 0 0 15px rgba(255, 87, 34, 0.7), 0 0 20px rgba(255, 87, 34, 0.7);
+  }
 }
 
 .series-card-details {
@@ -277,7 +295,10 @@
 
 .cartoon-iframe-video {
   position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   border: none;
   z-index: 2;
 }
@@ -345,7 +366,10 @@
 /* CINEMA MODE BACKDROP */
 .cinema-mode-overlay {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
@@ -408,8 +432,8 @@
   height: 140px;
   object-fit: cover;
   border-radius: 16px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .details-right {
@@ -516,7 +540,7 @@
 }
 
 .playlist-search-box .search-icon {
-  color: rgba(255,255,255,0.3);
+  color: rgba(255, 255, 255, 0.3);
   font-size: 13px;
 }
 
@@ -558,7 +582,8 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.5rem;
   flex: 1;
 }
 
@@ -585,7 +610,7 @@
 .episode-card.active {
   background: linear-gradient(90deg, rgba(255, 87, 34, 0.12) 0%, rgba(255, 87, 34, 0.02) 100%);
   border-color: rgba(255, 87, 34, 0.35);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .episode-thumb-frame {
@@ -595,7 +620,7 @@
   border-radius: 10px;
   overflow: hidden;
   flex-shrink: 0;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .episode-thumb {
@@ -611,7 +636,8 @@
 
 .duration-badge {
   position: absolute;
-  bottom: 4px; right: 4px;
+  bottom: 4px;
+  right: 4px;
   background: rgba(0, 0, 0, 0.75);
   color: #fff;
   font-size: 8px;
@@ -622,7 +648,10 @@
 
 .play-overlay-card {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(255, 87, 34, 0.35);
   display: flex;
   align-items: center;
@@ -638,7 +667,7 @@
 .play-icon-overlay {
   color: #ffffff;
   font-size: 14px;
-  filter: drop-shadow(0 0 4px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5));
 }
 
 .episode-info-cell {
@@ -700,13 +729,29 @@
   animation: bounceBar 1.2s ease-in-out infinite alternate;
 }
 
-.wave-1 { height: 100%; animation-delay: 0.1s; }
-.wave-2 { height: 75%; animation-delay: 0.3s; }
-.wave-3 { height: 50%; animation-delay: 0.5s; }
+.wave-1 {
+  height: 100%;
+  animation-delay: 0.1s;
+}
+
+.wave-2 {
+  height: 75%;
+  animation-delay: 0.3s;
+}
+
+.wave-3 {
+  height: 50%;
+  animation-delay: 0.5s;
+}
 
 @keyframes bounceBar {
-  0% { transform: scaleY(0.3); }
-  100% { transform: scaleY(1.1); }
+  0% {
+    transform: scaleY(0.3);
+  }
+
+  100% {
+    transform: scaleY(1.1);
+  }
 }
 
 /* EMPTY STATES */
@@ -717,7 +762,7 @@
   justify-content: center;
   padding: 40px 20px;
   text-align: center;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255, 255, 255, 0.3);
   gap: 12px;
   flex: 1;
 }
@@ -748,16 +793,19 @@
     grid-template-columns: 1fr;
     overflow-y: auto;
   }
+
   .cartoon-playlist-column {
     height: 450px;
     border-left: none;
     border-top: 1px solid rgba(255, 87, 34, 0.05);
   }
+
   .cartoon-header-horizon {
     flex-direction: column;
     align-items: flex-start;
     padding: 14px 20px;
   }
+
   .series-carousel-wrapper {
     justify-content: flex-start;
     width: 100%;
@@ -769,26 +817,33 @@
     padding: 12px;
     gap: 16px;
   }
+
   .cartoon-header-horizon {
     padding: 10px 14px;
     border-radius: 18px;
     gap: 12px;
   }
+
   .series-pill-card {
-    width: 170px; /* Slightly more compact card width on mobile for better visibility */
+    width: 170px;
+    /* Slightly more compact card width on mobile for better visibility */
     height: 95px;
     border-radius: 12px;
   }
+
   .series-card-details {
     padding: 6px 8px;
   }
+
   .series-name {
     font-size: 11px;
     margin: 1px 0;
   }
+
   .series-count {
     font-size: 7px;
   }
+
   .series-category {
     padding: 1px 4px;
     font-size: 7.5px;
@@ -921,9 +976,17 @@
 }
 
 @keyframes skipBounce {
-  0% { transform: scale(0.6); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0.6);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .skip-text {
@@ -1006,9 +1069,11 @@
     opacity: 0;
     transform: scale(0.8);
   }
+
   20% {
     opacity: 1;
   }
+
   100% {
     opacity: 0;
     transform: scale(1.6);
@@ -1146,7 +1211,8 @@
   align-items: center;
 }
 
-.controls-left, .controls-right {
+.controls-left,
+.controls-right {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -1464,6 +1530,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1547,6 +1614,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1648,11 +1716,12 @@
     gap: 0.25rem;
     padding: 0 0.25rem;
   }
-  
-  .controls-left, .controls-right {
+
+  .controls-left,
+  .controls-right {
     gap: 0.25rem;
   }
-  
+
   .ctrl-btn {
     padding: 4px;
   }
@@ -1661,7 +1730,7 @@
     width: 16px;
     height: 16px;
   }
-  
+
   .time-display {
     font-size: 0.7rem;
     margin-left: 0.25rem;
@@ -1672,7 +1741,7 @@
     font-size: 0.6rem;
     padding: 1px 3px;
   }
-  
+
   .brightness-control-wrapper,
   .volume-control-wrapper {
     display: none !important;
@@ -1788,8 +1857,15 @@
 }
 
 @keyframes fadeInPrompt {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .lock-icon-wrapper {
@@ -1808,9 +1884,21 @@
 }
 
 @keyframes lockPulse {
-  0% { transform: scale(1); box-shadow: 0 0 30px rgba(255, 87, 34, 0.1); }
-  50% { transform: scale(1.05); box-shadow: 0 0 45px rgba(255, 87, 34, 0.25); border-color: rgba(255, 87, 34, 0.4); }
-  100% { transform: scale(1); box-shadow: 0 0 30px rgba(255, 87, 34, 0.1); }
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 30px rgba(255, 87, 34, 0.1);
+  }
+
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 45px rgba(255, 87, 34, 0.25);
+    border-color: rgba(255, 87, 34, 0.4);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 30px rgba(255, 87, 34, 0.1);
+  }
 }
 
 .lock-icon {
@@ -1855,5 +1943,9 @@
   transform: translateY(0);
 }
 
-.ctrl-btn[disabled], .disabled-btn { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
-
+.ctrl-btn[disabled],
+.disabled-btn {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}

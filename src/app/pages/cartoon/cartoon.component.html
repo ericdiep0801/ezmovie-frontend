@@ -108,8 +108,10 @@
               <div class="controls-panel">
                 <div class="controls-left">
                   <!-- Previous Episode -->
-                  <button class="ctrl-btn" (click)="playPrevEpisode()" [disabled]="!hasPrevEpisode" [class.disabled-btn]="!hasPrevEpisode" title="Tập trước">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <button class="ctrl-btn" (click)="playPrevEpisode()" [disabled]="!hasPrevEpisode"
+                    [class.disabled-btn]="!hasPrevEpisode" title="Tập trước">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <polygon points="19 20 9 12 19 4 19 20"></polygon>
                       <line x1="5" y1="19" x2="5" y2="5"></line>
                     </svg>
@@ -121,8 +123,10 @@
                   </button>
 
                   <!-- Next Episode -->
-                  <button class="ctrl-btn" (click)="playNextEpisode()" [disabled]="!hasNextEpisode" [class.disabled-btn]="!hasNextEpisode" title="Tập tiếp theo">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <button class="ctrl-btn" (click)="playNextEpisode()" [disabled]="!hasNextEpisode"
+                    [class.disabled-btn]="!hasNextEpisode" title="Tập tiếp theo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <polygon points="5 4 15 12 5 20 5 4"></polygon>
                       <line x1="19" y1="5" x2="19" y2="19"></line>
                     </svg>
@@ -315,13 +319,13 @@
           <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()"
             placeholder="Tìm theo tập, phần phim..." class="playlist-search-input">
           <button (click)="onSearch()" class="playlist-search-btn" title="Tìm tập phim">
-            <i class="fas fa-chevron-right"></i>
+            <i class="fas fa-search"></i>
           </button>
         </div>
       </div>
 
       <!-- Episodes List Box (Scrollable) -->
-      <div class="episodes-scroller-box">
+      <div class=" episodes-scroller-box">
         <ng-container *ngIf="episodes.length > 0; else noEpisodes">
           <div *ngFor="let ep of episodes; let i = index" class="episode-card"
             [class.active]="selectedEpisode?.id === ep.id" (click)="selectEpisode(ep)" [id]="'episode-card-' + ep.id">

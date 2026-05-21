@@ -1,9 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 :root {
-  --color-primary: #ff5722; /* Vibrant Orange */
+  --color-primary: #ff5722;
+  /* Vibrant Orange */
   --color-primary-hover: #e64a19;
-  --color-bg-dark: #141414; /* Requested Deep Gray/Black */
+  --color-bg-dark: #141414;
+  /* Requested Deep Gray/Black */
   --color-bg-panel: #1f1f1f;
   --color-text: #ffffff;
   --color-text-muted: #b3b3b3;
@@ -78,11 +80,9 @@ a:hover {
   align-items: center;
   min-height: 100vh;
   padding: 2rem;
-  background: radial-gradient(
-    circle at top right,
-    #2a0a00 0%,
-    var(--color-bg-dark) 40%
-  );
+  background: radial-gradient(circle at top right,
+      #2a0a00 0%,
+      var(--color-bg-dark) 40%);
 }
 
 .auth-card {
@@ -238,19 +238,23 @@ a:hover {
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent; /* Fully transparent background track so it NEVER blocks content */
+  background: transparent;
+  /* Fully transparent background track so it NEVER blocks content */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 87, 34, 0.65); /* Vibrant semi-transparent primary orange */
+  background: rgba(255, 87, 34, 0.65);
+  /* Vibrant semi-transparent primary orange */
   border-radius: 100px;
-  border: 2px solid transparent; /* Nice padding floating capsule look */
+  border: 2px solid transparent;
+  /* Nice padding floating capsule look */
   background-clip: padding-box;
   transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 87, 34, 0.95); /* Glows brightly on hover */
+  background: rgba(255, 87, 34, 0.95);
+  /* Glows brightly on hover */
   border: 2px solid transparent;
   background-clip: padding-box;
 }
@@ -258,7 +262,7 @@ a:hover {
 /* Firefox Support */
 html {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 87, 34, 0.65) transparent;
+  scrollbar-color: rgba(255, 90, 40, 0.723) transparent;
 }
 
 /* Immersive Widescreen Cinema Mode: Hide global header */
