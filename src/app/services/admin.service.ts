@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -30,8 +30,15 @@ export class AdminService {
     return this.http.get<TableInfo[]>(`${this.apiUrl}/tables`, { headers: this.getHeaders() });
   }
 
-  getTableData(table: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/data/${table}`, { headers: this.getHeaders() });
+  getTableData(table: string, page: number = 1, limit: number = 20, search: string = ''): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+    
+    if (search) {
+      params = params.set('search', search);
+    }
+    return this.http.get<any>(`${this.apiUrl}/data/${table}`, { headers: this.getHeaders(), params });
   }
 
   insertData(table: string, data: any): Observable<any> {

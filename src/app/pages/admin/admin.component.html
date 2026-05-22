@@ -46,11 +46,29 @@
       <div class="main-header" *ngIf="activeTable">
         <div class="header-title">
           <h3>Bảng <span class="highlight">{{ activeTable.name }}</span></h3>
-          <span class="record-badge">{{ tableData.length }} bản ghi</span>
+          <span class="record-badge">{{ totalItems }} bản ghi</span>
         </div>
-        <button class="btn-refresh glow-button" (click)="loadTableData()">
-          <i class="fas fa-sync-alt" [class.fa-spin]="isLoading"></i> <span>Tải lại</span>
-        </button>
+        
+        <div class="header-actions">
+          <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Tìm kiếm..." class="search-input">
+            <button class="btn-clear-search" *ngIf="searchQuery" (click)="searchQuery = ''; onSearch()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div class="page-size-selector">
+            <span class="page-size-label">Hiển thị:</span>
+            <select class="page-size-select" (change)="onPageSizeChange($event)">
+              <option *ngFor="let size of pageSizeOptions" [value]="size" [selected]="size === pageSize">{{ size }}</option>
+            </select>
+          </div>
+
+          <button class="btn-refresh glow-button" (click)="loadTableData()">
+            <i class="fas fa-sync-alt" [class.fa-spin]="isLoading"></i> <span>Tải lại</span>
+          </button>
+        </div>
       </div>
 
       <!-- Loading State -->
@@ -116,6 +134,31 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-container" *ngIf="activeTable && !isLoading && totalPages > 1">
+        <div class="pagination-info">
+          Hiển thị {{ (currentPage - 1) * pageSize + 1 }} - {{ (currentPage * pageSize > totalItems) ? totalItems : (currentPage * pageSize) }} trong tổng số {{ totalItems }}
+        </div>
+        <div class="pagination-controls">
+          <button class="btn-page" [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          
+          <div class="page-numbers">
+            <button class="btn-page number" 
+                    *ngFor="let p of pagesArray" 
+                    [class.active]="p === currentPage"
+                    (click)="onPageChange(p)">
+              {{ p }}
+            </button>
+          </div>
+
+          <button class="btn-page" [disabled]="currentPage === totalPages" (click)="onPageChange(currentPage + 1)">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
       </div>
     </div>
   </main>

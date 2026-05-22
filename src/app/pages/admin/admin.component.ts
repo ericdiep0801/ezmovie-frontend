@@ -15,6 +15,12 @@ export class AdminComponent implements OnInit {
   tableData: any[] = [];
   isLoading = false;
 
+  currentPage = 1;
+  pageSize = 20;
+  totalItems = 0;
+  searchQuery = '';
+  pageSizeOptions = [10, 20, 50, 100];
+
   isSidebarCollapsed = false;
   selectedCellValue: { colName: string, value: string, isPrimary: boolean } | null = null;
   selectedRowItem: any = null;
@@ -53,15 +59,18 @@ export class AdminComponent implements OnInit {
 
   selectTable(table: TableInfo) {
     this.activeTable = table;
+    this.currentPage = 1;
+    this.searchQuery = '';
     this.loadTableData();
   }
 
   loadTableData() {
     if (!this.activeTable) return;
     this.isLoading = true;
-    this.adminService.getTableData(this.activeTable.name).subscribe({
+    this.adminService.getTableData(this.activeTable.name, this.currentPage, this.pageSize, this.searchQuery).subscribe({
       next: (res) => {
-        this.tableData = this.sortData(res);
+        this.tableData = res.data;
+        this.totalItems = res.total;
         this.isLoading = false;
       },
       error: (err) => {
@@ -71,27 +80,33 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  sortData(data: any[]): any[] {
-    if (!data || data.length === 0) return data;
-    
-    // Check for common date fields
-    const dateFields = ['createdAt', 'created_at', 'create_time', 'createdDate'];
-    const hasDate = dateFields.find(f => data[0] && data[0][f] !== undefined);
-    
-    if (hasDate) {
-      return data.sort((a, b) => new Date(b[hasDate]).getTime() - new Date(a[hasDate]).getTime());
+  onSearch() {
+    this.currentPage = 1;
+    this.loadTableData();
+  }
+
+  onPageChange(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.loadTableData();
+  }
+
+  onPageSizeChange(event: any) {
+    this.pageSize = parseInt(event.target.value, 10);
+    this.currentPage = 1;
+    this.loadTableData();
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.totalItems / this.pageSize) || 1;
+  }
+
+  get pagesArray(): number[] {
+    const pages = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
     }
-    
-    // If no date field, sort by primary key descending (usually ID)
-    const primaryCol = this.activeTable?.columns.find(c => c.isPrimary);
-    if (primaryCol) {
-      const pk = primaryCol.name;
-      if (data[0] && typeof data[0][pk] === 'number') {
-        return data.sort((a, b) => b[pk] - a[pk]);
-      }
-    }
-    
-    return data;
+    return pages;
   }
 
   confirmConfig: { action: 'save' | 'delete', message: string, data?: any } | null = null;
