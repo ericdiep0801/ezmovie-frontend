@@ -196,6 +196,12 @@
               </td>
               <td class="actions-cell">
                 <div class="action-buttons">
+                  <button *ngIf="activeTable?.name === 'users'" class="action-btn btn-block" 
+                          [class.is-blocked]="item.isBlocked" 
+                          (click)="toggleBlockUser(item)" 
+                          [title]="item.isBlocked ? 'Mở khóa tài khoản' : 'Khóa tài khoản'">
+                    <i class="fas" [class.fa-lock]="item.isBlocked" [class.fa-lock-open]="!item.isBlocked"></i>
+                  </button>
                   <button class="action-btn btn-delete" (click)="deleteRow(item)" title="Xóa dòng">
                     <i class="fas fa-trash"></i>
                   </button>

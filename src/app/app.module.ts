@@ -23,6 +23,7 @@ import { MusicComponent } from './pages/music/music.component';
 import { CartoonComponent } from './pages/cartoon/cartoon.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgrokInterceptor } from './ngrok.interceptor';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { NgrokInterceptor } from './ngrok.interceptor';
     HttpClientModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: NgrokInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: NgrokInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

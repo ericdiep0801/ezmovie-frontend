@@ -258,6 +258,27 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  toggleBlockUser(item: any) {
+    if (!this.activeTable || this.activeTable.name !== 'users') return;
+    
+    const primaryCol = this.activeTable.columns.find(c => c.isPrimary);
+    if (!primaryCol) return;
+    
+    const id = item[primaryCol.name];
+    const newBlockStatus = !item.isBlocked;
+    
+    this.adminService.updateData('users', id, { isBlocked: newBlockStatus }).subscribe({
+      next: () => {
+        item.isBlocked = newBlockStatus;
+        const statusMsg = newBlockStatus ? 'đã bị khóa' : 'đã được mở khóa';
+        this.popupService.showSuccess(`Tài khoản ${item.username || ''} ${statusMsg}`, 'Thành công');
+      },
+      error: (err) => {
+        this.popupService.showError('Không thể thay đổi trạng thái block', 'Lỗi');
+      }
+    });
+  }
+
   toggleSidebar() {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }

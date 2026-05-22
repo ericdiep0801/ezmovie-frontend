@@ -1390,3 +1390,26 @@
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+.btn-block {
+  background: rgba(247, 118, 142, 0.15);
+  color: #f7768e;
+  border-color: rgba(247, 118, 142, 0.3);
+}
+
+.btn-block:hover {
+  background: #f7768e;
+  color: #1a1b26;
+  box-shadow: 0 0 15px rgba(247, 118, 142, 0.4);
+}
+
+.btn-block.is-blocked {
+  background: rgba(158, 206, 106, 0.15);
+  color: #9ece6a;
+  border-color: rgba(158, 206, 106, 0.3);
+}
+
+.btn-block.is-blocked:hover {
+  background: #9ece6a;
+  color: #1a1b26;
+  box-shadow: 0 0 15px rgba(158, 206, 106, 0.4);
+}
