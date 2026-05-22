@@ -9,7 +9,7 @@
     <div class="sidebar-header">
       <div class="logo-wrapper">
         <i class="fas fa-database glow-icon"></i>
-        <h2 class="sidebar-title">EZAdmin</h2>
+        <h2 class="sidebar-title">Admin</h2>
       </div>
       <button class="btn-toggle-sidebar" (click)="toggleSidebar()" title="Thu gọn/Mở rộng">
         <i class="fas fa-bars"></i>
@@ -18,12 +18,10 @@
     <div class="sidebar-back-action">
       <a routerLink="/" class="btn-back"><i class="fas fa-arrow-left"></i> <span class="sidebar-text">Về web</span></a>
     </div>
-    
+
     <div class="tables-list custom-scrollbar">
-      <div class="table-item" 
-           *ngFor="let table of tables" 
-           [class.active]="activeTable?.name === table.name"
-           (click)="selectTable(table)">
+      <div class="table-item" *ngFor="let table of tables" [class.active]="activeTable?.name === table.name"
+        (click)="selectTable(table)">
         <i class="fas fa-table table-icon"></i>
         <span class="sidebar-text">{{ table.name }}</span>
         <div class="active-indicator"></div>
@@ -37,7 +35,7 @@
       <div class="main-header" *ngIf="activeTable">
         <div class="header-title">
           <h3>Bảng <span class="highlight">{{ activeTable.name }}</span></h3>
-          <span class="record-badge"><i class="fas fa-list-ul"></i> {{ tableData.length }} bản ghi</span>
+          <span class="record-badge">{{ tableData.length }} bản ghi</span>
         </div>
         <button class="btn-refresh glow-button" (click)="loadTableData()">
           <i class="fas fa-sync-alt" [class.fa-spin]="isLoading"></i> <span>Tải lại</span>
@@ -71,12 +69,8 @@
             <tr *ngFor="let item of tableData" class="data-row" [class.row-new]="isNewToday(item)">
               <td *ngFor="let col of activeTable.columns" [class.is-primary]="col.isPrimary">
                 <div class="input-wrapper" (click)="openCellValue(col.name, item, !!col.isPrimary)">
-                  <input type="text" 
-                         [value]="formatDisplayValue(item[col.name])" 
-                         class="grid-input"
-                         [class.primary-input]="col.isPrimary"
-                         readonly
-                         [placeholder]="col.isNullable ? 'NULL' : ''">
+                  <input type="text" [value]="formatDisplayValue(item[col.name])" class="grid-input"
+                    [class.primary-input]="col.isPrimary" readonly [placeholder]="col.isNullable ? 'NULL' : ''">
                   <button class="btn-view-value" title="Xem/Sửa chi tiết">
                     <i class="fas fa-eye"></i>
                   </button>
@@ -113,9 +107,8 @@
         <button class="btn-close-modal" (click)="closeCellValue()"><i class="fas fa-times"></i></button>
       </div>
       <div class="modal-body">
-        <textarea class="value-textarea custom-scrollbar" 
-                  [(ngModel)]="selectedCellValue.value" 
-                  [readonly]="selectedCellValue.isPrimary"></textarea>
+        <textarea class="value-textarea custom-scrollbar" [(ngModel)]="selectedCellValue.value"
+          [readonly]="selectedCellValue.isPrimary"></textarea>
       </div>
       <div class="modal-footer">
         <button class="btn-copy glow-button" (click)="copyToClipboard(selectedCellValue.value)">
