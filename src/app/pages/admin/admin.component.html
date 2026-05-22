@@ -31,6 +31,11 @@
     </div>
 
     <div class="tables-list custom-scrollbar">
+      <div class="table-item" [class.active]="!activeTable" (click)="showDashboard()">
+        <i class="fas fa-chart-line table-icon"></i>
+        <span class="sidebar-text">Tổng quan</span>
+        <div class="active-indicator"></div>
+      </div>
       <div class="table-item" *ngFor="let table of tables" [class.active]="activeTable?.name === table.name"
         (click)="selectTable(table)">
         <i class="fas fa-table table-icon"></i>
@@ -43,6 +48,26 @@
   <!-- Main Content -->
   <main class="admin-main">
     <div class="glass-panel main-content-wrapper">
+      
+      <!-- Dashboard State -->
+      <div class="dashboard-container custom-scrollbar" *ngIf="!activeTable && !isLoading">
+        <div class="dashboard-header">
+          <h2>Tổng quan Hệ thống</h2>
+          <p>Thống kê số lượng bản ghi của các bảng trong cơ sở dữ liệu.</p>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card glass-panel" *ngFor="let key of getDashboardKeys()">
+            <div class="stat-icon-container">
+              <i class="fas fa-database stat-icon"></i>
+            </div>
+            <div class="stat-details">
+              <span class="stat-value">{{ dashboardStats[key] }}</span>
+              <span class="stat-label">Bảng {{ key | titlecase }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="main-header" *ngIf="activeTable">
         <div class="header-title">
           <h3>Bảng <span class="highlight">{{ activeTable.name }}</span></h3>
@@ -52,11 +77,15 @@
         <div class="header-actions">
           <div class="search-box">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Tìm kiếm..." class="search-input">
+            <input type="text" class="search-input" placeholder="Tìm kiếm..." [(ngModel)]="searchQuery" (keyup.enter)="onSearch()">
             <button class="btn-clear-search" *ngIf="searchQuery" (click)="searchQuery = ''; onSearch()">
               <i class="fas fa-times"></i>
             </button>
           </div>
+          
+          <button class="btn-action btn-filter" [class.active]="showFilterPanel" (click)="toggleFilterPanel()" title="Lọc dữ liệu">
+            <i class="fas fa-filter"></i> Lọc
+          </button>
 
           <div class="page-size-selector">
             <span class="page-size-label">Hiển thị:</span>
@@ -65,8 +94,24 @@
             </select>
           </div>
 
+          <div class="action-buttons-group">
+            <button class="btn-action btn-danger" *ngIf="selectedItemIds.size > 0" (click)="bulkDelete()" title="Xóa các mục đã chọn">
+              <i class="fas fa-trash-alt"></i> Xóa ({{ selectedItemIds.size }})
+            </button>
+            <button class="btn-action btn-info" (click)="exportCSV()" title="Xuất dữ liệu ra file CSV">
+              <i class="fas fa-file-export"></i> Xuất
+            </button>
+            <label class="btn-action btn-success" title="Nhập dữ liệu từ file CSV">
+              <i class="fas fa-file-import"></i> Nhập
+              <input type="file" accept=".csv" (change)="onFileSelected($event)" style="display: none;">
+            </label>
+          </div>
+
           <button class="btn-refresh glow-button" (click)="loadTableData()">
             <i class="fas fa-sync-alt" [class.fa-spin]="isLoading"></i> <span>Tải lại</span>
+          </button>
+          <button class="btn-add glow-button" (click)="openAddModal()">
+            <i class="fas fa-plus"></i> <span class="add-text">Thêm mới</span>
           </button>
         </div>
       </div>
@@ -77,11 +122,41 @@
         <span>Đang đồng bộ...</span>
       </div>
 
+      <!-- Advanced Filters Panel -->
+      <div class="filter-panel glass-panel" *ngIf="activeTable && showFilterPanel">
+        <div class="filter-header">
+          <h4>Lọc dữ liệu nâng cao</h4>
+          <button class="btn-close" (click)="toggleFilterPanel()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="filter-body">
+          <div class="filter-group" *ngFor="let col of activeTable.columns">
+            <ng-container *ngIf="!isSystemColumn(col.name)">
+              <label>{{ col.name }}</label>
+              <input *ngIf="col.type !== 'boolean'" type="text" class="filter-input" [(ngModel)]="activeFilters[col.name]" [placeholder]="'Lọc ' + col.name">
+              <select *ngIf="col.type === 'boolean'" class="filter-input" [(ngModel)]="activeFilters[col.name]">
+                <option [ngValue]="undefined">Tất cả</option>
+                <option [ngValue]="true">True</option>
+                <option [ngValue]="false">False</option>
+              </select>
+            </ng-container>
+          </div>
+        </div>
+        <div class="filter-footer">
+          <button class="btn-action" (click)="clearFilters()">Xóa lọc</button>
+          <button class="btn-action btn-info" (click)="applyFilters()">Áp dụng</button>
+        </div>
+      </div>
+
       <!-- Data Grid -->
       <div class="data-grid-container custom-scrollbar" *ngIf="activeTable && !isLoading">
         <table class="data-grid">
           <thead>
             <tr>
+              <th class="checkbox-col">
+                <div class="th-content">
+                  <input type="checkbox" [checked]="isAllSelected()" (change)="toggleAllSelection()" class="custom-checkbox">
+                </div>
+              </th>
               <th *ngIf="activeTable?.name === 'users'" class="status-col">
                 <div class="th-content"><span class="col-name">Trạng thái</span></div>
               </th>
@@ -98,7 +173,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of tableData" class="data-row" [class.row-new]="isNewToday(item)">
+            <tr *ngFor="let item of tableData" class="data-row" [class.row-new]="isNewToday(item)" [class.selected-row]="getPrimaryKey(item) != null && selectedItemIds.has(getPrimaryKey(item))">
+              <td class="checkbox-cell">
+                <input type="checkbox" [checked]="getPrimaryKey(item) != null && selectedItemIds.has(getPrimaryKey(item))" (change)="toggleSelection(item)" class="custom-checkbox">
+              </td>
               <td *ngIf="activeTable?.name === 'users'" class="status-cell">
                 <div class="status-badge-container">
                   <span class="status-badge" [class.online]="isUserOnline(item.lastActiveAt)" [class.offline]="!isUserOnline(item.lastActiveAt)">
@@ -125,7 +203,7 @@
               </td>
             </tr>
             <tr *ngIf="tableData.length === 0">
-              <td [attr.colspan]="activeTable.columns.length + 1" class="empty-state">
+              <td [attr.colspan]="activeTable.columns.length + 2" class="empty-state">
                 <div class="empty-content">
                   <i class="fas fa-folder-open"></i>
                   <p>Bảng này chưa có dữ liệu.</p>
@@ -201,6 +279,47 @@
       <div class="modal-footer">
         <button class="btn-cancel glow-button" (click)="cancelConfirm()">Hủy</button>
         <button class="btn-confirm glow-button" (click)="processConfirm()">Xác nhận</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add New Modal -->
+  <div class="value-viewer-modal" *ngIf="isAddModalOpen">
+    <div class="modal-backdrop" (click)="closeAddModal()"></div>
+    <div class="modal-content glass-panel">
+      <div class="modal-header">
+        <h3>Thêm mới vào bảng <span class="highlight">{{ activeTable?.name }}</span></h3>
+        <button class="btn-close-modal" (click)="closeAddModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body custom-scrollbar add-modal-body">
+        <ng-container *ngFor="let col of activeTable?.columns">
+          <div class="form-group" *ngIf="!isSystemColumn(col.name)">
+            <label>{{ col.name }} <span class="required" *ngIf="!col.isNullable">*</span></label>
+            
+            <ng-container *ngIf="isForeignKey(col.name)">
+              <select class="form-input" [(ngModel)]="newRecord[col.name]">
+                 <option [ngValue]="null">-- Chọn --</option>
+                 <option *ngFor="let opt of getForeignTableOptions(col.name)" [ngValue]="opt.id">
+                   {{ opt.name || opt.title || opt.email || opt.id }}
+                 </option>
+              </select>
+            </ng-container>
+
+            <ng-container *ngIf="!isForeignKey(col.name)">
+              <input *ngIf="col.type !== 'boolean'" type="text" class="form-input" [(ngModel)]="newRecord[col.name]" [placeholder]="'Nhập ' + col.name">
+              <select *ngIf="col.type === 'boolean'" class="form-input" [(ngModel)]="newRecord[col.name]">
+                <option [ngValue]="true">True</option>
+                <option [ngValue]="false">False</option>
+              </select>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel glow-button" (click)="closeAddModal()">Hủy</button>
+        <button class="btn-save-modal glow-button" (click)="saveNewRecord()">
+          <i class="fas fa-save"></i> <span>Lưu dữ liệu</span>
+        </button>
       </div>
     </div>
   </div>

@@ -11,6 +11,11 @@ export interface TableInfo {
     isPrimary: boolean;
     isNullable: boolean;
   }[];
+  relations?: {
+    property: string;
+    joinColumns: string[];
+    targetTable: string;
+  }[];
 }
 
 @Injectable({
@@ -26,11 +31,15 @@ export class AdminService {
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
+  getDashboardStats(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/dashboard-stats`, { headers: this.getHeaders() });
+  }
+
   getTables(): Observable<TableInfo[]> {
     return this.http.get<TableInfo[]>(`${this.apiUrl}/tables`, { headers: this.getHeaders() });
   }
 
-  getTableData(table: string, page: number = 1, limit: number = 20, search: string = ''): Observable<any> {
+  getTableData(table: string, page: number = 1, limit: number = 20, search: string = '', filters: any = {}): Observable<any> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
@@ -38,6 +47,14 @@ export class AdminService {
     if (search) {
       params = params.set('search', search);
     }
+    
+    const filterKeys = Object.keys(filters).filter(k => filters[k] !== '' && filters[k] !== null);
+    if (filterKeys.length > 0) {
+      const activeFilters: any = {};
+      filterKeys.forEach(k => activeFilters[k] = filters[k]);
+      params = params.set('filters', JSON.stringify(activeFilters));
+    }
+
     return this.http.get<any>(`${this.apiUrl}/data/${table}`, { headers: this.getHeaders(), params });
   }
 
@@ -51,5 +68,13 @@ export class AdminService {
 
   deleteData(table: string, id: any): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/data/${table}/${id}`, { headers: this.getHeaders() });
+  }
+
+  batchDelete(table: string, ids: any[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/data/${table}/batch-delete`, { ids }, { headers: this.getHeaders() });
+  }
+
+  batchInsert(table: string, data: any[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/data/${table}/batch-insert`, { data }, { headers: this.getHeaders() });
   }
 }
