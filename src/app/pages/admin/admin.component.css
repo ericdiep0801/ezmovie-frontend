@@ -1485,6 +1485,22 @@
   border-color: rgba(158, 206, 106, 0.3);
 }
 
+/* Role Highlighting */
+.role-input-admin {
+  color: #f7768e !important;
+  font-weight: 700;
+}
+
+.role-input-user {
+  color: #7aa2f7 !important;
+  font-weight: 700;
+}
+
+.role-input-vip {
+  color: #e0af68 !important;
+  font-weight: 700;
+}
+
 .btn-block.is-blocked:hover {
   background: #9ece6a;
   color: #1a1b26;

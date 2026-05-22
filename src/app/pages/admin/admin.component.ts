@@ -182,6 +182,12 @@ export class AdminComponent implements OnInit {
 
   deleteRow(item: any) {
     if (!this.activeTable) return;
+    
+    if (this.activeTable.name === 'users' && item.role === 'admin') {
+      this.popupService.showError('Không thể xóa tài khoản Quản trị viên (Admin).', 'Bảo mật');
+      return;
+    }
+    
     this.confirmConfig = {
       action: 'delete',
       message: 'Cảnh báo: Hành động này không thể hoàn tác. Bạn có chắc muốn xóa?',
@@ -263,6 +269,11 @@ export class AdminComponent implements OnInit {
 
   toggleBlockUser(item: any) {
     if (!this.activeTable || this.activeTable.name !== 'users') return;
+    
+    if (item.role === 'admin') {
+      this.popupService.showError('Không thể khóa tài khoản Quản trị viên (Admin).', 'Bảo mật');
+      return;
+    }
     
     const primaryCol = this.activeTable.columns.find(c => c.isPrimary);
     if (!primaryCol) return;
