@@ -188,7 +188,8 @@
               <td *ngFor="let col of activeTable.columns" [class.is-primary]="col.isPrimary">
                 <div class="input-wrapper" (click)="openCellValue(col.name, item, !!col.isPrimary)">
                   <input type="text" [value]="formatDisplayValue(item[col.name])" class="grid-input"
-                    [class.primary-input]="col.isPrimary" readonly [placeholder]="col.isNullable ? 'NULL' : ''">
+                    [class.primary-input]="col.isPrimary" readonly [placeholder]="col.isNullable ? 'NULL' : ''"
+                    [style.min-width.px]="col.name === 'email' ? 320 : (col.name === 'username' ? 220 : null)">
                   <button class="btn-view-value" title="Xem/Sửa chi tiết">
                     <i class="fas fa-eye"></i>
                   </button>
