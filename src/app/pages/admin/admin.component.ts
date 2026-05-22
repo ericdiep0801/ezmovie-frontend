@@ -34,6 +34,9 @@ export class AdminComponent implements OnInit {
   selectedItemIds: Set<any> = new Set();
   foreignData: { [colName: string]: any[] } = {};
 
+  isDetailModalOpen = false;
+  selectedDetailItem: any = null;
+
   constructor(
     private adminService: AdminService, 
     private popupService: PopupService,
@@ -334,17 +337,21 @@ export class AdminComponent implements OnInit {
     this.isCopied = false;
   }
 
-  onCopySuccess() {
-    this.isCopied = true;
+  copiedColumn: string | null = null;
+
+  onCopySuccess(colName: string) {
+    this.copiedColumn = colName;
     setTimeout(() => {
-      this.isCopied = false;
+      if (this.copiedColumn === colName) {
+        this.copiedColumn = null;
+      }
     }, 2000);
   }
 
-  copyToClipboard(text: string) {
+  copyToClipboard(text: string, colName: string = '') {
     if (navigator && navigator.clipboard) {
       navigator.clipboard.writeText(text).then(() => {
-        this.onCopySuccess();
+        this.onCopySuccess(colName);
       }).catch(err => {
         this.popupService.showError('Không thể copy', 'Lỗi');
       });
@@ -356,7 +363,7 @@ export class AdminComponent implements OnInit {
       textArea.select();
       try {
         document.execCommand('copy');
-        this.onCopySuccess();
+        this.onCopySuccess(colName);
       } catch (err) {
         this.popupService.showError('Không thể copy', 'Lỗi');
       }
@@ -387,6 +394,23 @@ export class AdminComponent implements OnInit {
 
   closeAddModal() {
     this.isAddModalOpen = false;
+  }
+
+  openDetailModal(item: any, event?: Event) {
+    if (event) {
+      const target = event.target as HTMLElement;
+      if (target.closest('.checkbox-cell') || target.closest('.actions-cell') || target.closest('button')) {
+        return;
+      }
+    }
+    console.log('Opening detail modal for:', item);
+    this.selectedDetailItem = item;
+    this.isDetailModalOpen = true;
+  }
+
+  closeDetailModal() {
+    this.isDetailModalOpen = false;
+    this.selectedDetailItem = null;
   }
 
   saveNewRecord() {
