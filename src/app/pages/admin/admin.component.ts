@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService, TableInfo } from '../../services/admin.service';
 import { PopupService } from '../../services/popup.service';
+import { AuthService, User } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
@@ -16,10 +18,19 @@ export class AdminComponent implements OnInit {
   isSidebarCollapsed = false;
   selectedCellValue: { colName: string, value: string, isPrimary: boolean } | null = null;
   selectedRowItem: any = null;
+  currentUser: User | null = null;
 
-  constructor(private adminService: AdminService, private popupService: PopupService) {}
+  constructor(
+    private adminService: AdminService, 
+    private popupService: PopupService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
     this.loadTables();
   }
 
@@ -242,5 +253,10 @@ export class AdminComponent implements OnInit {
       }
       document.body.removeChild(textArea);
     }
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
   }
 }

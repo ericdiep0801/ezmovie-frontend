@@ -94,15 +94,84 @@
   padding: 24px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header-main-row {
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  width: 100%;
 }
 
 .admin-sidebar.collapsed .sidebar-header {
   padding: 24px 0;
-  justify-content: center;
+  align-items: center;
+}
+
+.admin-sidebar.collapsed .header-main-row {
   flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+}
+
+.admin-user-profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  animation: slideIn 0.3s ease-out;
+}
+
+.admin-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.admin-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #c0caf5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-email {
+  font-size: 0.75rem;
+  color: #565f89;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-logout-sidebar {
+  background: rgba(247, 118, 142, 0.1);
+  border: 1px solid rgba(247, 118, 142, 0.3);
+  color: #f7768e;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.btn-logout-sidebar:hover {
+  background: #f7768e;
+  color: #1a1b26;
+  box-shadow: 0 0 10px rgba(247, 118, 142, 0.4);
+  transform: translateY(-2px);
 }
 
 .logo-wrapper {

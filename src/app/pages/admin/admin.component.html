@@ -7,13 +7,24 @@
   <!-- Glass Sidebar -->
   <aside class="admin-sidebar glass-panel" [class.collapsed]="isSidebarCollapsed">
     <div class="sidebar-header">
-      <div class="logo-wrapper">
-        <i class="fas fa-database glow-icon"></i>
-        <h2 class="sidebar-title">Admin</h2>
+      <div class="header-main-row">
+        <div class="logo-wrapper">
+          <i class="fas fa-database glow-icon"></i>
+          <h2 class="sidebar-title">Admin</h2>
+        </div>
+        <button class="btn-toggle-sidebar" (click)="toggleSidebar()" title="Thu gọn/Mở rộng">
+          <i class="fas fa-bars"></i>
+        </button>
       </div>
-      <button class="btn-toggle-sidebar" (click)="toggleSidebar()" title="Thu gọn/Mở rộng">
-        <i class="fas fa-bars"></i>
-      </button>
+      <div class="admin-user-profile" *ngIf="currentUser && !isSidebarCollapsed">
+        <div class="admin-user-info">
+          <div class="admin-name" title="{{ currentUser.username }}">{{ currentUser.username }}</div>
+          <div class="admin-email" title="{{ currentUser.email }}">{{ currentUser.email }}</div>
+        </div>
+        <button class="btn-logout-sidebar" (click)="logout()" title="Đăng xuất">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
     </div>
     <div class="sidebar-back-action">
       <a routerLink="/" class="btn-back"><i class="fas fa-arrow-left"></i> <span class="sidebar-text">Về web</span></a>
