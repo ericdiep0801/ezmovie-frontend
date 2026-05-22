@@ -53,6 +53,9 @@
         <table class="data-grid">
           <thead>
             <tr>
+              <th *ngIf="activeTable?.name === 'users'" class="status-col">
+                <div class="th-content"><span class="col-name">Trạng thái</span></div>
+              </th>
               <th *ngFor="let col of activeTable.columns">
                 <div class="th-content">
                   <span class="col-name">
@@ -67,6 +70,14 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of tableData" class="data-row" [class.row-new]="isNewToday(item)">
+              <td *ngIf="activeTable?.name === 'users'" class="status-cell">
+                <div class="status-badge-container">
+                  <span class="status-badge" [class.online]="isUserOnline(item.lastActiveAt)" [class.offline]="!isUserOnline(item.lastActiveAt)">
+                    <span class="status-dot"></span>
+                    {{ isUserOnline(item.lastActiveAt) ? 'Online' : 'Offline' }}
+                  </span>
+                </div>
+              </td>
               <td *ngFor="let col of activeTable.columns" [class.is-primary]="col.isPrimary">
                 <div class="input-wrapper" (click)="openCellValue(col.name, item, !!col.isPrimary)">
                   <input type="text" [value]="formatDisplayValue(item[col.name])" class="grid-input"
@@ -111,8 +122,9 @@
           [readonly]="selectedCellValue.isPrimary"></textarea>
       </div>
       <div class="modal-footer">
-        <button class="btn-copy glow-button" (click)="copyToClipboard(selectedCellValue.value)">
-          <i class="fas fa-copy"></i> <span>Copy</span>
+        <button class="btn-copy glow-button" [class.copied]="isCopied" (click)="copyToClipboard(selectedCellValue.value)">
+          <i class="fas" [class.fa-copy]="!isCopied" [class.fa-check]="isCopied"></i>
+          <span>{{ isCopied ? 'Copied!' : 'Copy' }}</span>
         </button>
         <button class="btn-save-modal glow-button" *ngIf="!selectedCellValue.isPrimary" (click)="saveCellValue()">
           <i class="fas fa-save"></i> <span>Lưu thay đổi</span>

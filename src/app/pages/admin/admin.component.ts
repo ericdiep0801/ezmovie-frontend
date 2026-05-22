@@ -179,6 +179,14 @@ export class AdminComponent implements OnInit {
     return false;
   }
 
+  isUserOnline(lastActiveAt: any): boolean {
+    if (!lastActiveAt) return false;
+    const lastActive = new Date(lastActiveAt).getTime();
+    const now = Date.now();
+    // Coi là online nếu có activity trong 5 phút gần đây (300000 ms)
+    return (now - lastActive) < 300000;
+  }
+
   formatDisplayValue(value: any): string {
     if (value === null || value === undefined) return '';
     
@@ -192,20 +200,31 @@ export class AdminComponent implements OnInit {
     return String(value);
   }
 
+  isCopied = false;
+
   openCellValue(colName: string, item: any, isPrimary: boolean) {
     this.selectedRowItem = item;
     this.selectedCellValue = { colName, value: item[colName] != null ? String(item[colName]) : '', isPrimary };
+    this.isCopied = false;
   }
 
   closeCellValue() {
     this.selectedCellValue = null;
     this.selectedRowItem = null;
+    this.isCopied = false;
+  }
+
+  onCopySuccess() {
+    this.isCopied = true;
+    setTimeout(() => {
+      this.isCopied = false;
+    }, 2000);
   }
 
   copyToClipboard(text: string) {
     if (navigator && navigator.clipboard) {
       navigator.clipboard.writeText(text).then(() => {
-        this.popupService.showSuccess('Đã copy nội dung', 'Thành công');
+        this.onCopySuccess();
       }).catch(err => {
         this.popupService.showError('Không thể copy', 'Lỗi');
       });
@@ -217,7 +236,7 @@ export class AdminComponent implements OnInit {
       textArea.select();
       try {
         document.execCommand('copy');
-        this.popupService.showSuccess('Đã copy nội dung', 'Thành công');
+        this.onCopySuccess();
       } catch (err) {
         this.popupService.showError('Không thể copy', 'Lỗi');
       }
