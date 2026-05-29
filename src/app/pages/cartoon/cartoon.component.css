@@ -430,16 +430,107 @@
 }
 
 /* CINEMA MODE FOCUSING STATE */
-.cartoon-dashboard-container.cinema-focus::before {
-  content: '';
+.cinema-environment {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: #000000;
   z-index: 999998;
-  cursor: default;
+  pointer-events: none;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, #1c0000 0%, #000 70%);
+}
+
+.cinema-curtain {
+  position: absolute;
+  top: -10%;
+  width: 25vw;
+  height: 120vh;
+  background: repeating-linear-gradient(
+    to right,
+    #300000,
+    #1a0000 20px,
+    #400000 40px
+  );
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.9);
+  filter: drop-shadow(0 0 30px rgba(0,0,0,1));
+  z-index: 2;
+}
+.left-curtain {
+  left: -10vw;
+  transform: skewY(8deg) scaleX(1.2);
+  border-bottom-right-radius: 60%;
+}
+.right-curtain {
+  right: -10vw;
+  transform: skewY(-8deg) scaleX(1.2);
+  border-bottom-left-radius: 60%;
+}
+
+.cinema-screen-glow {
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 70vh;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
+  z-index: 1;
+}
+
+.cinema-seats-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 25vh;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.seat-row {
+  width: 120vw;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20 40 Q20 20 50 20 Q80 20 80 40 L80 100 L20 100 Z" fill="%230a0a0a"/><path d="M30 15 Q30 0 50 0 Q70 0 70 15 L70 30 L30 30 Z" fill="%23111"/><path d="M10 50 Q10 40 20 40 L20 100 L10 100 Z" fill="%23050505"/><path d="M90 50 Q90 40 80 40 L80 100 L90 100 Z" fill="%23050505"/></svg>');
+  background-repeat: repeat-x;
+  background-position: bottom center;
+}
+
+.row-1 {
+  height: 120px;
+  background-size: 100px 120px;
+  opacity: 0.8;
+  filter: brightness(1) drop-shadow(0 -5px 15px rgba(0,0,0,0.9));
+  margin-bottom: -40px;
+  transform: translateX(-20px);
+}
+.row-2 {
+  height: 180px;
+  background-size: 140px 180px;
+  opacity: 1;
+  filter: brightness(0.6) drop-shadow(0 -10px 20px rgba(0,0,0,1));
+  transform: translateX(-50px);
+}
+
+.cinema-light-beam {
+  position: absolute;
+  top: -20vh;
+  width: 20vw;
+  height: 120vh;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 0%, transparent 100%);
+  transform-origin: top center;
+  z-index: 1;
+  pointer-events: none;
+}
+.left-beam {
+  left: 20vw;
+  transform: rotate(30deg);
+}
+.right-beam {
+  right: 20vw;
+  transform: rotate(-30deg);
 }
 
 .cartoon-dashboard-container.cinema-focus .cartoon-player-column {

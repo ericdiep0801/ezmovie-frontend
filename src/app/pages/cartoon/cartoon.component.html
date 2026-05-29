@@ -1,5 +1,19 @@
 <div class="cartoon-dashboard-container" [class.cinema-focus]="cinemaMode" *ngIf="isLoggedIn; else authPrompt">
 
+  <!-- Cinema Room Environment -->
+  <div class="cinema-environment" *ngIf="cinemaMode">
+    <div class="cinema-light-beam left-beam"></div>
+    <div class="cinema-light-beam right-beam"></div>
+    <div class="cinema-screen-glow"></div>
+
+    <div class="cinema-curtain left-curtain"></div>
+    <div class="cinema-curtain right-curtain"></div>
+    
+    <div class="cinema-seats-layer">
+      <div class="seat-row row-1"></div>
+      <div class="seat-row row-2"></div>
+    </div>
+  </div>
   <header class="cartoon-header-horizon"> <!-- Series Grid Carousel (Micro-Animations on Hover) -->
     <div class="series-carousel-wrapper">
       <div *ngFor="let series of seriesList" class="series-pill-card" [class.active]="selectedSeries?.id === series.id"

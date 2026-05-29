@@ -11,6 +11,21 @@
     </a>
   </div>
 
+  <!-- Cinema Room Environment -->
+  <div class="cinema-environment" *ngIf="cinemaMode">
+    <div class="cinema-light-beam left-beam"></div>
+    <div class="cinema-light-beam right-beam"></div>
+    <div class="cinema-screen-glow"></div>
+
+    <div class="cinema-curtain left-curtain"></div>
+    <div class="cinema-curtain right-curtain"></div>
+    
+    <div class="cinema-seats-layer">
+      <div class="seat-row row-1"></div>
+      <div class="seat-row row-2"></div>
+    </div>
+  </div>
+
   <!-- Video Player Section (Only if Logged In and Session Valid) -->
   <section class="player-section" *ngIf="isLoggedIn && isSessionValid; else authPrompt">
     <!-- Player Mode Switch Tabs (Only if we have an episode and HLS link is available) -->
