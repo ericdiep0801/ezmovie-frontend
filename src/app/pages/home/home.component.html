@@ -1,264 +1,659 @@
-<div class="home-container" [class.no-hero]="!featuredMovie">
-  <!-- Hero Section -->
-  <section class="hero" *ngIf="featuredMovie" [style.backgroundImage]="'url(' + featuredMovie.imageUrl + ')'">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <h2 class="hero-title">{{ featuredMovie.title }}</h2>
-      <p class="hero-desc">{{ featuredMovie.description }}</p>
-      <div class="hero-buttons">
-        <button class="btn btn-primary play-btn" *ngIf="featuredMovie.slug" (click)="viewMovie(featuredMovie.slug)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-          Watch Now
-        </button>
-      </div>
-    </div>
-  </section>
+<html style="font-size: 14px; line-height: 1.5em; scroll-behavior: smooth;"
+  class="fontawesome-i2svg-active fontawesome-i2svg-complete">
 
-  <!-- Categories -->
-  <section class="content-section" *ngIf="!currentType || currentType === 'catalog'">
-    <h3 class="section-title">Categories / Thể Loại</h3>
-    <div class="category-list">
-      <div class="category-pill" *ngFor="let cat of categories" (click)="onCategoryClick(cat)">{{ cat }}</div>
-    </div>
-  </section>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <style type="text/css">
+    svg:not(:root).svg-inline--fa {
+      overflow: visible
+    }
 
-  <!-- Phim Đang Xem Dở -->
-  <section class="content-section premium-slider-section" *ngIf="!currentType && !searchKeyword && inProgressMovies.length > 0">
-    <h3 class="section-title flex-title">
-      <svg class="title-icon-svg" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"></circle>
-        <polyline points="12 6 12 12 16 14"></polyline>
-      </svg>
-      Phim Đang Xem Dở
-    </h3>
-    <div class="movie-grid">
-      <div class="movie-card progress-card" *ngFor="let movie of inProgressMovies" (click)="viewMovie(movie.slug)">
-        <div class="movie-poster">
-          <img [src]="movie.thumb_url || movie.poster_url" [alt]="movie.name" loading="lazy">
-          <div class="movie-overlay">
-            <button class="play-circle-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-            </button>
-          </div>
-          <span class="movie-badge" style="font-weight: 600; background: var(--color-primary); color: white;">Tập {{ movie.episode_current }}</span>
-          
-          <!-- Premium watch progress bar overlay -->
-          <div class="watch-progress-track">
-            <div class="watch-progress-bar" [style.width.%]="movie.progressPercent || 0"></div>
-          </div>
-        </div>
-        <div class="movie-info">
-          <h4 class="movie-title">{{ movie.name }}</h4>
-          <div class="movie-meta progress-meta">
-            <span class="progress-percent-label">Đã xem {{ movie.progressPercent || 0 }}%</span>
-            <span class="movie-rating" style="color: var(--color-primary); font-weight: bold;">Tập {{ movie.episode_current }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    .svg-inline--fa {
+      display: inline-block;
+      font-size: inherit;
+      height: 1em;
+      overflow: visible;
+      vertical-align: -.125em
+    }
 
-  <!-- Phim Đã Xem -->
-  <section class="content-section" *ngIf="!currentType && !searchKeyword && watchedMovies.length > 0">
-    <h3 class="section-title flex-title">
-      <svg class="title-icon-svg" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-      </svg>
-      Phim Đã Xem Gần Đây
-    </h3>
-    <div class="movie-grid">
-      <div class="movie-card completed-card" *ngFor="let movie of watchedMovies" (click)="viewMovie(movie.slug)">
-        <div class="movie-poster">
-          <img [src]="movie.thumb_url || movie.poster_url" [alt]="movie.name" loading="lazy">
-          <div class="movie-overlay">
-            <button class="play-circle-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-            </button>
-          </div>
-          <span class="movie-badge" style="background: #2ec4b6; color: white;">Hoàn thành ✓</span>
-        </div>
-        <div class="movie-info">
-          <h4 class="movie-title">{{ movie.name }}</h4>
-          <div class="movie-meta">
-            <span class="movie-genre" style="color: #2ec4b6;">Đã xem xong</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    .svg-inline--fa.fa-lg {
+      vertical-align: -.225em
+    }
 
-  <!-- Phim Gợi Ý Cùng Thể Loại -->
-  <section class="content-section" *ngIf="!currentType && !searchKeyword && recommendedMovies.length > 0">
-    <h3 class="section-title flex-title">
-      <svg class="title-icon-svg" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-      </svg>
-      Gợi ý phim thể loại: <span class="highlight-genre" style="color: var(--color-primary); margin-left: 6px;">{{ recommendedGenreName }}</span>
-    </h3>
-    <div class="movie-grid">
-      <div class="movie-card recommendation-card" *ngFor="let movie of recommendedMovies" (click)="viewMovie(movie.slug)">
-        <div class="movie-poster">
-          <img [src]="movie.thumb_url || movie.poster_url" [alt]="movie.name" loading="lazy">
-          <button class="card-favorite-btn" 
-                  [class.is-favorite]="isFavorite(movie.slug)"
-                  (click)="toggleFavoriteOnCard($event, movie)"
-                  title="Yêu thích">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" [attr.fill]="isFavorite(movie.slug) ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-            </svg>
-          </button>
-          <div class="movie-overlay">
-            <button class="play-circle-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-            </button>
-          </div>
-          <span class="movie-badge" *ngIf="movie.quality || movie.lang || movie.episode_current">
-            {{ movie.episode_current ? 'Tập ' + movie.episode_current : movie.quality + ' ' + movie.lang }}
-          </span>
-        </div>
-        <div class="movie-info">
-          <h4 class="movie-title">{{ movie.name }}</h4>
-          <div class="movie-meta">
-            <span class="movie-genre">{{ movie.origin_name || (movie.type === 'series' ? 'Phim Bộ' : 'Phim Lẻ') }}</span>
-            <span class="movie-rating" *ngIf="movie.year">
-              {{ movie.year }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    .svg-inline--fa.fa-w-1 {
+      width: .0625em
+    }
 
-  <!-- Movies List / Search Results / Tabs -->
-  <section class="content-section">
-    <div class="section-header-row">
-      <h3 class="section-title">
-        <ng-container *ngIf="currentType === 'favorites'">Phim Yêu Thích Của Bạn</ng-container>
-        <ng-container *ngIf="currentType === 'history'">Lịch Sử Xem Phim</ng-container>
-        <ng-container *ngIf="currentType === 'catalog'">Khám Phá Phim</ng-container>
-        <ng-container *ngIf="!currentType">
-          {{ searchKeyword ? 'Kết quả tìm kiếm cho: "' + searchKeyword + '"' : 'Phim Mới Cập Nhật' }}
-        </ng-container>
-      </h3>
-      
-      <!-- Items per page selector (Only for search or general list, i.e. !currentType or catalog) -->
-      <div class="page-size-selector" *ngIf="!currentType || currentType === 'catalog'">
-        <span class="size-label">Hiển thị:</span>
-        <div class="custom-select-wrapper">
-          <div class="custom-select-trigger" (click)="togglePageSizeDropdown($event)">
-            <span>{{ pageSize }} phim {{ pageSize === 100 ? '(Mặc định)' : '' }}</span>
-            <svg class="chevron-icon" [class.open]="isPageSizeDropdownOpen" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </div>
-          <div class="custom-select-dropdown" *ngIf="isPageSizeDropdownOpen">
-            <div class="custom-select-option" 
-                 *ngFor="let size of pageSizeOptions" 
-                 [class.selected]="pageSize === size"
-                 (click)="selectPageSize(size, $event)">
-              {{ size }} phim {{ size === 100 ? '(Mặc định)' : '' }}
-            </div>
-          </div>
-        </div>
-      </div>
+    .svg-inline--fa.fa-w-2 {
+      width: .125em
+    }
 
-      <!-- Clear History Action -->
-      <button class="btn-clear-history" *ngIf="currentType === 'history' && movies.length > 0" (click)="clearHistory()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="3 6 5 6 21 6"></polyline>
-          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-          <line x1="10" y1="11" x2="10" y2="17"></line>
-          <line x1="14" y1="11" x2="14" y2="17"></line>
+    .svg-inline--fa.fa-w-3 {
+      width: .1875em
+    }
+
+    .svg-inline--fa.fa-w-4 {
+      width: .25em
+    }
+
+    .svg-inline--fa.fa-w-5 {
+      width: .3125em
+    }
+
+    .svg-inline--fa.fa-w-6 {
+      width: .375em
+    }
+
+    .svg-inline--fa.fa-w-7 {
+      width: .4375em
+    }
+
+    .svg-inline--fa.fa-w-8 {
+      width: .5em
+    }
+
+    .svg-inline--fa.fa-w-9 {
+      width: .5625em
+    }
+
+    .svg-inline--fa.fa-w-10 {
+      width: .625em
+    }
+
+    .svg-inline--fa.fa-w-11 {
+      width: .6875em
+    }
+
+    .svg-inline--fa.fa-w-12 {
+      width: .75em
+    }
+
+    .svg-inline--fa.fa-w-13 {
+      width: .8125em
+    }
+
+    .svg-inline--fa.fa-w-14 {
+      width: .875em
+    }
+
+    .svg-inline--fa.fa-w-15 {
+      width: .9375em
+    }
+
+    .svg-inline--fa.fa-w-16 {
+      width: 1em
+    }
+
+    .svg-inline--fa.fa-w-17 {
+      width: 1.0625em
+    }
+
+    .svg-inline--fa.fa-w-18 {
+      width: 1.125em
+    }
+
+    .svg-inline--fa.fa-w-19 {
+      width: 1.1875em
+    }
+
+    .svg-inline--fa.fa-w-20 {
+      width: 1.25em
+    }
+
+    .svg-inline--fa.fa-pull-left {
+      margin-right: .3em;
+      width: auto
+    }
+
+    .svg-inline--fa.fa-pull-right {
+      margin-left: .3em;
+      width: auto
+    }
+
+    .svg-inline--fa.fa-border {
+      height: 1.5em
+    }
+
+    .svg-inline--fa.fa-li {
+      width: 2em
+    }
+
+    .svg-inline--fa.fa-fw {
+      width: 1.25em
+    }
+
+    .fa-layers svg.svg-inline--fa {
+      bottom: 0;
+      left: 0;
+      margin: auto;
+      position: absolute;
+      right: 0;
+      top: 0
+    }
+
+    .fa-layers {
+      display: inline-block;
+      height: 1em;
+      position: relative;
+      text-align: center;
+      vertical-align: -.125em;
+      width: 1em
+    }
+
+    .fa-layers svg.svg-inline--fa {
+      -webkit-transform-origin: center center;
+      transform-origin: center center
+    }
+
+    .fa-layers-counter,
+    .fa-layers-text {
+      display: inline-block;
+      position: absolute;
+      text-align: center
+    }
+
+    .fa-layers-text {
+      left: 50%;
+      top: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      -webkit-transform-origin: center center;
+      transform-origin: center center
+    }
+
+    .fa-layers-counter {
+      background-color: #ff253a;
+      border-radius: 1em;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      color: #fff;
+      height: 1.5em;
+      line-height: 1;
+      max-width: 5em;
+      min-width: 1.5em;
+      overflow: hidden;
+      padding: .25em;
+      right: 0;
+      text-overflow: ellipsis;
+      top: 0;
+      -webkit-transform: scale(.25);
+      transform: scale(.25);
+      -webkit-transform-origin: top right;
+      transform-origin: top right
+    }
+
+    .fa-layers-bottom-right {
+      bottom: 0;
+      right: 0;
+      top: auto;
+      -webkit-transform: scale(.25);
+      transform: scale(.25);
+      -webkit-transform-origin: bottom right;
+      transform-origin: bottom right
+    }
+
+    .fa-layers-bottom-left {
+      bottom: 0;
+      left: 0;
+      right: auto;
+      top: auto;
+      -webkit-transform: scale(.25);
+      transform: scale(.25);
+      -webkit-transform-origin: bottom left;
+      transform-origin: bottom left
+    }
+
+    .fa-layers-top-right {
+      right: 0;
+      top: 0;
+      -webkit-transform: scale(.25);
+      transform: scale(.25);
+      -webkit-transform-origin: top right;
+      transform-origin: top right
+    }
+
+    .fa-layers-top-left {
+      left: 0;
+      right: auto;
+      top: 0;
+      -webkit-transform: scale(.25);
+      transform: scale(.25);
+      -webkit-transform-origin: top left;
+      transform-origin: top left
+    }
+
+    .fa-lg {
+      font-size: 1.3333333333em;
+      line-height: .75em;
+      vertical-align: -.0667em
+    }
+
+    .fa-xs {
+      font-size: .75em
+    }
+
+    .fa-sm {
+      font-size: .875em
+    }
+
+    .fa-1x {
+      font-size: 1em
+    }
+
+    .fa-2x {
+      font-size: 2em
+    }
+
+    .fa-3x {
+      font-size: 3em
+    }
+
+    .fa-4x {
+      font-size: 4em
+    }
+
+    .fa-5x {
+      font-size: 5em
+    }
+
+    .fa-6x {
+      font-size: 6em
+    }
+
+    .fa-7x {
+      font-size: 7em
+    }
+
+    .fa-8x {
+      font-size: 8em
+    }
+
+    .fa-9x {
+      font-size: 9em
+    }
+
+    .fa-10x {
+      font-size: 10em
+    }
+
+    .fa-fw {
+      text-align: center;
+      width: 1.25em
+    }
+
+    .fa-ul {
+      list-style-type: none;
+      margin-left: 2.5em;
+      padding-left: 0
+    }
+
+    .fa-ul>li {
+      position: relative
+    }
+
+    .fa-li {
+      left: -2em;
+      position: absolute;
+      text-align: center;
+      width: 2em;
+      line-height: inherit
+    }
+
+    .fa-border {
+      border: solid .08em #eee;
+      border-radius: .1em;
+      padding: .2em .25em .15em
+    }
+
+    .fa-pull-left {
+      float: left
+    }
+
+    .fa-pull-right {
+      float: right
+    }
+
+    .fa.fa-pull-left,
+    .fab.fa-pull-left,
+    .fal.fa-pull-left,
+    .far.fa-pull-left,
+    .fas.fa-pull-left {
+      margin-right: .3em
+    }
+
+    .fa.fa-pull-right,
+    .fab.fa-pull-right,
+    .fal.fa-pull-right,
+    .far.fa-pull-right,
+    .fas.fa-pull-right {
+      margin-left: .3em
+    }
+
+    .fa-spin {
+      -webkit-animation: fa-spin 2s infinite linear;
+      animation: fa-spin 2s infinite linear
+    }
+
+    .fa-pulse {
+      -webkit-animation: fa-spin 1s infinite steps(8);
+      animation: fa-spin 1s infinite steps(8)
+    }
+
+    @-webkit-keyframes fa-spin {
+      0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+      }
+
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+      }
+    }
+
+    @keyframes fa-spin {
+      0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+      }
+
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+      }
+    }
+
+    .fa-rotate-90 {
+      -webkit-transform: rotate(90deg);
+      transform: rotate(90deg)
+    }
+
+    .fa-rotate-180 {
+      -webkit-transform: rotate(180deg);
+      transform: rotate(180deg)
+    }
+
+    .fa-rotate-270 {
+      -webkit-transform: rotate(270deg);
+      transform: rotate(270deg)
+    }
+
+    .fa-flip-horizontal {
+      -webkit-transform: scale(-1, 1);
+      transform: scale(-1, 1)
+    }
+
+    .fa-flip-vertical {
+      -webkit-transform: scale(1, -1);
+      transform: scale(1, -1)
+    }
+
+    .fa-flip-both,
+    .fa-flip-horizontal.fa-flip-vertical {
+      -webkit-transform: scale(-1, -1);
+      transform: scale(-1, -1)
+    }
+
+    :root .fa-flip-both,
+    :root .fa-flip-horizontal,
+    :root .fa-flip-vertical,
+    :root .fa-rotate-180,
+    :root .fa-rotate-270,
+    :root .fa-rotate-90 {
+      -webkit-filter: none;
+      filter: none
+    }
+
+    .fa-stack {
+      display: inline-block;
+      height: 2em;
+      position: relative;
+      width: 2.5em
+    }
+
+    .fa-stack-1x,
+    .fa-stack-2x {
+      bottom: 0;
+      left: 0;
+      margin: auto;
+      position: absolute;
+      right: 0;
+      top: 0
+    }
+
+    .svg-inline--fa.fa-stack-1x {
+      height: 1em;
+      width: 1.25em
+    }
+
+    .svg-inline--fa.fa-stack-2x {
+      height: 2em;
+      width: 2.5em
+    }
+
+    .fa-inverse {
+      color: #fff
+    }
+
+    .sr-only {
+      border: 0;
+      clip: rect(0, 0, 0, 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px
+    }
+
+    .sr-only-focusable:active,
+    .sr-only-focusable:focus {
+      clip: auto;
+      height: auto;
+      margin: 0;
+      overflow: visible;
+      position: static;
+      width: auto
+    }
+
+    .svg-inline--fa .fa-primary {
+      fill: var(--fa-primary-color, currentColor);
+      opacity: 1;
+      opacity: var(--fa-primary-opacity, 1)
+    }
+
+    .svg-inline--fa .fa-secondary {
+      fill: var(--fa-secondary-color, currentColor);
+      opacity: .4;
+      opacity: var(--fa-secondary-opacity, .4)
+    }
+
+    .svg-inline--fa.fa-swap-opacity .fa-primary {
+      opacity: .4;
+      opacity: var(--fa-secondary-opacity, .4)
+    }
+
+    .svg-inline--fa.fa-swap-opacity .fa-secondary {
+      opacity: 1;
+      opacity: var(--fa-primary-opacity, 1)
+    }
+
+    .svg-inline--fa mask .fa-primary,
+    .svg-inline--fa mask .fa-secondary {
+      fill: #000
+    }
+
+    .fad.fa-inverse {
+      color: #fff
+    }
+  </style>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mailtoharshit/San-Francisco-Font-/sanfrancisco.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/js/all.min.js"></script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7HPE9WNNWP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-7HPE9WNNWP');
+  </script>
+
+</head>
+
+<body style="font-family: sans-serif; background: #fff; font-size: 1rem;">
+  <div class="contact-us-detail">
+    <h1
+      style="background-color: #F2F2F2; padding: 15px 20px; font-size: 16px; font-weight: 600; color: #8F8F8F; margin-bottom: 0;"
+      class="header-contact">Calls</h1>
+    <div style="padding: 25px 0 17px 25px;" class="body-contact">
+      <div class="media">
+        <svg style="color: #24549D; font-size: 18px; margin-top: 2px;" class="svg-inline--fa fa-phone-alt fa-w-16"
+          aria-hidden="true" focusable="false" data-prefix="fas" data-icon="phone-alt" role="img"
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+          <path fill="currentColor"
+            d="M497.39 361.8l-112-48a24 24 0 0 0-28 6.9l-49.6 60.6A370.66 370.66 0 0 1 130.6 204.11l60.6-49.6a23.94 23.94 0 0 0 6.9-28l-48-112A24.16 24.16 0 0 0 122.6.61l-104 24A24 24 0 0 0 0 48c0 256.5 207.9 464 464 464a24 24 0 0 0 23.4-18.6l24-104a24.29 24.29 0 0 0-14.01-27.6z">
+          </path>
         </svg>
-        Xóa lịch sử xem
-      </button>
-    </div>
-    
-    <div class="movie-grid" *ngIf="movies.length > 0; else noMovies">
-      <div class="movie-card" *ngFor="let movie of movies" (click)="viewMovie(movie.slug)">
-        <div class="movie-poster">
-          <img [src]="movie.thumb_url || movie.poster_url" [alt]="movie.name" loading="lazy">
-          <button class="card-favorite-btn" 
-                  [class.is-favorite]="isFavorite(movie.slug)"
-                  (click)="toggleFavoriteOnCard($event, movie)"
-                  title="Yêu thích">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" [attr.fill]="isFavorite(movie.slug) ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-            </svg>
-          </button>
-          <div class="movie-overlay">
-            <button class="play-circle-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-            </button>
-          </div>
-          <span class="movie-badge" *ngIf="movie.quality || movie.lang || movie.episode_current">
-            {{ movie.episode_current ? 'Tập ' + movie.episode_current : movie.quality + ' ' + movie.lang }}
-          </span>
+        <!-- <i style="color: #24549D; font-size: 18px; margin-top: 2px;" class="fas fa-phone-alt"></i> -->
+        <div style="margin-left: 14px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #E7E7E7;"
+          class="media-body">
+          <h3 style="font-size: 16px; color: #9A9A9A; margin-bottom: 0;" class="content">Customer Care</h3>
+          <a href="tel:1605"
+            style="font-size: 16px; cursor: pointer; color: inherit; text-decoration: none; display: block;"
+            class="content" onclick="sendLink('phone','1605')">1605</a>
         </div>
-        <div class="movie-info">
-          <h4 class="movie-title">{{ movie.name }}</h4>
-          <div class="movie-meta">
-            <span class="movie-genre">{{ movie.origin_name || (movie.type === 'series' ? 'Phim Bộ' : 'Phim Lẻ') }}</span>
-            <span class="movie-rating" *ngIf="movie.year">
-              {{ movie.year }}
-            </span>
-          </div>
+      </div>
+      <div class="media">
+        <div style="margin-left: 28px;" class="media-body">
+          <h3 style="font-size: 16px; color: #9A9A9A; margin-bottom: 0;" class="content">From Overseas </h3>
+          <a href="tel:+6568454545"
+            style="font-size: 16px; cursor: pointer; color: inherit; text-decoration: none; display: block;"
+            class="content" onclick="sendLink('phone','+6568454545')">+65 6845 4545</a>
         </div>
       </div>
     </div>
-
-    <ng-template #noMovies>
-      <div class="no-movies-box">
-        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#777" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-        <p>
-          <ng-container *ngIf="currentType === 'favorites'">Danh sách phim yêu thích của bạn đang trống.</ng-container>
-          <ng-container *ngIf="currentType === 'history'">Lịch sử xem phim của bạn đang trống.</ng-container>
-          <ng-container *ngIf="!currentType || currentType === 'catalog'">Không có phim nào khả dụng hoặc không tìm thấy phim phù hợp.</ng-container>
-        </p>
+    <h1
+      style="background-color: #F2F2F2; padding: 15px 20px; font-size: 16px; font-weight: 600; color: #8F8F8F; margin-bottom: 0;"
+      class="header-contact">Operating Hours</h1>
+    <div style="padding: 25px 0 17px 25px;" class="body-contact">
+      <div class="media">
+        <div
+          style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #E7E7E7; display: flex; align-items: center; justify-content: space-between;"
+          class="media-body">
+          <h3 style="font-size: 16px; color: #4F4F4F; margin-bottom: 0;" class="content">Monday To Friday:</h3>
+          <h3 style="font-size: 16px; color: #4F4F4F; margin-bottom: 0; margin-right: 18px;" class="content">08:30 am to
+            6:00 pm</h3>
+        </div>
       </div>
-    </ng-template>
-
-    <!-- Sleek & Highly Aesthetic Premium Pagination -->
-    <div class="pagination-container" *ngIf="(!currentType || currentType === 'catalog') && totalPages >= 1 && movies.length > 0">
-      <!-- Prev Button -->
-      <button class="page-arrow-btn" [disabled]="page === 1" (click)="prevPage()" title="Previous Page">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-      </button>
-
-      <!-- First Page -->
-      <button class="page-num-btn" [class.active]="page === 1" (click)="goToPage(1)">1</button>
-      
-      <!-- Ellipses -->
-      <span class="page-ellipsis" *ngIf="page > 4">...</span>
-
-      <!-- Middle visible pages -->
-      <ng-container *ngFor="let p of visiblePages">
-        <button 
-          class="page-num-btn" 
-          *ngIf="p !== 1 && p !== totalPages" 
-          [class.active]="page === p" 
-          (click)="goToPage(p)">
-          {{ p }}
-        </button>
-      </ng-container>
-
-      <!-- Ellipses -->
-      <span class="page-ellipsis" *ngIf="page < totalPages - 3">...</span>
-      
-      <!-- Last page -->
-      <button 
-        class="page-num-btn" 
-        *ngIf="totalPages > 1" 
-        [class.active]="page === totalPages" 
-        (click)="goToPage(totalPages)">
-        {{ totalPages }}
-      </button>
-
-      <!-- Next Button -->
-      <button class="page-arrow-btn" [disabled]="page === totalPages" (click)="nextPage()" title="Next Page">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-      </button>
+      <div class="media">
+        <div
+          style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #E7E7E7; display: flex; align-items: center; justify-content: space-between;"
+          class="media-body">
+          <h3 style="font-size: 16px; color: #4F4F4F; margin-bottom: 0;" class="content">Saturday:</h3>
+          <h3 style="font-size: 16px; color: #4F4F4F; margin-bottom: 0; margin-right: 18px;" class="content">08:30 am to
+            1:00 pm</h3>
+        </div>
+      </div>
+      <div class="media">
+        <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;"
+          class="media-body">
+          <h3 style="font-size: 16px; color: #4F4F4F; margin-bottom: 0;" class="content">Sunday and holidays:</h3>
+          <h3 style="font-size: 16px; color: #4F4F4F; margin-bottom: 0; margin-right: 18px;" class="content">Closed</h3>
+        </div>
+      </div>
     </div>
-  </section>
-</div>
+    <h1
+      style="background-color: #F2F2F2; padding: 15px 20px; font-size: 16px; font-weight: 600; color: #8F8F8F; margin-bottom: 0;"
+      class="header-contact">Online</h1>
+    <div style="padding: 25px 0 25px 25px;" class="body-contact body-feedback">
+      <a style="color: #4F4F4F !important; display: flex; align-items: center;"
+        href="https://www.singpost.com/support/make-enquiry?source=mobile&medium=app" class="media">
+        <svg style="color: #24549D; font-size: 18px; margin-top: 2px;" class="svg-inline--fa fa-comment-dots fa-w-16"
+          aria-hidden="true" focusable="false" data-prefix="fas" data-icon="comment-dots" role="img"
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+          <path fill="currentColor"
+            d="M256 32C114.6 32 0 125.1 0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3 0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4 0 256-93.1 256-208S397.4 32 256 32zM128 272c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 0c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 0c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z">
+          </path>
+        </svg>
+        <!-- <i style="color: #24549D; font-size: 18px; margin-top: 2px;" class="fas fa-comment-dots"></i> -->
+        <div
+          style="margin-left: 14px; margin-bottom: 0; padding-bottom: 0; border-bottom: 1px solid #E7E7E7; border-bottom: none;"
+          class="media-body">
+          <div style="font-size: 16px;" class="content">Feedback Form</div>
+        </div>
+        <div style="border-bottom: 1px solid #E7E7E7; padding-right: 18px; border-bottom: none;" class="social-icon">
+          <svg style="color: #CCC;" class="svg-inline--fa fa-chevron-right fa-w-10" aria-hidden="true" focusable="false"
+            data-prefix="fas" data-icon="chevron-right" role="img" xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 320 512" data-fa-i2svg="">
+            <path fill="currentColor"
+              d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z">
+            </path>
+          </svg>
+          <!-- <i style="color: #CCC;" class="fas fa-chevron-right"></i> -->
+        </div>
+      </a>
+    </div>
+    <h1
+      style="background-color: #F2F2F2; padding: 15px 20px; font-size: 16px; font-weight: 600; color: #8F8F8F; margin-bottom: 0;"
+      class="header-contact">Connect With Us</h1>
+    <div style="padding: 25px 0 17px 25px;" class="body-contact">
+      <a style="color: #4F4F4F !important; cursor: pointer;" href="https://www.facebook.com/singpost" class="media">
+        <svg style="color: #24549D; font-size: 18px; margin-top: 2px;" class="svg-inline--fa fa-share-alt fa-w-14"
+          aria-hidden="true" focusable="false" data-prefix="fas" data-icon="share-alt" role="img"
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
+          <path fill="currentColor"
+            d="M352 320c-22.608 0-43.387 7.819-59.79 20.895l-102.486-64.054a96.551 96.551 0 0 0 0-41.683l102.486-64.054C308.613 184.181 329.392 192 352 192c53.019 0 96-42.981 96-96S405.019 0 352 0s-96 42.981-96 96c0 7.158.79 14.13 2.276 20.841L155.79 180.895C139.387 167.819 118.608 160 96 160c-53.019 0-96 42.981-96 96s42.981 96 96 96c22.608 0 43.387-7.819 59.79-20.895l102.486 64.054A96.301 96.301 0 0 0 256 416c0 53.019 42.981 96 96 96s96-42.981 96-96-42.981-96-96-96z">
+          </path>
+        </svg>
+        <!-- <i style="color: #24549D; font-size: 18px; margin-top: 2px;" class="fas fa-share-alt"></i> -->
+        <div style="margin-left: 14px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #E7E7E7;"
+          class="media-body">
+          <div style="font-size: 16px;" class="content">Facebook</div>
+        </div>
+        <div style="border-bottom: 1px solid #E7E7E7; margin-bottom: 15px; padding-bottom: 15px; padding-right: 18px;"
+          class="social-icon"><img style="width: 24px;" src="../offline_files/img/ant-design_facebook-filled.png"></div>
+      </a>
+      <a style="color: #4F4F4F !important; cursor: pointer;" href="https://www.instagram.com/mysingpost/"
+        class="media align-items-center">
+        <div style="margin-left: 28px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #E7E7E7;"
+          class="media-body">
+          <div style="font-size: 16px;" class="content">Instagram</div>
+        </div>
+        <div style="border-bottom: 1px solid #E7E7E7; margin-bottom: 15px; padding-bottom: 15px; padding-right: 18px;"
+          class="social-icon"><img src="../offline_files/img/ant-design_instagram-filled.svg"></div>
+      </a>
+      <a style="color: #4F4F4F !important; cursor: pointer;" href="https://www.linkedin.com/company/singapore-post-ltd"
+        class="media">
+        <div
+          style="margin-left: 28px; margin-bottom: 0; padding-bottom: 0; border-bottom: 1px solid #E7E7E7; border-bottom: none;"
+          class="media-body">
+          <div style="font-size: 16px;" class="content">Linkedin</div>
+        </div>
+        <div
+          style="border-bottom: 1px solid #E7E7E7; margin-bottom: 15px; padding-bottom: 15px; padding-right: 18px; border-bottom: none;"
+          class="social-icon"><img src="../offline_files/img/ant-design_linkedin-filled.svg"></div>
+      </a>
+    </div>
+  </div>
+  <script>
+    function sendLink(type, data) { let message = { 'function': type, 'data': data }; try { window.Android.postMessage(JSON.stringify(message)); } catch (e) { } try { webkit.messageHandlers.process.postMessage(message); } catch (e) { } };
+  </script>
+</body>
+
+</html>
