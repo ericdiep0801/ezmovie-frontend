@@ -11,11 +11,6 @@
     </a>
   </div>
 
-  <!-- Cinema Room Environment -->
-  <div class="cinema-environment" *ngIf="cinemaMode">
-    <div class="cinema-screen-glow"></div>
-  </div>
-
   <!-- Video Player Section (Only if Logged In and Session Valid) -->
   <section class="player-section" *ngIf="isLoggedIn && isSessionValid; else authPrompt">
     <!-- Player Mode Switch Tabs (Only if we have an episode and HLS link is available) -->

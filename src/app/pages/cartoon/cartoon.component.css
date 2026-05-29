@@ -430,30 +430,16 @@
 }
 
 /* CINEMA MODE FOCUSING STATE */
-.cinema-environment {
+.cartoon-dashboard-container.cinema-focus::before {
+  content: '';
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
+  background: #000000;
   z-index: 999998;
-  pointer-events: none;
-  overflow: hidden;
-  background-image: url('../../../assets/images/cinema_bg.png');
-  background-size: cover;
-  background-position: center bottom;
-  background-repeat: no-repeat;
-}
-
-.cinema-screen-glow {
-  position: absolute;
-  top: 0%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100vw;
-  height: 70vh;
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
-  z-index: 1;
+  cursor: default;
 }
 
 .cartoon-dashboard-container.cinema-focus .cartoon-player-column {
