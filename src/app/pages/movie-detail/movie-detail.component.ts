@@ -115,6 +115,13 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     private popupService: PopupService,
   ) { }
 
+  @HostListener('window:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Escape' && this.cinemaMode) {
+      this.toggleCinemaMode();
+    }
+  }
+
   ngAfterViewInit(): void {
     if (this.isHlsMode && this.selectedEpisode) {
       this.initializeHlsPlayer();

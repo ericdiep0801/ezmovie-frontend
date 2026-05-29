@@ -87,6 +87,13 @@ export class CartoonComponent implements OnInit, OnDestroy {
     private readonly router: Router
   ) { }
 
+  @HostListener('window:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Escape' && this.cinemaMode) {
+      this.toggleCinemaMode();
+    }
+  }
+
   ngOnInit(): void {
     this.authService.currentUser$.subscribe((user) => {
       this.isLoggedIn = !!user;

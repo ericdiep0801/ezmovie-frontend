@@ -30,7 +30,7 @@
       <!-- 2. VIDEO PLAYER CONTAINER (Moved here to sit side-by-side with Playlist) -->
       <section class="video-player-container-inner" *ngIf="selectedEpisode">
         <!-- Player Mode Switch Tabs -->
-        <div class="player-mode-tabs" *ngIf="selectedEpisode.linkM3u8">
+        <div class="player-mode-tabs" *ngIf="selectedEpisode.linkM3u8 && !cinemaMode">
           <button class="mode-tab-btn" [class.active]="isHlsMode" (click)="setPlayerMode(true)">
             <i class="fas fa-play tab-icon"></i> VIP Player (Tua 10S)
           </button>
@@ -40,6 +40,11 @@
         </div>
 
         <div class="video-aspect-wrapper" [style.filter]="'brightness(' + brightness + ')'">
+          <!-- Cinema Mode Close Button -->
+          <button class="cinema-close-btn" *ngIf="cinemaMode" (click)="toggleCinemaMode()" title="Thoát chế độ Rạp Chiếu">
+            <i class="fas fa-times"></i>
+          </button>
+
           <!-- 1. VIP Player (Custom HLS Player) -->
           <div class="custom-player-container" [class.hide-cursor]="!showControls && isPlaying"
             *ngIf="isHlsMode && selectedEpisode.linkM3u8" (mousemove)="onMouseMovePlayer()"
@@ -273,7 +278,7 @@
         </div>
 
         <!-- Video Metadata / Playing Title Panel -->
-        <div class="player-metadata-bar">
+        <div class="player-metadata-bar" *ngIf="!cinemaMode">
           <div class="meta-left">
             <span class="playing-tag"><i class="fas fa-play"></i> Đang Phát</span>
             <h2 class="playing-title">{{ selectedEpisode.title }}</h2>
