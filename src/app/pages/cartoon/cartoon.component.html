@@ -41,8 +41,8 @@
 
         <div class="video-aspect-wrapper" [style.filter]="'brightness(' + brightness + ')'">
           <!-- Cinema Mode Close Button -->
-          <button class="cinema-close-btn" *ngIf="cinemaMode" (click)="toggleCinemaMode()" title="Thoát chế độ Rạp Chiếu">
-            <i class="fas fa-times"></i>
+          <button class="cinema-close-btn" *ngIf="cinemaMode" (click)="toggleCinemaMode()">
+            Thoát khỏi chế độ rạp chiếu
           </button>
 
           <!-- 1. VIP Player (Custom HLS Player) -->
