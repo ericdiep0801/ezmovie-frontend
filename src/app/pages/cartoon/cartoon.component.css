@@ -754,6 +754,42 @@
   }
 }
 
+/* WATCH PROGRESS STYLES */
+.episode-progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 5;
+}
+
+.episode-progress-bar-fill {
+  height: 100%;
+  background: #ff5722;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.episode-watch-status {
+  margin-top: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.status-completed {
+  color: #4caf50;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-progress {
+  color: #ff9800;
+}
+
 /* EMPTY STATES */
 .empty-playlist-state {
   display: flex;

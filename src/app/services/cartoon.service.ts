@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -25,6 +25,17 @@ export interface CartoonEpisode {
   duration: string;
   views: string;
   publishDate: string;
+  progressPercent?: number;
+  isCompleted?: boolean;
+}
+
+export interface CartoonHistory {
+  id: number;
+  userId: number;
+  seriesId: string;
+  episodeId: string;
+  progressPercent: number;
+  isCompleted: boolean;
 }
 
 @Injectable({
@@ -53,6 +64,25 @@ export class CartoonService {
   getEpisodeEmbed(slug: string): Observable<{ linkEmbed: string; linkM3u8: string }> {
     return this.http.get<{ linkEmbed: string; linkM3u8: string }>(
       `${this.apiUrl}/episode-embed?slug=${encodeURIComponent(slug)}`
+    );
+  }
+
+  saveHistory(seriesId: string, episodeId: string, progressPercent: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post(`${this.apiUrl}/history`, {
+      seriesId,
+      episodeId,
+      progressPercent
+    }, { headers });
+  }
+
+  getSeriesHistory(seriesId: string): Observable<{ status: number; data: CartoonHistory[] }> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<{ status: number; data: CartoonHistory[] }>(
+      `${this.apiUrl}/history?seriesId=${encodeURIComponent(seriesId)}`,
+      { headers }
     );
   }
 }

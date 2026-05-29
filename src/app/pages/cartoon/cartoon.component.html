@@ -50,7 +50,7 @@
 
             <video #videoPlayer class="video-element" crossorigin="anonymous" (timeupdate)="onTimeUpdate()"
               (durationchange)="onDurationChange()" (play)="onPlayStatusChange(true)"
-              (pause)="onPlayStatusChange(false)"
+              (pause)="onPlayStatusChange(false)" (loadedmetadata)="onLoadedMetadata()"
               [style.object-fit]="currentAspectRatio === 'Default' ? 'contain' : (currentAspectRatio === 'Fill' ? 'cover' : 'fill')"
               [style.aspect-ratio]="currentAspectRatio === '16:9' ? '16/9' : (currentAspectRatio === '4:3' ? '4/3' : 'auto')">
             </video>
@@ -337,6 +337,11 @@
               <div class="play-overlay-card">
                 <i class="fas fa-play play-icon-overlay"></i>
               </div>
+              
+              <!-- Watch Progress Bar -->
+              <div class="episode-progress-bar-container" *ngIf="ep.progressPercent !== undefined && ep.progressPercent > 0 && !ep.isCompleted">
+                <div class="episode-progress-bar-fill" [style.width.%]="ep.progressPercent"></div>
+              </div>
             </div>
 
             <!-- Episode Details -->
@@ -347,6 +352,12 @@
               <div class="episode-stats-row">
                 <span class="stat-item"><i class="far fa-eye"></i> {{ ep.views }}</span>
                 <span class="stat-item"><i class="far fa-calendar-alt"></i> {{ ep.publishDate }}</span>
+              </div>
+              
+              <!-- Watch Status Text -->
+              <div class="episode-watch-status" *ngIf="ep.progressPercent !== undefined || ep.isCompleted">
+                <span class="status-completed" *ngIf="ep.isCompleted"><i class="fas fa-check-circle"></i> Đã xem xong</span>
+                <span class="status-progress" *ngIf="!ep.isCompleted && ep.progressPercent! > 0">Đã xem {{ Math.round(ep.progressPercent!) }}%</span>
               </div>
             </div>
 

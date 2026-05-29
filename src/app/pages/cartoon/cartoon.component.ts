@@ -61,6 +61,10 @@ export class CartoonComponent implements OnInit, OnDestroy {
   public showHoverTime: boolean = false;
   public hoverX: number = 0;
   public hoverTimeText: string = '00:00';
+  public isResumePending: boolean = false;
+
+  private lastSavedProgress: number = 0;
+  private lastSavedTime: number = 0;
 
   private hls: any = null;
   private controlsTimeout: any = null;
@@ -136,14 +140,32 @@ export class CartoonComponent implements OnInit, OnDestroy {
       next: (res) => {
         if (res.status === 200 && res.data) {
           this.episodes = res.data;
-          if (this.episodes.length > 0) {
-            this.selectEpisode(this.episodes[0]);
+          
+          if (this.isLoggedIn) {
+            this.cartoonService.getSeriesHistory(seriesId).subscribe({
+              next: (histRes) => {
+                if (histRes.status === 200 && histRes.data) {
+                  const historyMap = new Map();
+                  histRes.data.forEach(h => historyMap.set(h.episodeId, h));
+                  
+                  this.episodes.forEach(ep => {
+                    const h = historyMap.get(ep.id);
+                    if (h) {
+                      ep.progressPercent = h.progressPercent;
+                      ep.isCompleted = h.isCompleted;
+                    }
+                  });
+                }
+                this.finalizeEpisodeSelection();
+              },
+              error: () => this.finalizeEpisodeSelection()
+            });
           } else {
-            this.selectedEpisode = null;
-            this.safePlayerUrl = null;
+            this.finalizeEpisodeSelection();
           }
+        } else {
+          this.loadingService.hide();
         }
-        this.loadingService.hide();
       },
       error: (err) => {
         console.error('Failed to load episodes for cartoon series', err);
@@ -151,6 +173,16 @@ export class CartoonComponent implements OnInit, OnDestroy {
         this.loadingService.hide();
       }
     });
+  }
+
+  finalizeEpisodeSelection(): void {
+    if (this.episodes.length > 0) {
+      this.selectEpisode(this.episodes[0]);
+    } else {
+      this.selectedEpisode = null;
+      this.safePlayerUrl = null;
+    }
+    this.loadingService.hide();
   }
 
   selectEpisode(episode: CartoonEpisode): void {
@@ -215,8 +247,14 @@ export class CartoonComponent implements OnInit, OnDestroy {
     this.isPlaying = false;
     this.currentTime = 0;
     this.duration = 0;
-    this.progressPercent = 0;
+    
+    // Resume logic: Use existing progress if not completed
+    const initialProgress = (!episode.isCompleted && episode.progressPercent) ? episode.progressPercent : 0;
+    this.progressPercent = initialProgress;
     this.bufferedPercent = 0;
+    this.lastSavedProgress = initialProgress;
+    this.lastSavedTime = 0;
+    this.isResumePending = initialProgress > 0;
 
     if (this.isHlsMode && episode.linkM3u8) {
       this.initializeHlsPlayer();
@@ -332,8 +370,13 @@ export class CartoonComponent implements OnInit, OnDestroy {
     this.isPlaying = false;
     this.currentTime = 0;
     this.duration = 0;
-    this.progressPercent = 0;
+    
+    const initialProgress = (!this.selectedEpisode?.isCompleted && this.selectedEpisode?.progressPercent) ? this.selectedEpisode.progressPercent : 0;
+    this.progressPercent = initialProgress;
     this.bufferedPercent = 0;
+    this.lastSavedProgress = initialProgress;
+    this.lastSavedTime = 0;
+    this.isResumePending = initialProgress > 0;
 
     if (!isHls && this.hls) {
       this.hls.destroy();
@@ -375,6 +418,9 @@ export class CartoonComponent implements OnInit, OnDestroy {
         this.showSettingsMenu = false;
       }, 5000);
     } else {
+      if (this.isLoggedIn && this.selectedSeries && this.selectedEpisode && this.progressPercent > 0) {
+        this.saveCurrentProgress();
+      }
       this.stopAmbientGlow();
       this.showControls = true;
       if (this.controlsTimeout) {
@@ -450,14 +496,47 @@ export class CartoonComponent implements OnInit, OnDestroy {
     this.currentTime = video.currentTime;
     if (video.duration) {
       this.progressPercent = (video.currentTime / video.duration) * 100;
+      
+      if (this.isLoggedIn && this.selectedSeries && this.selectedEpisode) {
+        if (this.progressPercent - this.lastSavedProgress >= 5 || Math.abs(video.currentTime - this.lastSavedTime) >= 30) {
+          this.saveCurrentProgress();
+        }
+      }
     }
     this.updateBufferedPercent();
+  }
+
+  saveCurrentProgress(): void {
+    if (!this.selectedSeries || !this.selectedEpisode || !this.isLoggedIn) return;
+    this.lastSavedProgress = this.progressPercent;
+    this.lastSavedTime = this.currentTime;
+    
+    this.selectedEpisode.progressPercent = this.progressPercent;
+    if (this.progressPercent >= 95) {
+      this.selectedEpisode.isCompleted = true;
+    }
+
+    this.cartoonService.saveHistory(this.selectedSeries.id, this.selectedEpisode.id, this.progressPercent).subscribe();
   }
 
   onDurationChange(): void {
     const video = this.videoPlayer?.nativeElement;
     if (!video) return;
     this.duration = video.duration || 0;
+  }
+
+  onLoadedMetadata(): void {
+    const video = this.videoPlayer?.nativeElement;
+    if (!video) return;
+    
+    this.duration = video.duration || 0;
+    
+    if (this.isResumePending && this.duration > 0 && this.progressPercent > 0) {
+      const resumeTime = (this.progressPercent / 100) * this.duration;
+      video.currentTime = resumeTime;
+      this.currentTime = resumeTime;
+      this.isResumePending = false;
+    }
   }
 
   updateBufferedPercent(): void {
