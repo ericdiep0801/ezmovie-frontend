@@ -53,6 +53,7 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   public volume: number = 1;
   public isMuted: boolean = false;
   public isFullscreen: boolean = false;
+  public cinemaMode: boolean = false;
   public showControls: boolean = true;
 
   public bufferedPercent: number = 0;
@@ -651,6 +652,14 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       video.pause();
       this.isPlaying = false;
+    }
+  }
+
+  toggleCinemaMode(): void {
+    this.cinemaMode = !this.cinemaMode;
+    // Scroll to top or center player when entering cinema mode
+    if (this.cinemaMode) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 

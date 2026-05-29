@@ -1,4 +1,4 @@
-<div class="detail-container" *ngIf="movie">
+<div class="detail-container" [class.cinema-focus]="cinemaMode" *ngIf="movie">
   <!-- Back navigation -->
   <div class="back-nav">
     <a href="#" (click)="goBack($event)" class="back-link">
@@ -397,7 +397,24 @@
       </iframe>
     </div>
     <div class="player-info" *ngIf="selectedEpisode">
-      <h2 class="playing-title">Đang phát: {{ movie.name }} - {{ selectedEpisode.filename }}</h2>
+      <div class="meta-left">
+        <span class="playing-tag" *ngIf="isPlaying">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          Đang Phát
+        </span>
+        <h2 class="playing-title">Đang phát: {{ movie.name }} - {{ selectedEpisode.filename }}</h2>
+      </div>
+      <div class="meta-right">
+        <button class="cinema-mode-btn" (click)="toggleCinemaMode()" title="Chế độ Rạp Chiếu">
+          <svg *ngIf="!cinemaMode" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+          </svg>
+          <svg *ngIf="cinemaMode" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>
+          </svg>
+          {{ cinemaMode ? 'Thu nhỏ' : 'Rạp Chiếu' }}
+        </button>
+      </div>
     </div>
   </section>
 
