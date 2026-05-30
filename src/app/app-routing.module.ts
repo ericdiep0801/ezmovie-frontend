@@ -10,6 +10,7 @@ import { MovieDetailComponent } from './pages/movie-detail/movie-detail.componen
 import { TvComponent } from './pages/tv/tv.component';
 import { MusicComponent } from './pages/music/music.component';
 import { CartoonComponent } from './pages/cartoon/cartoon.component';
+import { LiveComponent } from './pages/live/live.component';
 
 import { GuestGuard } from './guards/guest.guard';
 import { AdminGuard } from './guards/admin.guard';
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'tv', component: TvComponent },
   { path: 'music', component: MusicComponent },
   { path: 'cartoon', component: CartoonComponent },
+  { path: 'live', component: LiveComponent },
   { 
     path: 'login', 
     component: LoginComponent,

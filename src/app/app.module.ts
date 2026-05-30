@@ -24,6 +24,7 @@ import { CartoonComponent } from './pages/cartoon/cartoon.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgrokInterceptor } from './ngrok.interceptor';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { LiveComponent } from './pages/live/live.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     MovieDetailComponent,
     TvComponent,
     MusicComponent,
-    CartoonComponent
+    CartoonComponent,
+    LiveComponent
   ],
   imports: [
     BrowserModule,

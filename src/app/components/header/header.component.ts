@@ -113,7 +113,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.isVisible &&
       !this.isTvActive() &&
       !this.isMusicActive() &&
-      !this.isCartoonActive();
+      !this.isCartoonActive() &&
+      !this.isLiveActive();
     const stacked = showSearch && window.innerWidth <= 1320;
     document.body.classList.toggle('header-search-stacked', stacked);
   }
@@ -371,7 +372,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   isMoviesActive(): boolean {
-    return !this.isTvActive() && !this.isMusicActive() && !this.isCartoonActive();
+    return !this.isTvActive() && !this.isMusicActive() && !this.isCartoonActive() && !this.isLiveActive();
   }
 
   isTvActive(): boolean {
@@ -384,6 +385,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isCartoonActive(): boolean {
     return this.router.url.split('?')[0].startsWith('/cartoon');
+  }
+
+  isLiveActive(): boolean {
+    return this.router.url.split('?')[0].startsWith('/live');
   }
 
   gotoPage(type: string) {

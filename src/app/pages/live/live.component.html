@@ -1,0 +1,61 @@
+<div class="live-portal-container">
+  <!-- Hero / Active Live Section -->
+  <section class="live-hero-section" *ngIf="activePageant">
+    <div class="live-hero-content">
+      <div class="live-player-wrapper">
+        <iframe *ngIf="safeEmbedUrl" [src]="safeEmbedUrl" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen class="live-iframe" referrerpolicy="strict-origin-when-cross-origin">
+        </iframe>
+        <div class="mt-4 text-center">
+          <p class="text-gray-400 mb-2">If the video is blocked by the owner (Error 153), please watch it directly on YouTube:</p>
+          <a [href]="'https://www.youtube.com/watch?v=' + activePageant.previewUrl" target="_blank" rel="noopener noreferrer" 
+             class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full transition-colors duration-300">
+            <i class="fab fa-youtube mr-2"></i> Watch on YouTube
+          </a>
+        </div>
+      </div>
+      <div class="live-info">
+        <span class="live-badge">LIVE</span>
+        <h1 class="live-title">{{ activePageant.name }}</h1>
+        <p class="live-channel"><i class="fas fa-tv"></i> {{ activePageant.channel }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live List Section -->
+  <section class="live-list-section">
+    <div class="section-header">
+      <h2 class="section-title"><i class="fas fa-crown"></i> Các Giải Hoa Hậu Đang Trực Tiếp</h2>
+    </div>
+
+    <div class="live-grid" *ngIf="pageants.length > 0; else emptyState">
+      <div class="live-card" *ngFor="let p of pageants" (click)="playPageant(p)"
+        [class.active-card]="activePageant?.id === p.id">
+        <div class="live-thumbnail-wrapper">
+          <img [src]="p.coverUrl" alt="Thumbnail" class="live-thumbnail">
+          <div class="live-overlay">
+            <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+              fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+          </div>
+          <span class="live-status-badge">Trực tiếp</span>
+        </div>
+        <div class="live-details">
+          <h3 class="live-name">{{ p.name }}</h3>
+          <p class="live-channel-name">{{ p.channel }}</p>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="fas fa-video-slash"></i>
+        </div>
+        <p>Hiện không có giải hoa hậu nào đang trực tiếp.</p>
+      </div>
+    </ng-template>
+  </section>
+</div>
