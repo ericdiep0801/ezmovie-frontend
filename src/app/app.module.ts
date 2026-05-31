@@ -27,6 +27,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { LiveComponent } from './pages/live/live.component';
 import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
 import { TranslatePipe } from './pipes/translate.pipe';
+import { AiChatComponent } from './components/ai-chat/ai-chat.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { TranslatePipe } from './pipes/translate.pipe';
     CartoonComponent,
     LiveComponent,
     SettingsModalComponent,
-    TranslatePipe
+    TranslatePipe,
+    AiChatComponent
   ],
   imports: [
     BrowserModule,

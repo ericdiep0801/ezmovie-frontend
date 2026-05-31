@@ -1,0 +1,51 @@
+<div class="ai-chat-container">
+  <!-- Floating Button -->
+  <button class="ai-chat-btn" [class.open]="isOpen" (click)="toggleChat()" title="Trợ lý EZMOVIE AI">
+    <i class="fas fa-robot"></i>
+  </button>
+
+  <!-- Chat Window -->
+  <div class="ai-chat-window" [class.open]="isOpen">
+    <div class="chat-header">
+      <div class="chat-title">
+        <i class="fas fa-magic"></i> EZMOVIE AI
+      </div>
+      <div class="chat-actions">
+        <button class="action-btn" (click)="clearChat()" title="Xóa lịch sử"><i class="fas fa-trash-alt"></i></button>
+        <button class="action-btn" (click)="toggleChat()" title="Đóng"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+
+    <div class="chat-body" #chatBody>
+      <div class="message" *ngFor="let msg of messages$ | async" [ngClass]="msg.role">
+        <div class="avatar">
+          <i class="fas" [ngClass]="msg.role === 'model' ? 'fa-robot' : 'fa-user'"></i>
+        </div>
+        <div class="content">
+          {{ msg.content }}
+        </div>
+      </div>
+      
+      <div class="message model loading-indicator" *ngIf="isLoading$ | async">
+        <div class="avatar"><i class="fas fa-robot"></i></div>
+        <div class="content typing">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-footer">
+      <textarea 
+        class="chat-input" 
+        [(ngModel)]="userInput" 
+        (keydown)="handleKeyDown($event)" 
+        placeholder="Hỏi mình về phim..." 
+        rows="1"></textarea>
+      <button class="send-btn" (click)="sendMessage()" [disabled]="(isLoading$ | async) || !userInput.trim()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+</div>
