@@ -66,6 +66,7 @@
   font-weight: 700;
   text-shadow: 0 0 10px rgba(255, 86, 34, 0.286);
   animation: textFade 1.5s infinite alternate;
+  white-space: nowrap;
 }
 
 @keyframes rotate {

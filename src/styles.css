@@ -18,6 +18,14 @@
   --page-offset-top: var(--app-header-height);
 }
 
+body.light-theme {
+  --color-bg-dark: #f0f2f5;
+  --color-bg-panel: #ffffff;
+  --color-text: #1a1a1a;
+  --color-text-muted: #65676b;
+  --color-border: #e4e6eb;
+}
+
 @media screen and (max-width: 768px) {
   :root {
     --app-header-height-expanded: 130px;

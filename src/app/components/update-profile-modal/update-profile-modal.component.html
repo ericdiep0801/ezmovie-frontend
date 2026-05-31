@@ -8,8 +8,8 @@
     </button>
 
     <div class="modal-header">
-      <h2>Edit Profile</h2>
-      <p>Update your public information</p>
+      <h2>{{ 'PROFILE.EDIT' | translate }}</h2>
+      <p>{{ 'PROFILE.EDIT_DESC' | translate }}</p>
     </div>
 
     <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
@@ -27,11 +27,11 @@
           </label>
         </div>
         <input id="avatar-input" type="file" (change)="onFileSelected($event)" accept="image/*" hidden>
-        <p class="upload-hint">Recommended: Square image, max 2MB</p>
+        <p class="upload-hint">{{ 'PROFILE.AVATAR_HINT' | translate }}</p>
       </div>
 
       <div class="form-group">
-        <label for="username">Username</label>
+        <label for="username">{{ 'PROFILE.USERNAME_LABEL' | translate }}</label>
         <div class="input-wrapper">
           <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -41,18 +41,18 @@
             id="username" 
             type="text" 
             formControlName="username" 
-            placeholder="Your username"
+            [placeholder]="'PROFILE.USERNAME_PLACEHOLDER' | translate"
             [class.invalid]="profileForm.get('username')?.invalid && profileForm.get('username')?.touched"
           >
         </div>
         <span class="error-text" *ngIf="profileForm.get('username')?.invalid && profileForm.get('username')?.touched">
-          Username must be at least 3 characters
+          {{ 'PROFILE.USERNAME_ERROR' | translate }}
         </span>
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn-secondary" (click)="close()">Cancel</button>
-        <button type="submit" class="btn-primary" [disabled]="profileForm.invalid">Save Changes</button>
+        <button type="button" class="btn-secondary" (click)="close()">{{ 'PROFILE.CANCEL' | translate }}</button>
+        <button type="submit" class="btn-primary" [disabled]="profileForm.invalid">{{ 'PROFILE.SAVE' | translate }}</button>
       </div>
     </form>
   </div>

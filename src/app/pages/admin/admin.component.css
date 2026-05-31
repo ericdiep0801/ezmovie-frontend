@@ -2,8 +2,8 @@
   display: block;
   height: 100vh;
   width: 100vw;
-  background: linear-gradient(135deg, #0f111a 0%, #1a1b26 100%);
-  color: #e0e0e0;
+  background: var(--color-bg-dark);
+  color: var(--color-text);
   font-family: 'Inter', sans-serif;
   overflow: hidden;
   position: relative;
@@ -214,8 +214,8 @@
 }
 
 .btn-toggle-sidebar:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: rgba(128, 128, 128, 0.1);
+  color: var(--color-text);
 }
 
 .sidebar-back-action {
@@ -252,8 +252,8 @@
 }
 
 .btn-back:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: rgba(128, 128, 128, 0.1);
+  color: var(--color-text);
   transform: translateX(-4px);
 }
 
@@ -292,8 +292,8 @@
 }
 
 .table-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
+  background: rgba(128, 128, 128, 0.05);
+  color: var(--color-text);
 }
 
 .table-icon {
@@ -307,7 +307,7 @@
 
 .table-item.active {
   background: rgba(122, 162, 247, 0.1);
-  color: #ffffff;
+  color: var(--color-text);
 }
 
 .table-item.active .table-icon {
@@ -766,7 +766,7 @@
 
 .btn-close-modal:hover {
   background: #f7768e;
-  color: #fff;
+  color: white;
 }
 
 .modal-body {
@@ -850,9 +850,9 @@
 }
 
 .btn-cancel:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  background: rgba(128, 128, 128, 0.1);
+  color: var(--color-text);
+  box-shadow: 0 0 10px rgba(128, 128, 128, 0.1);
 }
 
 .btn-confirm {
@@ -1314,8 +1314,8 @@
 }
 
 .btn-filter:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: rgba(128, 128, 128, 0.1);
+  color: var(--color-text);
 }
 
 .btn-filter.active {
@@ -1426,8 +1426,8 @@
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: rgba(128, 128, 128, 0.1);
+  color: var(--color-text);
 }
 
 .detail-value-wrapper {

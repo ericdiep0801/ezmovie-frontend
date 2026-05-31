@@ -7,7 +7,7 @@
         <line x1="19" y1="12" x2="5" y2="12"></line>
         <polyline points="12 19 5 12 12 5"></polyline>
       </svg>
-      Trở lại Trang chủ
+      {{ 'MOVIE.BACK_TO_HOME' | translate }}
     </a>
   </div>
 
@@ -20,7 +20,7 @@
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tab-icon">
           <polygon points="5 3 19 12 5 21 5 3"></polygon>
         </svg>
-        VIP Player (Tua 10S)
+        {{ 'PLAYER.VIP_PLAYER' | translate }}
       </button>
       <button class="mode-tab-btn" [class.active]="!isHlsMode" (click)="setPlayerMode(false)">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -30,14 +30,14 @@
           <line x1="17" y1="2" x2="17" y2="22"></line>
           <line x1="2" y1="12" x2="22" y2="12"></line>
         </svg>
-        Dự phòng (Embed Player)
+        {{ 'PLAYER.BACKUP_PLAYER' | translate }}
       </button>
     </div>
 
     <div class="player-wrapper" [class.ios-fake-fullscreen]="isFakeFullscreen" *ngIf="selectedEpisode">
       <!-- Cinema Mode Close Button -->
       <button class="cinema-close-btn" *ngIf="cinemaMode" (click)="toggleCinemaMode()">
-        Thoát khỏi chế độ rạp chiếu
+        {{ 'PLAYER.EXIT_CINEMA' | translate }}
       </button>
 
       <!-- 1. VIP Player (Custom HLS Player) -->
@@ -127,7 +127,7 @@
             <div class="controls-left">
               <!-- Previous Episode -->
               <button class="ctrl-btn" (click)="playPrevEpisode()" [disabled]="!hasPrevEpisode"
-                [class.disabled-btn]="!hasPrevEpisode" title="Tập trước">
+                [class.disabled-btn]="!hasPrevEpisode" [title]="'PLAYER.PREV_EPISODE' | translate">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polygon points="19 20 9 12 19 4 19 20"></polygon>
@@ -150,7 +150,7 @@
 
               <!-- Next Episode -->
               <button class="ctrl-btn" (click)="playNextEpisode()" [disabled]="!hasNextEpisode"
-                [class.disabled-btn]="!hasNextEpisode" title="Tập tiếp theo">
+                [class.disabled-btn]="!hasNextEpisode" [title]="'PLAYER.NEXT_EPISODE' | translate">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polygon points="5 4 15 12 5 20 5 4"></polygon>
@@ -256,7 +256,7 @@
 
                 <!-- Premium Dropdown Menu -->
                 <div class="resolution-dropdown-menu" *ngIf="showResolutionMenu">
-                  <div class="resolution-dropdown-header">Độ Phân Giải</div>
+                  <div class="resolution-dropdown-header">{{ 'PLAYER.RESOLUTION' | translate }}</div>
                   <div class="resolution-dropdown-list">
                     <button *ngFor="let res of availableResolutions" class="resolution-dropdown-item"
                       [class.active]="currentResolutionIndex === res.index" (click)="selectResolution(res.index)">
@@ -273,7 +273,7 @@
 
               <!-- Settings Control (Gear Button) -->
               <div class="settings-control-wrapper">
-                <button class="ctrl-btn settings-btn" (click)="toggleSettingsMenu()" [title]="'Cài đặt'">
+                <button class="ctrl-btn settings-btn" (click)="toggleSettingsMenu()" [title]="'PLAYER.SETTINGS' | translate">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="3"></circle>
@@ -287,7 +287,7 @@
                 <div class="settings-dropdown-menu" *ngIf="showSettingsMenu">
                   <!-- Main Menu -->
                   <div *ngIf="activeSettingsSubMenu === 'main'" class="settings-menu-content">
-                    <div class="settings-dropdown-header">Cài đặt</div>
+                    <div class="settings-dropdown-header">{{ 'PLAYER.SETTINGS' | translate }}</div>
 
                     <button class="settings-item-row" (click)="activeSettingsSubMenu = 'speed'">
                       <span class="settings-item-left">
@@ -297,7 +297,7 @@
                           <circle cx="12" cy="12" r="10"></circle>
                           <polygon points="10 8 16 12 10 16 10 8"></polygon>
                         </svg>
-                        Tốc độ phát (Play Speed)
+                        {{ 'PLAYER.SPEED' | translate }}
                       </span>
                       <span class="settings-item-right">
                         {{ getSpeedLabel(currentSpeed) }}
@@ -318,7 +318,7 @@
                           <line x1="8" y1="21" x2="16" y2="21"></line>
                           <line x1="12" y1="17" x2="12" y2="21"></line>
                         </svg>
-                        Tỷ lệ khung hình (Aspect Ratio)
+                        {{ 'PLAYER.ASPECT_RATIO' | translate }}
                       </span>
                       <span class="settings-item-right">
                         {{ currentAspectRatio === 'Default' ? 'Default' : currentAspectRatio }}
@@ -338,7 +338,7 @@
                         stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="15 18 9 12 15 6"></polyline>
                       </svg>
-                      Tốc độ phát
+                      {{ 'PLAYER.SPEED' | translate }}
                     </button>
                     <div class="resolution-dropdown-list">
                       <button *ngFor="let speed of availableSpeeds" class="resolution-dropdown-item"
@@ -360,7 +360,7 @@
                         stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="15 18 9 12 15 6"></polyline>
                       </svg>
-                      Tỷ lệ khung hình
+                      {{ 'PLAYER.ASPECT_RATIO' | translate }}
                     </button>
                     <div class="resolution-dropdown-list">
                       <button *ngFor="let ratio of availableAspectRatios" class="resolution-dropdown-item"
@@ -405,19 +405,19 @@
       <div class="meta-left">
         <span class="playing-tag" *ngIf="isPlaying">
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-          Đang Phát
+          {{ 'PLAYER.NOW_PLAYING' | translate }}
         </span>
-        <h2 class="playing-title">Đang phát: {{ movie.name }} - {{ selectedEpisode.filename }}</h2>
+        <h2 class="playing-title">{{ 'PLAYER.NOW_PLAYING' | translate }}: {{ movie.name }} - {{ selectedEpisode.filename }}</h2>
       </div>
       <div class="meta-right">
-        <button class="cinema-mode-btn" (click)="toggleCinemaMode()" title="Chế độ Rạp Chiếu">
+        <button class="cinema-mode-btn" (click)="toggleCinemaMode()" [title]="'PLAYER.CINEMA_MODE' | translate">
           <svg *ngIf="!cinemaMode" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
           </svg>
           <svg *ngIf="cinemaMode" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>
           </svg>
-          {{ cinemaMode ? 'Thu nhỏ' : 'Rạp Chiếu' }}
+          {{ cinemaMode ? ('PLAYER.SHRINK' | translate) : ('PLAYER.CINEMA_MODE' | translate) }}
         </button>
       </div>
     </div>
@@ -437,17 +437,15 @@
           </div>
 
           <ng-container *ngIf="!isLoggedIn; else expiredSession">
-            <h2 class="prompt-title">Bạn cần Đăng Nhập để xem phim này</h2>
-            <p class="prompt-desc">Hãy đăng nhập để trải nghiệm xem phim chất lượng cao, lưu phim yêu thích và đồng bộ
-              hóa lịch sử xem của bạn!</p>
-            <button class="btn-prompt-action" (click)="goToLogin()">Đăng Nhập Ngay</button>
+            <h2 class="prompt-title">{{ 'AUTH.PROMPT_TITLE_MOVIE' | translate }}</h2>
+            <p class="prompt-desc">{{ 'AUTH.PROMPT_DESC_MOVIE' | translate }}</p>
+            <button class="btn-prompt-action" (click)="goToLogin()">{{ 'AUTH.LOGIN_NOW' | translate }}</button>
           </ng-container>
 
           <ng-template #expiredSession>
-            <h2 class="prompt-title">Phiên đăng nhập đã hết hạn</h2>
-            <p class="prompt-desc">Phiên đăng nhập của bạn đã kết thúc. Vui lòng đăng nhập lại để tiếp tục xem phim và
-              đồng bộ hóa trải nghiệm của bạn.</p>
-            <button class="btn-prompt-action" (click)="handleSessionExpiredLogin()">Đăng Nhập Lại</button>
+            <h2 class="prompt-title">{{ 'AUTH.SESSION_EXPIRED' | translate }}</h2>
+            <p class="prompt-desc">{{ 'AUTH.SESSION_EXPIRED_DESC' | translate }}</p>
+            <button class="btn-prompt-action" (click)="handleSessionExpiredLogin()">{{ 'AUTH.LOGIN_AGAIN' | translate }}</button>
           </ng-template>
         </div>
       </div>
@@ -457,9 +455,9 @@
   <!-- Episode List Selection -->
   <section class="episodes-section" *ngIf="episodes.length > 0">
     <div class="episodes-card">
-      <h3 class="episodes-title">Chọn Tập Phim</h3>
+      <h3 class="episodes-title">{{ 'MOVIE.CHOOSE_EPISODE' | translate }}</h3>
       <div class="server-block" *ngFor="let server of episodes">
-        <h4 class="server-name" *ngIf="episodes.length > 1">Nguồn phát: {{ server.server_name }}</h4>
+        <h4 class="server-name" *ngIf="episodes.length > 1">{{ 'MOVIE.SERVER' | translate }} {{ server.server_name }}</h4>
         <div class="episodes-grid">
           <button class="ep-btn" *ngFor="let ep of server.server_data"
             [class.active]="selectedEpisode && selectedEpisode.slug === ep.slug" (click)="selectEpisode(ep)">
@@ -491,7 +489,7 @@
                   d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
                 </path>
               </svg>
-              {{ isFavorited ? 'Đã lưu yêu thích' : 'Lưu phim yêu thích' }}
+              {{ isFavorited ? ('MOVIE.FAVORITE_ADDED' | translate) : ('MOVIE.FAVORITE_ADD' | translate) }}
             </button>
             <button class="btn-download" *ngIf="selectedEpisode && selectedEpisode.link_m3u8 && (userRole === 'vip' || userRole === 'admin')" (click)="downloadMovie()"
               title="Tải file M3U8 để xem offline bằng VLC Player">
@@ -501,7 +499,7 @@
                 <polyline points="7 10 12 15 17 10"></polyline>
                 <line x1="12" y1="15" x2="12" y2="3"></line>
               </svg>
-              Tải phim xuống
+              {{ 'MOVIE.DOWNLOAD' | translate }}
             </button>
           </div>
         </div>
@@ -516,34 +514,57 @@
         </div>
 
         <div class="info-block">
-          <h4 class="info-heading">Nội dung phim</h4>
+          <h4 class="info-heading">{{ 'MOVIE.CONTENT' | translate }}</h4>
           <!-- Use innerHTML to preserve paragraphs/breaks if present, or fallback to standard binding -->
           <p class="movie-description" [innerHTML]="movie.content"></p>
         </div>
 
         <div class="meta-list-details">
           <div class="meta-row" *ngIf="movie.category && movie.category.length > 0">
-            <span class="meta-label">Thể loại:</span>
+            <span class="meta-label">{{ 'MOVIE.GENRE' | translate }}</span>
             <span class="meta-values">
               <span class="genre-pill" *ngFor="let cat of movie.category">{{ cat.name }}</span>
             </span>
           </div>
 
           <div class="meta-row" *ngIf="movie.country && movie.country.length > 0">
-            <span class="meta-label">Quốc gia:</span>
+            <span class="meta-label">{{ 'MOVIE.COUNTRY' | translate }}</span>
             <span class="meta-values">
               <span class="country-name" *ngFor="let c of movie.country">{{ c.name }}</span>
             </span>
           </div>
 
           <div class="meta-row" *ngIf="movie.director && movie.director.length > 0">
-            <span class="meta-label">Đạo diễn:</span>
+            <span class="meta-label">{{ 'MOVIE.DIRECTOR' | translate }}</span>
             <span class="meta-values">{{ movie.director.join(', ') }}</span>
           </div>
 
           <div class="meta-row" *ngIf="movie.actor && movie.actor.length > 0">
-            <span class="meta-label">Diễn viên:</span>
+            <span class="meta-label">{{ 'MOVIE.ACTOR' | translate }}</span>
             <span class="meta-values">{{ movie.actor.join(', ') }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Suggested Movies Section -->
+  <section class="suggested-movies-section" *ngIf="suggestedMovies.length > 0">
+    <div class="suggested-movies-card">
+      <h3 class="suggested-title">{{ 'MOVIE.SUGGESTIONS' | translate }} ({{ suggestedGenreName }})</h3>
+      <div class="suggested-grid">
+        <div class="movie-card" *ngFor="let m of suggestedMovies" (click)="viewMovie(m.slug)">
+          <div class="movie-poster">
+            <img [src]="m.thumb_url || m.poster_url" [alt]="m.name">
+            <div class="movie-overlay">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h4 class="movie-title">{{ m.name }}</h4>
+            <p class="movie-meta">{{ m.year }}</p>
           </div>
         </div>
       </div>
@@ -558,19 +579,19 @@
           stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="title-icon">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
-        Bình luận cộng đồng ({{ commentsList.length }})
+        {{ 'MOVIE.COMMENTS' | translate }} ({{ commentsList.length }})
       </h3>
 
       <!-- Write Comment Box (Visible to logged in users, otherwise show warning) -->
       <div class="comment-input-block" *ngIf="isLoggedIn; else loginToCommentPrompt">
         <textarea class="comment-textarea"
-          placeholder="Chia sẻ cảm xúc của bạn về bộ phim này... (Không chứa ký tự thô tục, chỉ cho bình luận văn bản)"
+          [placeholder]="'MOVIE.COMMENT_PLACEHOLDER' | translate"
           [(ngModel)]="commentContent" rows="3">
         </textarea>
         <div class="comment-input-actions">
-          <span class="char-counter">{{ commentContent ? commentContent.length : 0 }} ký tự</span>
+          <span class="char-counter">{{ commentContent ? commentContent.length : 0 }} {{ 'MOVIE.CHARS' | translate }}</span>
           <button class="btn btn-primary btn-submit-comment" (click)="submitComment()">
-            Gửi bình luận
+            {{ 'MOVIE.SEND_COMMENT' | translate }}
           </button>
         </div>
       </div>
@@ -583,8 +604,7 @@
             <line x1="12" y1="9" x2="12" y2="13"></line>
             <line x1="12" y1="17" x2="12.01" y2="17"></line>
           </svg>
-          <span>Bạn phải <a href="#" (click)="goToLogin(); $event.preventDefault()">Đăng nhập</a> để tham gia bình
-            luận!</span>
+          <span>{{ 'MOVIE.LOGIN_TO_COMMENT_1' | translate }} <a href="#" (click)="goToLogin(); $event.preventDefault()">{{ 'MOVIE.LOGIN_TO_COMMENT_2' | translate }}</a> {{ 'MOVIE.LOGIN_TO_COMMENT_3' | translate }}</span>
         </div>
       </ng-template>
 
@@ -627,7 +647,7 @@
             stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="empty-icon">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
           </svg>
-          <p>Chưa có bình luận nào cho phim này. Hãy là người đầu tiên chia sẻ cảm xúc nhé!</p>
+          <p>{{ 'MOVIE.NO_COMMENTS' | translate }}</p>
         </div>
       </ng-template>
     </div>

@@ -25,6 +25,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgrokInterceptor } from './ngrok.interceptor';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { LiveComponent } from './pages/live/live.component';
+import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
+import { TranslatePipe } from './pipes/translate.pipe';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import { LiveComponent } from './pages/live/live.component';
     TvComponent,
     MusicComponent,
     CartoonComponent,
-    LiveComponent
+    LiveComponent,
+    SettingsModalComponent,
+    TranslatePipe
   ],
   imports: [
     BrowserModule,

@@ -769,8 +769,11 @@ export class CartoonComponent implements OnInit, OnDestroy {
   toggleCinemaMode(): void {
     this.cinemaMode = !this.cinemaMode;
     if (this.cinemaMode) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.body.style.overflow = 'hidden';
       document.body.classList.add('cartoon-cinema-mode');
     } else {
+      document.body.style.overflow = '';
       document.body.classList.remove('cartoon-cinema-mode');
     }
   }

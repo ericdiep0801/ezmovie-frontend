@@ -16,12 +16,12 @@
 .otp-card {
   width: 90%;
   max-width: 420px;
-  background-color: #1a1a1a;
+  background-color: var(--color-bg-panel);
   border-radius: 24px;
   padding: 3rem 2rem;
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
   text-align: center;
   animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -39,7 +39,7 @@
 }
 
 .close-btn:hover {
-  color: #fff;
+  color: var(--color-text);
 }
 
 .otp-header .otp-icon {
@@ -57,7 +57,7 @@
   font-size: 1.8rem;
   font-weight: 800;
   margin-bottom: 0.5rem;
-  color: #fff;
+  color: var(--color-text);
 }
 
 .otp-header p {
@@ -87,7 +87,7 @@
   padding: 1rem;
   font-size: 2rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text);
   text-align: center;
   letter-spacing: 0.5rem;
   transition: all 0.3s;

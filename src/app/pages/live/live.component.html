@@ -25,8 +25,7 @@
 
   <!-- Live List Section -->
   <section class="live-list-section">
-    <div class="section-header">
-      <h2 class="section-title"><i class="fas fa-crown"></i> Các Giải Hoa Hậu Đang Trực Tiếp</h2>
+    <div class="section-header" style="display: none;">
     </div>
 
     <div class="live-grid" *ngIf="pageants.length > 0; else emptyState">
@@ -54,7 +53,7 @@
         <div class="empty-icon">
           <i class="fas fa-video-slash"></i>
         </div>
-        <p>Hiện không có giải hoa hậu nào đang trực tiếp.</p>
+        <p>Hiện không có kênh nào đang trực tiếp.</p>
       </div>
     </ng-template>
   </section>

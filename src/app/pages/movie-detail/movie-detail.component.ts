@@ -59,6 +59,9 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   public bufferedPercent: number = 0;
   public progressPercent: number = 0;
 
+  public suggestedMovies: any[] = [];
+  public suggestedGenreName: string = '';
+
   public skipIndicatorText: string = '';
   public showSkipFlash: boolean = false;
 
@@ -221,6 +224,9 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
 
           // Load comments for the movie
           this.loadComments(slug);
+
+          // Load suggested movies
+          this.loadSuggestedMovies(this.movie);
         } else {
           this.popupService.showError(
             'Không thể tìm thấy phim này hoặc đã xảy ra lỗi.',
@@ -240,6 +246,13 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadingService.hide();
       },
     });
+  }
+
+  viewMovie(slug: string): void {
+    if (slug) {
+      // Reload the component with the new slug
+      this.router.navigate(['/movie', slug]);
+    }
   }
 
   checkFavoriteStatus(slug: string): void {
@@ -412,6 +425,41 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   // ==========================================
   public commentsList: any[] = [];
   public commentContent: string = '';
+
+  loadSuggestedMovies(movie: any): void {
+    const categories = movie.category;
+    if (categories && categories.length > 0) {
+      let targetGenre = categories[0].name;
+      const popularGenres = ['Hoạt Hình', 'Hành Động', 'Cổ Trang', 'Chiến Tranh', 'Viễn Tưởng', 'Hình Sự', 'Kinh Dị', 'Tình Cảm', 'Cổ Tích', 'Hài Hước'];
+      for (const cat of categories) {
+        if (popularGenres.includes(cat.name)) {
+          targetGenre = cat.name;
+          break;
+        }
+      }
+      this.suggestedGenreName = targetGenre;
+      this.movieService.searchMovies(targetGenre, 1, 10).subscribe({
+        next: (searchRes) => {
+          if (searchRes.status === 200 && searchRes.items) {
+            this.suggestedMovies = searchRes.items
+              .filter((m: any) => m.slug !== movie.slug)
+              .slice(0, 8);
+          }
+        }
+      });
+    } else {
+      this.suggestedGenreName = 'Hành Động';
+      this.movieService.searchMovies('Hành Động', 1, 10).subscribe({
+        next: (res) => {
+          if (res.status === 200 && res.items) {
+            this.suggestedMovies = res.items
+              .filter((m: any) => m.slug !== movie.slug)
+              .slice(0, 8);
+          }
+        }
+      });
+    }
+  }
 
   loadComments(slug: string): void {
     this.movieService.listComments(slug).subscribe({
@@ -667,6 +715,9 @@ export class MovieDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     // Scroll to top or center player when entering cinema mode
     if (this.cinemaMode) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
   }
 

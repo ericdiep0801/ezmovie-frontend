@@ -3,14 +3,26 @@
   <section class="hero" *ngIf="featuredMovie" [style.backgroundImage]="'url(' + featuredMovie.imageUrl + ')'">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <h2 class="hero-title">{{ featuredMovie.title }}</h2>
-      <p class="hero-desc">{{ featuredMovie.description }}</p>
+      <h2 class="hero-title">
+        <ng-container *ngIf="currentType === 'history'">{{ 'HOME.BANNER_HISTORY_TITLE' | translate | uppercase }}</ng-container>
+        <ng-container *ngIf="currentType === 'favorites'">{{ 'HOME.BANNER_FAVORITES_TITLE' | translate | uppercase }}</ng-container>
+        <ng-container *ngIf="currentType === '' && searchKeyword">{{ 'HOME.BANNER_SEARCH_TITLE' | translate | uppercase }}: {{ searchKeyword | uppercase }}</ng-container>
+        <ng-container *ngIf="currentType === '' && !searchKeyword">{{ featuredMovie.title }}</ng-container>
+        <ng-container *ngIf="currentType === 'catalog'">{{ featuredMovie.title }}</ng-container>
+      </h2>
+      <p class="hero-desc">
+        <ng-container *ngIf="currentType === 'history'">{{ 'HOME.BANNER_HISTORY_DESC' | translate }}</ng-container>
+        <ng-container *ngIf="currentType === 'favorites'">{{ 'HOME.BANNER_FAVORITES_DESC' | translate }}</ng-container>
+        <ng-container *ngIf="currentType === '' && searchKeyword && movies.length > 0">{{ 'HOME.BANNER_SEARCH_DESC_1' | translate }} "{{ searchKeyword }}". {{ 'HOME.BANNER_SEARCH_DESC_2' | translate }} {{ featuredMovie.origin_name }} ({{ featuredMovie.year }}).</ng-container>
+        <ng-container *ngIf="currentType === '' && searchKeyword && movies.length === 0">{{ 'HOME.BANNER_SEARCH_EMPTY' | translate }} "{{ searchKeyword }}". {{ 'HOME.BANNER_SEARCH_EMPTY_2' | translate }}</ng-container>
+        <ng-container *ngIf="currentType === '' && !searchKeyword">{{ featuredMovie.origin_name }} ({{ featuredMovie.year }}) - {{ 'HOME.BANNER_NEW_MOVIE_DESC' | translate }}</ng-container>
+      </p>
       <div class="hero-buttons">
         <button class="btn btn-primary play-btn" *ngIf="featuredMovie.slug" (click)="viewMovie(featuredMovie.slug)">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
             <polygon points="5 3 19 12 5 21 5 3"></polygon>
           </svg>
-          Watch Now
+          {{ 'HOME.WATCH_NOW' | translate }}
         </button>
       </div>
     </div>
@@ -18,7 +30,7 @@
 
   <!-- Categories -->
   <section class="content-section" *ngIf="!currentType || currentType === 'catalog'">
-    <h3 class="section-title">Categories / Thể Loại</h3>
+    <h3 class="section-title">{{ 'HOME.CATEGORIES' | translate }}</h3>
     <div class="category-list">
       <div class="category-pill" *ngFor="let cat of categories" (click)="onCategoryClick(cat)">{{ cat }}</div>
     </div>
@@ -33,7 +45,7 @@
         <circle cx="12" cy="12" r="10"></circle>
         <polyline points="12 6 12 12 16 14"></polyline>
       </svg>
-      Phim Đang Xem Dở
+      {{ 'HOME.IN_PROGRESS' | translate }}
     </h3>
     <div class="movie-grid">
       <div class="movie-card progress-card" *ngFor="let movie of inProgressMovies" (click)="viewMovie(movie.slug)">
@@ -46,8 +58,7 @@
               </svg>
             </button>
           </div>
-          <span class="movie-badge" style="font-weight: 600; background: var(--color-primary); color: white;">Tập {{
-            movie.episode_current }}</span>
+          <span class="movie-badge" style="font-weight: 600; background: var(--color-primary); color: white;">{{ 'HOME.EPISODE' | translate }} {{ movie.episode_current }}</span>
 
           <!-- Premium watch progress bar overlay -->
           <div class="watch-progress-track">
@@ -57,9 +68,8 @@
         <div class="movie-info">
           <h4 class="movie-title">{{ movie.name }}</h4>
           <div class="movie-meta progress-meta">
-            <span class="progress-percent-label">Đã xem {{ movie.progressPercent || 0 }}%</span>
-            <span class="movie-rating" style="color: var(--color-primary); font-weight: bold;">Tập {{
-              movie.episode_current }}</span>
+            <span class="progress-percent-label">{{ 'HOME.WATCHED_PERCENT' | translate }} {{ movie.progressPercent || 0 }}%</span>
+            <span class="movie-rating" style="color: var(--color-primary); font-weight: bold;">{{ 'HOME.EPISODE' | translate }} {{ movie.episode_current }}</span>
           </div>
         </div>
       </div>
@@ -74,7 +84,7 @@
         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
         <polyline points="22 4 12 14.01 9 11.01"></polyline>
       </svg>
-      Phim Đã Xem Gần Đây
+      {{ 'HOME.WATCHED_RECENTLY' | translate }}
     </h3>
     <div class="movie-grid">
       <div class="movie-card completed-card" *ngFor="let movie of watchedMovies" (click)="viewMovie(movie.slug)">
@@ -87,12 +97,12 @@
               </svg>
             </button>
           </div>
-          <span class="movie-badge" style="background: #2ec4b6; color: white;">Hoàn thành ✓</span>
+          <span class="movie-badge" style="background: #2ec4b6; color: white;">{{ 'HOME.FINISHED' | translate }}</span>
         </div>
         <div class="movie-info">
           <h4 class="movie-title">{{ movie.name }}</h4>
           <div class="movie-meta">
-            <span class="movie-genre" style="color: #2ec4b6;">Đã xem xong</span>
+            <span class="movie-genre" style="color: #2ec4b6;">{{ 'HOME.WATCHED_DONE' | translate }}</span>
           </div>
         </div>
       </div>
@@ -108,7 +118,7 @@
           points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
         </polygon>
       </svg>
-      Gợi ý phim thể loại: <span class="highlight-genre" style="color: var(--color-primary); margin-left: 6px;">{{
+      {{ 'HOME.SUGGESTIONS_GENRE' | translate }} <span class="highlight-genre" style="color: var(--color-primary); margin-left: 6px;">{{
         recommendedGenreName }}</span>
     </h3>
     <div class="movie-grid">
@@ -140,8 +150,7 @@
         <div class="movie-info">
           <h4 class="movie-title">{{ movie.name }}</h4>
           <div class="movie-meta">
-            <span class="movie-genre">{{ movie.origin_name || (movie.type === 'series' ? 'Phim Bộ' : 'Phim Lẻ')
-              }}</span>
+            <span class="movie-genre">{{ movie.origin_name || (movie.type === 'series' ? ('HOME.SERIES' | translate) : ('HOME.SINGLE_MOVIE' | translate)) }}</span>
             <span class="movie-rating" *ngIf="movie.year">
               {{ movie.year }}
             </span>
@@ -155,20 +164,20 @@
   <section class="content-section">
     <div class="section-header-row">
       <h3 class="section-title">
-        <ng-container *ngIf="currentType === 'favorites'">Phim Yêu Thích Của Bạn</ng-container>
-        <ng-container *ngIf="currentType === 'history'">Lịch Sử Xem Phim</ng-container>
-        <ng-container *ngIf="currentType === 'catalog'">Khám Phá Phim</ng-container>
+        <ng-container *ngIf="currentType === 'favorites'">{{ 'HOME.FAVORITE_MOVIES' | translate }}</ng-container>
+        <ng-container *ngIf="currentType === 'history'">{{ 'HOME.WATCH_HISTORY' | translate }}</ng-container>
+        <ng-container *ngIf="currentType === 'catalog'">{{ 'HOME.DISCOVER_MOVIES' | translate }}</ng-container>
         <ng-container *ngIf="!currentType">
-          {{ searchKeyword ? 'Kết quả tìm kiếm cho: "' + searchKeyword + '"' : 'Phim Mới Cập Nhật' }}
+          {{ searchKeyword ? ('HOME.SEARCH_RESULTS' | translate) + ' "' + searchKeyword + '"' : ('HOME.NEW_UPDATES' | translate) }}
         </ng-container>
       </h3>
 
       <!-- Items per page selector (Only for search or general list, i.e. !currentType or catalog) -->
       <div class="page-size-selector" *ngIf="!currentType || currentType === 'catalog'">
-        <span class="size-label">Hiển thị:</span>
+        <span class="size-label">{{ 'HOME.SHOWING' | translate }}</span>
         <div class="custom-select-wrapper">
           <div class="custom-select-trigger" (click)="togglePageSizeDropdown($event)">
-            <span>{{ pageSize }} phim {{ pageSize === 100 ? '(Mặc định)' : '' }}</span>
+            <span>{{ pageSize }} {{ 'HOME.MOVIES_COUNT' | translate }} {{ pageSize === 100 ? ('HOME.DEFAULT' | translate) : '' }}</span>
             <svg class="chevron-icon" [class.open]="isPageSizeDropdownOpen" xmlns="http://www.w3.org/2000/svg"
               width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
               stroke-linecap="round" stroke-linejoin="round">
@@ -178,7 +187,7 @@
           <div class="custom-select-dropdown" *ngIf="isPageSizeDropdownOpen">
             <div class="custom-select-option" *ngFor="let size of pageSizeOptions" [class.selected]="pageSize === size"
               (click)="selectPageSize(size, $event)">
-              {{ size }} phim {{ size === 100 ? '(Mặc định)' : '' }}
+              {{ size }} {{ 'HOME.MOVIES_COUNT' | translate }} {{ size === 100 ? ('HOME.DEFAULT' | translate) : '' }}
             </div>
           </div>
         </div>
@@ -193,7 +202,7 @@
           <line x1="10" y1="11" x2="10" y2="17"></line>
           <line x1="14" y1="11" x2="14" y2="17"></line>
         </svg>
-        Xóa lịch sử xem
+        {{ 'HOME.CLEAR_HISTORY' | translate }}
       </button>
     </div>
 
@@ -225,8 +234,7 @@
         <div class="movie-info">
           <h4 class="movie-title">{{ movie.name }}</h4>
           <div class="movie-meta">
-            <span class="movie-genre">{{ movie.origin_name || (movie.type === 'series' ? 'Phim Bộ' : 'Phim Lẻ')
-              }}</span>
+            <span class="movie-genre">{{ movie.origin_name || (movie.type === 'series' ? ('HOME.SERIES' | translate) : ('HOME.SINGLE_MOVIE' | translate)) }}</span>
             <span class="movie-rating" *ngIf="movie.year">
               {{ movie.year }}
             </span>
@@ -243,10 +251,9 @@
           <line x1="8" y1="12" x2="16" y2="12"></line>
         </svg>
         <p>
-          <ng-container *ngIf="currentType === 'favorites'">Danh sách phim yêu thích của bạn đang trống.</ng-container>
-          <ng-container *ngIf="currentType === 'history'">Lịch sử xem phim của bạn đang trống.</ng-container>
-          <ng-container *ngIf="!currentType || currentType === 'catalog'">Không có phim nào khả dụng hoặc không tìm thấy
-            phim phù hợp.</ng-container>
+          <ng-container *ngIf="currentType === 'favorites'">{{ 'HOME.EMPTY_FAVORITES' | translate }}</ng-container>
+          <ng-container *ngIf="currentType === 'history'">{{ 'HOME.EMPTY_HISTORY' | translate }}</ng-container>
+          <ng-container *ngIf="!currentType || currentType === 'catalog'">{{ 'HOME.EMPTY_CATALOG' | translate }}</ng-container>
         </p>
       </div>
     </ng-template>

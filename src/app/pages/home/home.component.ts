@@ -108,7 +108,8 @@ export class HomeComponent implements OnInit {
               const first = this.movies[0];
               this.featuredMovie = {
                 title: first.name,
-                description: `${first.origin_name} (${first.year}) - Phim mới cập nhật chất lượng cực cao.`,
+                origin_name: first.origin_name,
+                year: first.year,
                 imageUrl: first.poster_url || first.thumb_url,
                 slug: first.slug
               };
@@ -138,14 +139,14 @@ export class HomeComponent implements OnInit {
             const first = this.movies[0];
             this.featuredMovie = {
               title: first.name,
-              description: `Kết quả tìm kiếm cho từ khóa "${keyword}". Phim ${first.origin_name} (${first.year}).`,
+              origin_name: first.origin_name,
+              year: first.year,
               imageUrl: first.poster_url || first.thumb_url,
               slug: first.slug
             };
           } else {
             this.featuredMovie = {
               title: `TÌM KIẾM: ${keyword.toUpperCase()}`,
-              description: `Không tìm thấy kết quả phù hợp cho từ khóa "${keyword}". Hãy thử tìm kiếm từ khóa khác!`,
               imageUrl: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=1925&ixlib=rb-4.0.3',
               slug: null
             };
@@ -176,7 +177,6 @@ export class HomeComponent implements OnInit {
 
           this.featuredMovie = {
             title: 'PHIM YÊU THÍCH',
-            description: 'Danh sách những bộ phim bạn đã lưu để xem lại. Bấm chọn phim để thưởng thức ngay!',
             imageUrl: this.movies.length > 0 ? this.movies[0].thumb_url : 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=1925&ixlib=rb-4.0.3',
             slug: null
           };
@@ -206,7 +206,6 @@ export class HomeComponent implements OnInit {
 
           this.featuredMovie = {
             title: 'LỊCH SỬ XEM PHIM',
-            description: 'Xem lại các bộ phim và tập phim bạn đã xem gần đây. Tự động lưu trữ lịch sử phát phim của bạn.',
             imageUrl: this.movies.length > 0 ? this.movies[0].thumb_url : 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=1925&ixlib=rb-4.0.3',
             slug: null
           };

@@ -25,24 +25,24 @@
           <line x1="12" y1="17" x2="12.01" y2="17"></line>
         </svg>
       </div>
-      <h3>{{ (popupService.popup$ | async)?.title }}</h3>
+      <h3>{{ (popupService.popup$ | async)?.title | translate }}</h3>
     </div>
     
     <div class="popup-body">
-      <p>{{ (popupService.popup$ | async)?.message }}</p>
+      <p>{{ (popupService.popup$ | async)?.message | translate }}</p>
     </div>
 
     <div class="popup-footer">
       <ng-container *ngIf="(popupService.popup$ | async)?.type === 'confirm'; else standardBtn">
         <button class="popup-btn btn-cancel" (click)="close()">
-          {{ (popupService.popup$ | async)?.cancelText || 'Hủy' }}
+          {{ ((popupService.popup$ | async)?.cancelText || 'PROFILE.CANCEL') | translate }}
         </button>
         <button class="popup-btn btn-confirm" (click)="confirm()">
-          {{ (popupService.popup$ | async)?.confirmText || 'Đồng ý' }}
+          {{ ((popupService.popup$ | async)?.confirmText || 'POPUP.CONFIRM') | translate }}
         </button>
       </ng-container>
       <ng-template #standardBtn>
-        <button class="popup-btn" (click)="close()">Got it</button>
+        <button class="popup-btn" (click)="close()">{{ 'POPUP.GOT_IT' | translate }}</button>
       </ng-template>
     </div>
   </div>

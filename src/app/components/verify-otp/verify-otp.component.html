@@ -14,8 +14,8 @@
           <polyline points="22,6 12,13 2,6"></polyline>
         </svg>
       </div>
-      <h2>Verify Your Email</h2>
-      <p>We've sent a 6-digit verification code to <br><span>{{ email }}</span></p>
+      <h2>{{ 'AUTH.VERIFY_EMAIL' | translate }}</h2>
+      <p>{{ 'AUTH.VERIFY_DESC_1' | translate }} <br><span>{{ email }}</span></p>
     </div>
 
     <div class="otp-form">
@@ -36,15 +36,15 @@
           <circle cx="12" cy="12" r="10"></circle>
           <polyline points="12 6 12 12 16 14"></polyline>
         </svg>
-        <span>Expires in: {{ formattedTime }}</span>
+        <span>{{ 'AUTH.EXPIRES_IN' | translate }} {{ formattedTime }}</span>
       </div>
 
       <button class="verify-submit-btn" (click)="onSubmit()" [disabled]="otpCode.length !== 6 || timeLeft === 0">
-        Verify Account
+        {{ 'AUTH.VERIFY_ACCOUNT' | translate }}
       </button>
 
       <div class="otp-resend">
-        <p>Didn't receive the code? <button class="resend-link" (click)="onResendOtp()" [disabled]="timeLeft > 0 || isLoading">Resend Code</button></p>
+        <p>{{ 'AUTH.DIDNT_RECEIVE' | translate }} <button class="resend-link" (click)="onResendOtp()" [disabled]="timeLeft > 0 || isLoading">{{ 'AUTH.RESEND_CODE' | translate }}</button></p>
       </div>
     </div>
   </div>

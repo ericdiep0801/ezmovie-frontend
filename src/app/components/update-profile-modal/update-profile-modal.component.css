@@ -22,12 +22,12 @@
 .modal-card {
   width: 100%;
   max-width: 450px;
-  background: #1a1a1a;
+  background: var(--color-bg-panel);
   border-radius: 28px;
   padding: 2.5rem;
   position: relative;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--color-border);
   animation: slideUp 0.4s cubic-bezier(0.2, 1, 0.3, 1);
 }
 
@@ -45,7 +45,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  color: #fff;
+  color: var(--color-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,7 +66,7 @@
 .modal-header h2 {
   font-size: 1.8rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--color-text);
   margin-bottom: 0.5rem;
 }
 
@@ -121,7 +121,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border: 4px solid #1a1a1a;
+  border: 4px solid var(--color-bg-panel);
   transition: all 0.3s;
 }
 
@@ -167,7 +167,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 14px;
   padding: 1rem 1rem 1rem 3.2rem;
-  color: #fff !important;
+  color: var(--color-text) !important;
   font-size: 1rem;
   transition: all 0.3s;
 }
@@ -176,8 +176,8 @@
 .input-wrapper input:-webkit-autofill,
 .input-wrapper input:-webkit-autofill:hover, 
 .input-wrapper input:-webkit-autofill:focus {
-  -webkit-text-fill-color: #fff !important;
-  -webkit-box-shadow: 0 0 0px 1000px #222 inset !important;
+  -webkit-text-fill-color: var(--color-text) !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-bg-panel) inset !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 
@@ -219,12 +219,12 @@
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  background: rgba(128, 128, 128, 0.05);
+  color: var(--color-text);
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(128, 128, 128, 0.1);
 }
 
 .btn-primary {

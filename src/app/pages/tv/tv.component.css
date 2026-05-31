@@ -7,8 +7,8 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #08080a;
-  color: #f1f2f6;
+  background-color: var(--color-bg-dark);
+  color: var(--color-text);
   padding: 85px 24px 40px 24px;
   max-width: 100%;
   box-sizing: border-box;
@@ -55,9 +55,9 @@
 }
 
 .category-pill:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(128, 128, 128, 0.12);
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
   transform: translateY(-2px);
 }
 
@@ -104,7 +104,7 @@
 .sidebar-title {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text);
   margin: 0 0 16px 0;
   letter-spacing: 0.5px;
 }
@@ -117,9 +117,9 @@
 .search-channels-box input {
   width: 100%;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
-  color: #fff;
+  color: var(--color-text);
   padding: 12px 16px 12px 42px;
   font-size: 0.9rem;
   transition: all 0.3s ease;
@@ -236,7 +236,7 @@
 .channel-name-txt {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text);
   transition: color 0.3s ease;
 }
 
@@ -380,7 +380,7 @@
 }
 
 .loading-msg {
-  color: #fff;
+  color: var(--color-text);
   font-size: 1.05rem;
   font-weight: 600;
   margin: 0;
@@ -388,7 +388,7 @@
 }
 
 .error-msg-title {
-  color: #fff;
+  color: var(--color-text);
   font-size: 1.3rem;
   font-weight: 700;
   margin: 16px 0 8px 0;
@@ -411,7 +411,7 @@
   padding: 12px 28px;
   border-radius: 30px;
   cursor: pointer;
-  color: #fff;
+  color: var(--color-text);
   transition: all 0.3s ease;
 }
 
@@ -468,7 +468,7 @@
 .playing-chan-title {
   font-size: 1.4rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--color-text);
   margin: 0;
   letter-spacing: 0.5px;
 }
@@ -487,9 +487,9 @@
 }
 
 .action-fav-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: var(--color-bg-dark);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
   padding: 10px 22px;
   border-radius: 12px;
   font-size: 0.9rem;
@@ -541,7 +541,7 @@
 .epg-title {
   font-size: 1.15rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text);
   margin: 0;
   display: flex;
   align-items: center;
@@ -629,7 +629,7 @@
 .inner-glowing-dot {
   width: 4px;
   height: 4px;
-  background-color: #fff;
+  background-color: var(--color-text-muted);
   border-radius: 50%;
 }
 
@@ -682,7 +682,7 @@
 .program-title {
   font-size: 1.05rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text);
   margin: 0;
   transition: color 0.3s ease;
 }
@@ -842,7 +842,7 @@
     margin: 0 !important;
     white-space: nowrap;
     letter-spacing: 0.2px;
-    color: #fff !important;
+    color: var(--color-text) !important;
   }
 
   .search-channels-box {
@@ -1041,7 +1041,7 @@
   margin: 0;
   font-size: 1.15rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1058,7 +1058,7 @@
 }
 
 .close-btn:hover {
-  color: #fff;
+  color: var(--color-text);
 }
 
 .modal-body {
@@ -1090,7 +1090,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   padding: 12px 16px;
-  color: #fff;
+  color: var(--color-text);
   font-size: 0.9rem;
   transition: all 0.3s;
   box-sizing: border-box;
@@ -1138,7 +1138,7 @@
 .suggestion-btn:hover {
   background: rgba(229, 9, 20, 0.1);
   border-color: rgba(229, 9, 20, 0.3);
-  color: #fff;
+  color: var(--color-text);
 }
 
 .checkbox-group {
@@ -1172,8 +1172,8 @@
 .spinner-inline {
   width: 14px;
   height: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-text);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }

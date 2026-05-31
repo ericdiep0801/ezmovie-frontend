@@ -7,25 +7,25 @@
         <div class="search-box-wrapper">
           <i class="fas fa-search search-icon"></i>
           <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" (focus)="onSearchFocus()"
-            (blur)="onSearchBlur()" placeholder="Tìm kiếm bài hát, nghệ sĩ tại EZMOVIE..." class="search-input"
+            (blur)="onSearchBlur()" [placeholder]="'MUSIC.SEARCH_PLACEHOLDER' | translate" class="search-input"
             id="music-search-input" autocomplete="off">
           <i class="fas fa-times clear-search-icon" *ngIf="searchQuery" (click)="searchQuery=''"
-            title="Xóa tìm kiếm"></i>
-          <button (click)="onSearch()" class="search-btn" id="music-search-btn" title="Tìm Kiếm"><i
+            [title]="'MUSIC.CLEAR_SEARCH' | translate"></i>
+          <button (click)="onSearch()" class="search-btn" id="music-search-btn" [title]="'MUSIC.SEARCH_BTN' | translate"><i
               class="fas fa-search"></i></button>
 
           <!-- High-End Glassmorphic Search History Popup for Music -->
           <div class="search-history-popup" *ngIf="showSearchHistory && filteredSearchHistory.length > 0">
             <div class="history-header">
-              <span>Lịch sử tìm kiếm</span>
-              <button class="btn-clear-all" (mousedown)="clearAllSearchHistory($event)">Xóa tất cả</button>
+              <span>{{ 'MUSIC.SEARCH_HISTORY' | translate }}</span>
+              <button class="btn-clear-all" (mousedown)="clearAllSearchHistory($event)">{{ 'MUSIC.CLEAR_ALL' | translate }}</button>
             </div>
             <div class="history-items">
               <div class="history-item" *ngFor="let item of filteredSearchHistory"
                 (mousedown)="selectSearchHistoryItem($event, item)">
                 <i class="fas fa-history clock-icon"></i>
                 <span class="history-text">{{ item }}</span>
-                <button class="btn-delete-item" (mousedown)="deleteSearchHistoryItem($event, item)" title="Xóa">
+                <button class="btn-delete-item" (mousedown)="deleteSearchHistoryItem($event, item)" [title]="'MUSIC.DELETE' | translate">
                   <i class="fas fa-times"></i>
                 </button>
               </div>
@@ -39,7 +39,7 @@
         <button *ngFor="let genre of genres" class="genre-pill" [class.active]="activeGenre === genre"
           (click)="selectGenre(genre)" [id]="'genre-btn-' + genre.toLowerCase()">
           <span class="genre-dot"></span>
-          <span class="genre-pill-text">{{ genre === 'All' ? 'Tất cả thể loại' : genre }}</span>
+          <span class="genre-pill-text">{{ genre === 'All' ? ('MUSIC.ALL_GENRES' | translate) : genre }}</span>
         </button>
       </div>
 
@@ -57,8 +57,8 @@
           <h1 class="hero-song-title">{{ selectedTrack.name }}</h1>
           <p class="hero-artist-name"><i class="fas fa-microphone-alt"></i> {{ selectedTrack.artist }}</p>
           <div class="hero-meta">
-            <span><i class="fas fa-music"></i> Album: {{ selectedTrack.album }}</span>
-            <span><i class="fas fa-fire"></i> Thịnh hành: {{ selectedTrack.popularity }}%</span>
+            <span><i class="fas fa-music"></i> {{ 'MUSIC.ALBUM' | translate }}: {{ selectedTrack.album }}</span>
+            <span><i class="fas fa-fire"></i> {{ 'MUSIC.POPULARITY' | translate }}: {{ selectedTrack.popularity }}%</span>
           </div>
         </div>
       </section>
@@ -66,8 +66,8 @@
       <!-- Tracklist Queue Table -->
       <section class="track-queue-section">
         <div class="section-header">
-          <h2 class="section-title">Danh Sách Phát</h2>
-          <span class="track-count">{{ tracks.length }} bài hát</span>
+          <h2 class="section-title">{{ 'MUSIC.PLAYLIST' | translate }}</h2>
+          <span class="track-count">{{ tracks.length }} {{ 'MUSIC.SONGS_COUNT' | translate }}</span>
         </div>
 
         <div class="table-container-scroll">
@@ -75,9 +75,9 @@
             <thead>
               <tr>
                 <th class="col-num">#</th>
-                <th class="col-title">Tiêu Đề</th>
-                <th class="col-album">Lượt xem</th>
-                <th class="col-duration">Thời lượng</th>
+                <th class="col-title">{{ 'MUSIC.TITLE' | translate }}</th>
+                <th class="col-album">{{ 'MUSIC.VIEWS' | translate }}</th>
+                <th class="col-duration">{{ 'MUSIC.DURATION' | translate }}</th>
                 <!-- <th class="col-actions">Tùy Chọn</th> -->
               </tr>
             </thead>
@@ -111,7 +111,7 @@
                     <div class="cell-details">
                       <span class="track-cell-name">
                         {{ track.name }}
-                        <span class="locked-badge" *ngIf="track.isLocked || !track.previewUrl">GIỚI HẠN</span>
+                        <span class="locked-badge" *ngIf="track.isLocked || !track.previewUrl">{{ 'MUSIC.LOCKED' | translate }}</span>
                       </span>
                       <span class="track-cell-artist">{{ track.artist }}</span>
                     </div>
@@ -138,7 +138,7 @@
         <!-- High-End Glassmorphic Pagination Controls -->
         <div class="pagination-controls-wrapper" *ngIf="tracks.length > pageSize">
           <button class="pagination-btn prev-page-btn" [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)"
-            title="Trang trước">
+            [title]="'MUSIC.PREV_PAGE' | translate">
             <i class="fas fa-chevron-left"></i>
           </button>
 
@@ -150,7 +150,7 @@
           </div>
 
           <button class="pagination-btn next-page-btn" [disabled]="currentPage === totalPages"
-            (click)="setPage(currentPage + 1)" title="Trang sau">
+            (click)="setPage(currentPage + 1)" [title]="'MUSIC.NEXT_PAGE' | translate">
             <i class="fas fa-chevron-right"></i>
           </button>
         </div>
@@ -162,17 +162,17 @@
       <!-- Video Playback Iframe Panel -->
       <div class="video-card-container">
         <div class="video-header">
-          <h3 class="panel-subtitle"><i class="fab fa-youtube"></i> Trình Chiếu MV</h3>
+          <h3 class="panel-subtitle"><i class="fab fa-youtube"></i> {{ 'MUSIC.MV_TITLE' | translate }}</h3>
           <div class="video-header-actions">
-            <button class="toggle-video-btn" (click)="toggleVideoMode()" id="toggle-mv-btn" title="Ẩn/Hiện MV">
+            <button class="toggle-video-btn" (click)="toggleVideoMode()" id="toggle-mv-btn" [title]="'MUSIC.TOGGLE_MV' | translate">
               <i class="fas" [class.fa-video]="showVideo" [class.fa-video-slash]="!showVideo"></i>
-              {{ showVideo ? 'Ẩn' : 'Xem MV' }}
+              {{ showVideo ? ('MUSIC.HIDE_MV' | translate) : ('MUSIC.SHOW_MV' | translate) }}
             </button>
             <button class="popup-video-btn" *ngIf="showVideo" (click)="togglePopupMode()" id="popup-mv-btn"
-              title="Phóng to màn hình xem MV">
+              [title]="'MUSIC.EXPAND_MV' | translate">
               <i class="fas" [class.fa-expand-arrows-alt]="!showPopupMode"
                 [class.fa-compress-arrows-alt]="showPopupMode"></i>
-              {{ showPopupMode ? 'Thu nhỏ' : 'Phóng to' }}
+              {{ showPopupMode ? ('MUSIC.SHRINK' | translate) : ('MUSIC.EXPAND' | translate) }}
             </button>
           </div>
         </div>
@@ -180,7 +180,7 @@
         <!-- Hidden or active video embed container (with popup state hook) -->
         <div class="yt-video-wrapper" [class.video-hidden]="!showVideo" [class.video-popup-active]="showPopupMode">
           <div id="yt-player"></div>
-          <button class="close-popup-btn" *ngIf="showPopupMode" (click)="togglePopupMode()" title="Thu nhỏ MV">
+          <button class="close-popup-btn" *ngIf="showPopupMode" (click)="togglePopupMode()" [title]="'MUSIC.SHRINK_MV' | translate">
             <i class="fas fa-times"></i>
           </button>
         </div>
@@ -189,7 +189,7 @@
         <div class="mv-popup-backdrop-blur" *ngIf="showPopupMode" (click)="togglePopupMode()"
           (mousemove)="onBackdropMouseMove()">
           <div class="mv-popup-close-indicator" [class.indicator-hidden]="!showIndicator">
-            <i class="fas fa-compress-arrows-alt"></i> Nhấn ngoài vùng để thu nhỏ MV
+            <i class="fas fa-compress-arrows-alt"></i> {{ 'MUSIC.CLICK_OUTSIDE' | translate }}
           </div>
         </div>
       </div>
@@ -221,7 +221,7 @@
 
       <!-- Scrolling Karaoke Lyrics Stream -->
       <div class="lyrics-panel-card">
-        <h3 class="panel-subtitle"><i class="fas fa-quote-right"></i> Lời Bài Hát</h3>
+        <h3 class="panel-subtitle"><i class="fas fa-quote-right"></i> {{ 'MUSIC.LYRICS' | translate }}</h3>
         <div class="lyrics-scroll-box" id="lyrics-scroll-container">
           <div *ngFor="let lyric of trackLyrics; let idx = index" class="lyric-line"
             [class.active-lyric]="idx === currentLyricIndex">
@@ -263,18 +263,18 @@
       <div class="bottom-playback-controls">
         <div class="player-buttons-group">
           <!-- 1. Previous Track -->
-          <button class="player-ctrl-btn side-btn" (click)="prevTrack()" title="Bài trước">
+          <button class="player-ctrl-btn side-btn" (click)="prevTrack()" [title]="'MUSIC.PREV_TRACK' | translate">
             <i class="fas fa-step-backward"></i>
           </button>
 
           <!-- 2. Rewind 5 seconds -->
           <button class="player-ctrl-btn jump-btn" (click)="seekRelative(-5)" (dblclick)="seekRelative(-10)"
-            (mousedown)="startHoldSeek(-5)" (mouseup)="stopHoldSeek()" (mouseleave)="stopHoldSeek()" title="Tua lùi 5s">
+            (mousedown)="startHoldSeek(-5)" (mouseup)="stopHoldSeek()" (mouseleave)="stopHoldSeek()" [title]="'MUSIC.REWIND_5S' | translate">
             <i class="fas fa-undo-alt"></i>
           </button>
 
           <!-- 3. Central Glowing Play/Pause Button -->
-          <button class="player-ctrl-btn play-circle-btn" (click)="togglePlay()" title="Phát/Tạm dừng"
+          <button class="player-ctrl-btn play-circle-btn" (click)="togglePlay()" [title]="'MUSIC.PLAY_PAUSE' | translate"
             id="bottom-play-btn">
             <i class="fas" [class.fa-pause]="isPlaying" [class.fa-play]="!isPlaying"></i>
           </button>
@@ -282,12 +282,12 @@
           <!-- 4. Fast Forward 5 seconds -->
           <button class="player-ctrl-btn jump-btn" (click)="seekRelative(5)" (dblclick)="seekRelative(10)"
             (mousedown)="startHoldSeek(5)" (mouseup)="stopHoldSeek()" (mouseleave)="stopHoldSeek()"
-            title="Tua nhanh 5s">
+            [title]="'MUSIC.FORWARD_5S' | translate">
             <i class="fas fa-redo-alt"></i>
           </button>
 
           <!-- 5. Next Track -->
-          <button class="player-ctrl-btn side-btn" (click)="nextTrack()" title="Bài tiếp theo">
+          <button class="player-ctrl-btn side-btn" (click)="nextTrack()" [title]="'MUSIC.NEXT_TRACK' | translate">
             <i class="fas fa-step-forward"></i>
           </button>
         </div>
@@ -322,10 +322,9 @@
             </svg>
           </div>
 
-          <h2 class="prompt-title">Bạn cần Đăng Nhập để nghe nhạc</h2>
-          <p class="prompt-desc">Hãy đăng nhập để trải nghiệm âm nhạc chất lượng cao, theo dõi danh sách phát và lưu
-            những bài hát yêu thích!</p>
-          <button class="btn-prompt-action" (click)="goToLogin()">Đăng Nhập Ngay</button>
+          <h2 class="prompt-title">{{ 'AUTH.PROMPT_TITLE_MUSIC' | translate }}</h2>
+          <p class="prompt-desc">{{ 'AUTH.PROMPT_DESC_MUSIC' | translate }}</p>
+          <button class="btn-prompt-action" (click)="goToLogin()">{{ 'AUTH.LOGIN_NOW' | translate }}</button>
         </div>
       </div>
     </section>

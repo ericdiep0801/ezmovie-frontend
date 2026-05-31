@@ -32,17 +32,17 @@
         <!-- Player Mode Switch Tabs -->
         <div class="player-mode-tabs" *ngIf="selectedEpisode.linkM3u8 && !cinemaMode">
           <button class="mode-tab-btn" [class.active]="isHlsMode" (click)="setPlayerMode(true)">
-            <i class="fas fa-play tab-icon"></i> VIP Player (Tua 10S)
+            <i class="fas fa-play tab-icon"></i> {{ 'PLAYER.VIP_PLAYER' | translate }}
           </button>
           <button class="mode-tab-btn" [class.active]="!isHlsMode" (click)="setPlayerMode(false)">
-            <i class="fas fa-tv tab-icon"></i> Dự phòng (Embed Player)
+            <i class="fas fa-tv tab-icon"></i> {{ 'PLAYER.BACKUP_PLAYER' | translate }}
           </button>
         </div>
 
         <div class="video-aspect-wrapper" [style.filter]="'brightness(' + brightness + ')'">
           <!-- Cinema Mode Close Button -->
           <button class="cinema-close-btn" *ngIf="cinemaMode" (click)="toggleCinemaMode()">
-            Thoát khỏi chế độ rạp chiếu
+            {{ 'PLAYER.EXIT_CINEMA' | translate }}
           </button>
 
           <!-- 1. VIP Player (Custom HLS Player) -->
@@ -114,7 +114,7 @@
                 <div class="controls-left">
                   <!-- Previous Episode -->
                   <button class="ctrl-btn" (click)="playPrevEpisode()" [disabled]="!hasPrevEpisode"
-                    [class.disabled-btn]="!hasPrevEpisode" title="Tập trước">
+                    [class.disabled-btn]="!hasPrevEpisode" [title]="'PLAYER.PREV_EPISODE' | translate">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <polygon points="19 20 9 12 19 4 19 20"></polygon>
@@ -123,13 +123,13 @@
                   </button>
 
                   <!-- Play / Pause -->
-                  <button class="ctrl-btn" (click)="togglePlay()" [title]="isPlaying ? 'Tạm dừng' : 'Phát'">
+                  <button class="ctrl-btn" (click)="togglePlay()" [title]="isPlaying ? ('PLAYER.PAUSE' | translate) : ('PLAYER.PLAY' | translate)">
                     <i class="fas" [class.fa-play]="!isPlaying" [class.fa-pause]="isPlaying"></i>
                   </button>
 
                   <!-- Next Episode -->
                   <button class="ctrl-btn" (click)="playNextEpisode()" [disabled]="!hasNextEpisode"
-                    [class.disabled-btn]="!hasNextEpisode" title="Tập tiếp theo">
+                    [class.disabled-btn]="!hasNextEpisode" [title]="'PLAYER.NEXT_EPISODE' | translate">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <polygon points="5 4 15 12 5 20 5 4"></polygon>
@@ -138,13 +138,13 @@
                   </button>
 
                   <!-- Rewind 10s -->
-                  <button class="ctrl-btn" (click)="skipTime(-10)" title="Lùi 10 giây">
+                  <button class="ctrl-btn" (click)="skipTime(-10)" [title]="'PLAYER.REWIND_10S' | translate">
                     <i class="fas fa-undo"></i>
                     <span class="skip-btn-text">-10s</span>
                   </button>
 
                   <!-- Fast Forward 10s -->
-                  <button class="ctrl-btn" (click)="skipTime(10)" title="Tiến 10 giây">
+                  <button class="ctrl-btn" (click)="skipTime(10)" [title]="'PLAYER.FORWARD_10S' | translate">
                     <i class="fas fa-redo"></i>
                     <span class="skip-btn-text">+10s</span>
                   </button>
@@ -153,20 +153,20 @@
                 <div class="controls-right">
                   <!-- Brightness Control -->
                   <div class="brightness-control-wrapper">
-                    <button class="ctrl-btn" title="Độ sáng" (click)="brightness = 1.0">
+                    <button class="ctrl-btn" [title]="'PLAYER.BRIGHTNESS' | translate" (click)="brightness = 1.0">
                       <i class="fas fa-sun"></i>
                     </button>
                     <span class="control-value-label">{{ getBrightnessPercent() }}%</span>
                     <div class="slider-container-with-tick">
                       <input type="range" min="0.2" max="2.0" step="0.05" class="brightness-slider"
                         [(ngModel)]="brightness">
-                      <div class="slider-tick-mark brightness-tick" title="Mức chuẩn 100%"></div>
+                      <div class="slider-tick-mark brightness-tick" [title]="'PLAYER.DEFAULT_100' | translate"></div>
                     </div>
                   </div>
 
                   <!-- Volume Control -->
                   <div class="volume-control-wrapper">
-                    <button class="ctrl-btn" (click)="toggleMute()" [title]="isMuted ? 'Bật âm thanh' : 'Tắt âm thanh'">
+                    <button class="ctrl-btn" (click)="toggleMute()" [title]="isMuted ? ('PLAYER.UNMUTE' | translate) : ('PLAYER.MUTE' | translate)">
                       <i class="fas" [class.fa-volume-mute]="isMuted || volume === 0"
                         [class.fa-volume-down]="!isMuted && volume > 0 && volume <= 0.5"
                         [class.fa-volume-up]="!isMuted && volume > 0.5"></i>
@@ -175,25 +175,25 @@
                     <div class="slider-container-with-tick">
                       <input type="range" min="0" max="1" step="0.05" class="volume-slider"
                         [value]="isMuted ? 0 : volume" (input)="onSliderVolumeChange($event)">
-                      <div class="slider-tick-mark volume-tick" title="Mức chuẩn 50%"></div>
+                      <div class="slider-tick-mark volume-tick" [title]="'PLAYER.DEFAULT_50' | translate"></div>
                     </div>
                   </div>
 
                   <!-- Picture-in-Picture -->
-                  <button class="ctrl-btn" (click)="togglePictureInPicture()" title="Xem cửa sổ nổi (PiP)">
+                  <button class="ctrl-btn" (click)="togglePictureInPicture()" [title]="'PLAYER.PIP' | translate">
                     <i class="fas fa-clone"></i>
                   </button>
 
                   <!-- Resolution Selector (Quality Switcher) -->
                   <div class="resolution-control-wrapper" *ngIf="availableResolutions.length > 0">
                     <button class="ctrl-btn resolution-btn" (click)="showResolutionMenu = !showResolutionMenu"
-                      title="Độ phân giải">
+                      [title]="'PLAYER.RESOLUTION' | translate">
                       <i class="fas fa-layer-group"></i>
                       <span class="resolution-active-label">{{ activeResolutionLabel }}</span>
                     </button>
 
                     <div class="resolution-dropdown-menu" *ngIf="showResolutionMenu">
-                      <div class="resolution-dropdown-header">Độ Phân Giải</div>
+                      <div class="resolution-dropdown-header">{{ 'PLAYER.RESOLUTION' | translate }}</div>
                       <div class="resolution-dropdown-list">
                         <button *ngFor="let res of availableResolutions" class="resolution-dropdown-item"
                           [class.active]="currentResolutionIndex === res.index" (click)="selectResolution(res.index)">
@@ -206,17 +206,17 @@
 
                   <!-- Settings Control (Gear Button) -->
                   <div class="settings-control-wrapper">
-                    <button class="ctrl-btn settings-btn" (click)="toggleSettingsMenu()" title="Cài đặt">
+                    <button class="ctrl-btn settings-btn" (click)="toggleSettingsMenu()" [title]="'PLAYER.SETTINGS' | translate">
                       <i class="fas fa-cog"></i>
                     </button>
 
                     <div class="settings-dropdown-menu" *ngIf="showSettingsMenu">
                       <div *ngIf="activeSettingsSubMenu === 'main'" class="settings-menu-content">
-                        <div class="settings-dropdown-header">Cài đặt</div>
+                        <div class="settings-dropdown-header">{{ 'PLAYER.SETTINGS' | translate }}</div>
 
                         <button class="settings-item-row" (click)="activeSettingsSubMenu = 'speed'">
                           <span class="settings-item-left">
-                            <i class="fas fa-tachometer-alt settings-item-icon"></i> Tốc độ phát
+                            <i class="fas fa-tachometer-alt settings-item-icon"></i> {{ 'PLAYER.PLAY_SPEED' | translate }}
                           </span>
                           <span class="settings-item-right">
                             {{ getSpeedLabel(currentSpeed) }} <i class="fas fa-chevron-right chevron-right-icon"></i>
@@ -225,7 +225,7 @@
 
                         <button class="settings-item-row" (click)="activeSettingsSubMenu = 'aspect'">
                           <span class="settings-item-left">
-                            <i class="fas fa-compress settings-item-icon"></i> Tỷ lệ khung hình
+                            <i class="fas fa-compress settings-item-icon"></i> {{ 'PLAYER.ASPECT_RATIO' | translate }}
                           </span>
                           <span class="settings-item-right">
                             {{ currentAspectRatio }} <i class="fas fa-chevron-right chevron-right-icon"></i>
@@ -235,12 +235,12 @@
 
                       <div *ngIf="activeSettingsSubMenu === 'speed'" class="settings-menu-content">
                         <button class="settings-menu-back-btn" (click)="activeSettingsSubMenu = 'main'">
-                          <i class="fas fa-chevron-left"></i> Quay lại
+                          <i class="fas fa-chevron-left"></i> {{ 'PLAYER.BACK' | translate }}
                         </button>
                         <div class="resolution-dropdown-list">
                           <button *ngFor="let speed of availableSpeeds" class="resolution-dropdown-item"
                             [class.active]="currentSpeed === speed" (click)="setPlaySpeed(speed)">
-                            <span class="res-label">{{ speed === 1.0 ? 'Bình thường' : speed + 'x' }}</span>
+                            <span class="res-label">{{ speed === 1.0 ? ('PLAYER.NORMAL' | translate) : speed + 'x' }}</span>
                             <i class="fas fa-check active-check-icon" *ngIf="currentSpeed === speed"></i>
                           </button>
                         </div>
@@ -248,12 +248,12 @@
 
                       <div *ngIf="activeSettingsSubMenu === 'aspect'" class="settings-menu-content">
                         <button class="settings-menu-back-btn" (click)="activeSettingsSubMenu = 'main'">
-                          <i class="fas fa-chevron-left"></i> Quay lại
+                          <i class="fas fa-chevron-left"></i> {{ 'PLAYER.BACK' | translate }}
                         </button>
                         <div class="resolution-dropdown-list">
                           <button *ngFor="let ratio of availableAspectRatios" class="resolution-dropdown-item"
                             [class.active]="currentAspectRatio === ratio" (click)="setAspectRatio(ratio)">
-                            <span class="res-label">{{ ratio === 'Default' ? 'Mặc định' : ratio }}</span>
+                            <span class="res-label">{{ ratio === 'Default' ? ('PLAYER.DEFAULT' | translate) : ratio }}</span>
                             <i class="fas fa-check active-check-icon" *ngIf="currentAspectRatio === ratio"></i>
                           </button>
                         </div>
@@ -263,7 +263,7 @@
 
                   <!-- Fullscreen -->
                   <button class="ctrl-btn" (click)="toggleFullscreen()"
-                    [title]="isFullscreen ? 'Thoát toàn màn hình' : 'Toàn màn hình'">
+                    [title]="isFullscreen ? ('PLAYER.EXIT_FULLSCREEN' | translate) : ('PLAYER.FULLSCREEN' | translate)">
                     <i class="fas" [class.fa-expand]="!isFullscreen" [class.fa-compress]="isFullscreen"></i>
                   </button>
                 </div>
@@ -280,13 +280,13 @@
         <!-- Video Metadata / Playing Title Panel -->
         <div class="player-metadata-bar" *ngIf="!cinemaMode">
           <div class="meta-left">
-            <span class="playing-tag"><i class="fas fa-play"></i> Đang Phát</span>
+            <span class="playing-tag"><i class="fas fa-play"></i> {{ 'PLAYER.NOW_PLAYING' | translate }}</span>
             <h2 class="playing-title">{{ selectedEpisode.title }}</h2>
           </div>
           <div class="meta-right">
-            <button class="cinema-mode-btn" (click)="toggleCinemaMode()" title="Chế độ Rạp Chiếu">
+            <button class="cinema-mode-btn" (click)="toggleCinemaMode()" [title]="'PLAYER.CINEMA_MODE' | translate">
               <i class="fas" [class.fa-expand]="!cinemaMode" [class.fa-compress]="cinemaMode"></i>
-              {{ cinemaMode ? 'Thu nhỏ' : 'Rạp Chiếu' }}
+              {{ cinemaMode ? ('PLAYER.SHRINK' | translate) : ('PLAYER.CINEMA' | translate) }}
             </button>
           </div>
         </div>
@@ -315,15 +315,15 @@
       <!-- Inside List Header & Quick Search -->
       <div class="playlist-header-container">
         <div class="playlist-header">
-          <h3 class="panel-subtitle"><i class="fas fa-th-list"></i> Danh Sách Tập</h3>
-          <span class="total-episodes" *ngIf="episodes">{{ episodes.length }} tập được tìm thấy</span>
+          <h3 class="panel-subtitle"><i class="fas fa-th-list"></i> {{ 'PLAYER.EPISODES_LIST' | translate }}</h3>
+          <span class="total-episodes" *ngIf="episodes">{{ episodes.length }} {{ 'PLAYER.EPISODES_FOUND' | translate }}</span>
         </div>
 
         <div class="playlist-search-box">
           <i class="fas fa-search search-icon"></i>
           <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()"
-            placeholder="Tìm theo tập, phần phim..." class="playlist-search-input">
-          <button (click)="onSearch()" class="playlist-search-btn" title="Tìm tập phim">
+            [placeholder]="'PLAYER.SEARCH_EPISODE_PLACEHOLDER' | translate" class="playlist-search-input">
+          <button (click)="onSearch()" class="playlist-search-btn" [title]="'PLAYER.SEARCH_EPISODE' | translate">
             <i class="fas fa-search"></i>
           </button>
         </div>
@@ -361,8 +361,8 @@
               
               <!-- Watch Status Text -->
               <div class="episode-watch-status" *ngIf="ep.progressPercent !== undefined || ep.isCompleted">
-                <span class="status-completed" *ngIf="ep.isCompleted"><i class="fas fa-check-circle"></i> Đã xem xong</span>
-                <span class="status-progress" *ngIf="!ep.isCompleted && ep.progressPercent! > 0">Đã xem {{ Math.round(ep.progressPercent!) }}%</span>
+                <span class="status-completed" *ngIf="ep.isCompleted"><i class="fas fa-check-circle"></i> {{ 'PLAYER.WATCHED_DONE' | translate }}</span>
+                <span class="status-progress" *ngIf="!ep.isCompleted && ep.progressPercent! > 0">{{ 'PLAYER.WATCHED' | translate }} {{ Math.round(ep.progressPercent!) }}%</span>
               </div>
             </div>
 
@@ -378,7 +378,7 @@
         <ng-template #noEpisodes>
           <div class="empty-playlist-state">
             <i class="fas fa-film movie-empty-icon"></i>
-            <p>Không tìm thấy tập phim nào phù hợp.<br>Thử tìm kiếm với từ khóa khác nhé!</p>
+            <p>{{ 'PLAYER.NO_EPISODES' | translate }}</p>
           </div>
         </ng-template>
       </div>
@@ -402,10 +402,9 @@
             </svg>
           </div>
 
-          <h2 class="prompt-title">Bạn cần Đăng Nhập để xem phim hoạt hình</h2>
-          <p class="prompt-desc">Hãy đăng nhập để trải nghiệm xem các tập phim Anime chất lượng cao, theo dõi danh sách
-            tập mới nhất và lưu nội dung yêu thích!</p>
-          <button class="btn-prompt-action" (click)="goToLogin()">Đăng Nhập Ngay</button>
+          <h2 class="prompt-title">{{ 'AUTH.PROMPT_TITLE_CARTOON' | translate }}</h2>
+          <p class="prompt-desc">{{ 'AUTH.PROMPT_DESC_CARTOON' | translate }}</p>
+          <button class="btn-prompt-action" (click)="goToLogin()">{{ 'AUTH.LOGIN_NOW' | translate }}</button>
         </div>
       </div>
     </section>

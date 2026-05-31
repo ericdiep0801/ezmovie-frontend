@@ -27,7 +27,7 @@
               <line x1="17" y1="17" x2="22" y2="17"></line>
               <line x1="17" y1="7" x2="22" y2="7"></line>
             </svg>
-            <span class="segment-label">Phim</span>
+            <span class="segment-label">{{ 'HEADER.MOVIES' | translate }}</span>
           </a>
           <a routerLink="/tv" class="nav-segment-item" [class.active]="isTvActive()">
             <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
@@ -35,7 +35,7 @@
               <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
               <polyline points="17 2 12 7 7 2"></polyline>
             </svg>
-            <span class="segment-label">TV Show</span>
+            <span class="segment-label">{{ 'HEADER.TV_SHOWS' | translate }}</span>
           </a>
           <a routerLink="/music" class="nav-segment-item" [class.active]="isMusicActive()">
             <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
@@ -44,7 +44,7 @@
               <circle cx="6" cy="18" r="3"></circle>
               <circle cx="18" cy="16" r="3"></circle>
             </svg>
-            <span class="segment-label">Âm nhạc</span>
+            <span class="segment-label">{{ 'HEADER.MUSIC' | translate }}</span>
           </a>
           <a routerLink="/cartoon" class="nav-segment-item" [class.active]="isCartoonActive()">
             <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
@@ -52,13 +52,13 @@
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
               </path>
             </svg>
-            <span class="segment-label">Anime</span>
+            <span class="segment-label">{{ 'HEADER.CARTOON' | translate }}</span>
           </a>
           <a routerLink="/live" class="nav-segment-item" [class.active]="isLiveActive()">
             <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
             </svg>
-            <span class="segment-label">Live</span>
+            <span class="segment-label">{{ 'HEADER.LIVE' | translate }}</span>
           </a>
         </nav>
       </div>
@@ -69,7 +69,7 @@
         <div class="search-bar desktop-search" *ngIf="!isTvActive() && !isMusicActive() && !isCartoonActive() && !isLiveActive()">
           <div class="search-input-wrapper">
             <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" (focus)="onSearchFocus()"
-              (blur)="onSearchBlur()" placeholder="Tìm phim...">
+              (blur)="onSearchBlur()" [placeholder]="'HEADER.SEARCH_PLACEHOLDER' | translate">
             <button *ngIf="searchQuery" class="btn-clear" (mousedown)="clearSearchQuery($event)" title="Xóa">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -89,8 +89,8 @@
           <!-- High-End Search History Popup -->
           <div class="search-history-popup" *ngIf="showSearchHistory && filteredSearchHistory.length > 0">
             <div class="history-header">
-              <span>Lịch sử tìm kiếm</span>
-              <button class="btn-clear-all" (mousedown)="clearAllSearchHistory($event)">Xóa tất cả</button>
+              <span>{{ 'HEADER.SEARCH_HISTORY' | translate }}</span>
+              <button class="btn-clear-all" (mousedown)="clearAllSearchHistory($event)">{{ 'HEADER.CLEAR_ALL' | translate }}</button>
             </div>
             <div class="history-items">
               <div class="history-item" *ngFor="let item of filteredSearchHistory"
@@ -114,9 +114,10 @@
         </div>
 
         <div class="auth-section">
+
           <ng-container *ngIf="!(authService.currentUser$ | async); else userLoggedIn">
-            <button class="btn-login" routerLink="/login">Sign In</button>
-            <button class="btn-signup" routerLink="/signup">Sign Up</button>
+            <button class="btn-login" routerLink="/login">{{ 'HEADER.LOGIN' | translate }}</button>
+            <button class="btn-signup" routerLink="/signup">{{ 'HEADER.SIGNUP' | translate }}</button>
           </ng-container>
 
           <ng-template #userLoggedIn>
@@ -152,7 +153,7 @@
                     </div>
                     <p>{{ currentUser?.email }}</p>
                     <a *ngIf="currentUser?.role === 'admin'" routerLink="/admin" class="btn-goto-admin" (click)="toggleProfile()">
-                      Chuyển tới trang admin <i class="fas fa-arrow-right"></i>
+                      {{ 'PROFILE.GOTO_ADMIN' | translate }} <i class="fas fa-arrow-right"></i>
                     </a>
                   </div>
                 </div>
@@ -161,11 +162,11 @@
                   <div class="popup-tabs" role="tablist">
                     <button type="button" class="tab-btn" role="tab" [class.active]="activeTab === 'history'"
                       (click)="activeTab = 'history'">
-                      <span>Lịch sử</span>
+                      <span>{{ 'PROFILE.HISTORY' | translate }}</span>
                     </button>
                     <button type="button" class="tab-btn" role="tab" [class.active]="activeTab === 'favorites'"
                       (click)="activeTab = 'favorites'">
-                      <span>Yêu thích</span>
+                      <span>{{ 'PROFILE.FAVORITES' | translate }}</span>
                     </button>
                   </div>
 
@@ -173,9 +174,9 @@
                     <!-- History tab list -->
                     <div *ngIf="activeTab === 'history'" class="tab-pane">
                       <div class="history-tab-header" *ngIf="watchHistory.length > 0">
-                        <span class="history-section-title" (click)="gotoPage('history')">Lịch sử xem <i
+                        <span class="history-section-title" (click)="gotoPage('history')">{{ 'PROFILE.WATCH_HISTORY' | translate }} <i
                             class="fas fa-arrow-right"></i></span>
-                        <button class="btn-clear-history" (click)="clearAllWatchHistory($event)">Xóa toàn bộ</button>
+                        <button class="btn-clear-history" (click)="clearAllWatchHistory($event)">{{ 'HEADER.CLEAR_ALL' | translate }}</button>
                       </div>
                       <div *ngIf="watchHistory.length === 0" class="empty-dropdown-list">
                         <div class="empty-dropdown-icon" aria-hidden="true">
@@ -185,7 +186,7 @@
                             <polyline points="12 6 12 12 16 14"></polyline>
                           </svg>
                         </div>
-                        <p class="empty-dropdown-title">Chưa có lịch sử xem phim</p>
+                        <p class="empty-dropdown-title">{{ 'PROFILE.NO_HISTORY' | translate }}</p>
                       </div>
                       <div class="history-list-dropdown" *ngIf="watchHistory.length > 0">
                         <div class="history-item-dropdown" *ngFor="let item of watchHistory"
@@ -194,8 +195,8 @@
                             class="history-thumb-dropdown">
                           <div class="history-details-dropdown">
                             <h4 class="history-name-dropdown">{{ item.movieName }}</h4>
-                            <p class="history-ep-dropdown" *ngIf="item.episodeName">Tập {{ item.episodeName }}</p>
-                            <p class="history-time-dropdown">Xem lúc: {{ item.updatedAt | date:'dd/MM/yyyy HH:mm' }}</p>
+                            <p class="history-ep-dropdown" *ngIf="item.episodeName">{{ 'HOME.EPISODE' | translate }} {{ item.episodeName }}</p>
+                            <p class="history-time-dropdown">{{ 'PROFILE.WATCHED_AT' | translate }}: {{ item.updatedAt | date:'dd/MM/yyyy HH:mm' }}</p>
                           </div>
                           <button class="btn-delete-history-item"
                             (click)="deleteWatchHistoryItem($event, item.movieSlug)" title="Xóa">
@@ -213,7 +214,7 @@
                     <!-- Favorites tab list -->
                     <div *ngIf="activeTab === 'favorites'" class="tab-pane">
                       <div class="history-tab-header" *ngIf="favoritesList.length > 0">
-                        <span class="history-section-title" (click)="gotoPage('favorites')">Phim đã thích <i
+                        <span class="history-section-title" (click)="gotoPage('favorites')">{{ 'PROFILE.FAVORITE_MOVIES' | translate }} <i
                             class="fas fa-arrow-right"></i></span>
                       </div>
                       <div *ngIf="favoritesList.length === 0" class="empty-dropdown-list">
@@ -225,7 +226,7 @@
                             </path>
                           </svg>
                         </div>
-                        <p class="empty-dropdown-title">Chưa có phim yêu thích</p>
+                        <p class="empty-dropdown-title">{{ 'PROFILE.NO_FAVORITES' | translate }}</p>
                       </div>
                       <div class="favorites-list-dropdown" *ngIf="favoritesList.length > 0">
                         <div class="favorite-item-dropdown" *ngFor="let item of favoritesList"
@@ -251,8 +252,9 @@
                 </div>
 
                 <div class="popup-footer">
-                  <button class="btn-action" (click)="openChangePassword()">Đổi mật khẩu</button>
-                  <button class="btn-logout" (click)="logout()">Đăng xuất</button>
+                  <button class="btn-action" (click)="settingsModal.show(); isProfileOpen = false">{{ 'SETTINGS.TITLE' | translate }}</button>
+                  <button class="btn-action" (click)="openChangePassword()">{{ 'PROFILE.CHANGE_PASSWORD' | translate }}</button>
+                  <button class="btn-logout" (click)="logout()">{{ 'PROFILE.LOGOUT' | translate }}</button>
                 </div>
               </div>
             </div>
@@ -265,7 +267,7 @@
     <div class="search-bar mobile-search-row" *ngIf="!isTvActive() && !isMusicActive() && !isCartoonActive() && !isLiveActive()">
       <div class="search-input-wrapper">
         <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" (focus)="onSearchFocus()"
-          (blur)="onSearchBlur()" placeholder="Tìm phim...">
+          (blur)="onSearchBlur()" [placeholder]="'HEADER.SEARCH_PLACEHOLDER' | translate">
         <button *ngIf="searchQuery" class="btn-clear" (mousedown)="clearSearchQuery($event)" title="Xóa">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -285,8 +287,8 @@
       <!-- High-End Search History Popup for Mobile -->
       <div class="search-history-popup" *ngIf="showSearchHistory && filteredSearchHistory.length > 0">
         <div class="history-header">
-          <span>Lịch sử tìm kiếm</span>
-          <button class="btn-clear-all" (mousedown)="clearAllSearchHistory($event)">Xóa tất cả</button>
+          <span>{{ 'HEADER.SEARCH_HISTORY' | translate }}</span>
+          <button class="btn-clear-all" (mousedown)="clearAllSearchHistory($event)">{{ 'HEADER.CLEAR_ALL' | translate }}</button>
         </div>
         <div class="history-items">
           <div class="history-item" *ngFor="let item of filteredSearchHistory"
@@ -311,3 +313,5 @@
 
   </div>
 </header>
+
+<app-settings-modal #settingsModal></app-settings-modal>

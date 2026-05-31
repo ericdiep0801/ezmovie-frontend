@@ -8,7 +8,7 @@
         class="category-pill" 
         [class.active]="activeCategory === cat" 
         (click)="selectCategory(cat)">
-        {{ cat === 'All' ? 'Tất cả kênh' : cat }}
+        {{ cat === 'All' ? ('TV.ALL_CHANNELS' | translate) : cat }}
       </button>
     </div>
 
@@ -32,7 +32,7 @@
               <div class="double-bounce1"></div>
               <div class="double-bounce2"></div>
             </div>
-            <p class="loading-msg">Đang kết nối luồng phát sóng...</p>
+            <p class="loading-msg">{{ 'TV.CONNECTING' | translate }}</p>
           </div>
 
           <!-- Error Overlay State -->
@@ -42,10 +42,10 @@
               <line x1="12" y1="8" x2="12" y2="12"></line>
               <line x1="12" y1="16" x2="12.01" y2="16"></line>
             </svg>
-            <p class="error-msg-title">Sự cố phát trực tiếp</p>
+            <p class="error-msg-title">{{ 'TV.ERROR_TITLE' | translate }}</p>
             <p class="error-msg-detail">{{ playerErrorMessage }}</p>
             <button class="btn btn-primary retry-btn" (click)="selectChannel(currentChannel)">
-              Thử kết nối lại
+              {{ 'TV.RETRY' | translate }}
             </button>
           </div>
         </div>
@@ -55,7 +55,7 @@
           <div class="banner-left">
             <div class="live-badge-glow">
               <span class="live-red-glow"></span>
-              TRỰC TIẾP
+              {{ 'TV.LIVE_BADGE' | translate }}
             </div>
             <div class="title-details">
               <h2 class="playing-chan-title">{{ currentChannel.name }}</h2>
@@ -67,12 +67,11 @@
             <button 
               class="action-fav-btn" 
               [class.favorited]="isFavorited" 
-              (click)="toggleFavorite()"
-              title="Yêu thích kênh">
+              (click)="toggleFavorite()">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" [attr.fill]="isFavorited ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
               </svg>
-              {{ isFavorited ? 'Đã thích' : 'Yêu thích' }}
+              {{ isFavorited ? ('TV.FAVORITED' | translate) : ('TV.FAVORITE' | translate) }}
             </button>
           </div>
         </div>
@@ -82,14 +81,14 @@
       <aside class="channels-sidebar">
         <div class="sidebar-header">
           <div class="sidebar-title-row">
-            <h3 class="sidebar-title">Kênh truyền hình</h3>
-            <button class="btn-import-iptv" (click)="openImportModal()" title="Nhập danh sách kênh IPTV M3U">
+            <h3 class="sidebar-title">{{ 'TV.TV_CHANNELS' | translate }}</h3>
+            <button class="btn-import-iptv" (click)="openImportModal()">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="17 8 12 3 7 8"></polyline>
                 <line x1="12" y1="3" x2="12" y2="15"></line>
               </svg>
-              Nhập M3U
+              {{ 'TV.IMPORT_M3U' | translate }}
             </button>
           </div>
           <div class="search-channels-box">
@@ -97,7 +96,7 @@
               type="text" 
               [(ngModel)]="searchQuery" 
               (input)="onSearchChange()" 
-              placeholder="Tìm kiếm kênh TV..."
+              [placeholder]="'TV.SEARCH_PLACEHOLDER' | translate"
             >
             <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="11" cy="11" r="8"></circle>
@@ -127,7 +126,7 @@
                 <div class="channel-meta-tags">
                   <span class="category-tag">{{ chan.category }}</span>
                   <span class="live-dot-indicator" *ngIf="currentChannel?.id === chan.id">
-                    <span class="pulse-dot"></span> Đang xem
+                    <span class="pulse-dot"></span> {{ 'TV.WATCHING' | translate }}
                   </span>
                 </div>
               </div>
@@ -144,7 +143,7 @@
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="8" y1="12" x2="16" y2="12"></line>
               </svg>
-              <p>Không tìm thấy kênh phù hợp.</p>
+              <p>{{ 'TV.NO_CHANNELS' | translate }}</p>
             </div>
           </ng-template>
         </div>
@@ -160,9 +159,9 @@
               <line x1="8" y1="2" x2="8" y2="6"></line>
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
-            LỊCH PHÁT SÓNG HÔM NAY
+            {{ 'TV.EPG_TITLE' | translate }}
           </h3>
-          <span class="epg-subtitle">*Thời gian phát sóng mang tính chất tham khảo</span>
+          <span class="epg-subtitle">{{ 'TV.EPG_SUBTITLE' | translate }}</span>
         </div>
 
         <div class="epg-timeline-flow">
@@ -187,7 +186,7 @@
             <div class="node-details-card">
               <div class="card-title-row">
                 <h4 class="program-title">{{ prog.title }}</h4>
-                <span class="now-playing-badge" *ngIf="prog.isActive">ĐANG PHÁT</span>
+                <span class="now-playing-badge" *ngIf="prog.isActive">{{ 'TV.NOW_PLAYING' | translate }}</span>
               </div>
               <p class="program-desc">{{ prog.description }}</p>
             </div>
@@ -207,18 +206,18 @@
               <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
               <line x1="4" y1="22" x2="4" y2="15"></line>
             </svg>
-            Nhập Playlist IPTV M3U
+            {{ 'TV.IMPORT_MODAL_TITLE' | translate }}
           </h4>
           <button class="close-btn" (click)="closeImportModal()">&times;</button>
         </div>
 
         <div class="modal-body">
           <p class="modal-description">
-            Dán đường dẫn danh sách M3U / M3U8 từ nhà mạng hoặc danh sách IPTV để tự động đồng bộ hàng nghìn kênh TV trong và ngoài nước tốc độ cao.
+            {{ 'TV.IMPORT_DESC' | translate }}
           </p>
 
           <div class="form-group">
-            <label>Đường dẫn danh sách M3U (M3U URL)</label>
+            <label>{{ 'TV.M3U_URL_LABEL' | translate }}</label>
             <input 
               type="text" 
               [(ngModel)]="m3uPlaylistUrl" 
@@ -229,7 +228,7 @@
 
           <!-- Premium suggestions section -->
           <div class="suggestion-box">
-            <span class="suggestion-label">Gợi ý danh sách kênh miễn phí:</span>
+            <span class="suggestion-label">{{ 'TV.SUGGESTIONS_LABEL' | translate }}</span>
             <div class="suggestion-items">
               <button 
                 class="suggestion-btn" 
@@ -246,15 +245,15 @@
 
           <div class="checkbox-group">
             <input type="checkbox" id="cleanExisting" [(ngModel)]="cleanOnImport">
-            <label for="cleanExisting">Xóa các kênh tự thêm trước đó trước khi nhập mới</label>
+            <label for="cleanExisting">{{ 'TV.CLEAN_EXISTING' | translate }}</label>
           </div>
         </div>
 
         <div class="modal-footer">
-          <button class="btn btn-secondary" [disabled]="isImporting" (click)="closeImportModal()">Hủy bỏ</button>
+          <button class="btn btn-secondary" [disabled]="isImporting" (click)="closeImportModal()">{{ 'TV.CANCEL' | translate }}</button>
           <button class="btn btn-primary btn-import-submit" [disabled]="isImporting" (click)="submitM3uImport()">
             <span class="spinner-inline" *ngIf="isImporting"></span>
-            {{ isImporting ? 'Đang nhập...' : 'Bắt đầu Nhập' }}
+            {{ isImporting ? ('TV.IMPORTING' | translate) : ('TV.START_IMPORT' | translate) }}
           </button>
         </div>
       </div>
@@ -275,9 +274,9 @@
             </svg>
           </div>
           
-          <h2 class="prompt-title">Bạn cần Đăng Nhập để xem truyền hình</h2>
-          <p class="prompt-desc">Hãy đăng nhập để trải nghiệm xem các kênh truyền hình trực tuyến chất lượng cao, theo dõi lịch phát sóng hôm nay và đồng bộ các playlist IPTV yêu thích!</p>
-          <button class="btn-prompt-action" (click)="goToLogin()">Đăng Nhập Ngay</button>
+          <h2 class="prompt-title">{{ 'AUTH.PROMPT_TITLE_TV' | translate }}</h2>
+          <p class="prompt-desc">{{ 'AUTH.PROMPT_DESC_TV' | translate }}</p>
+          <button class="btn-prompt-action" (click)="goToLogin()">{{ 'AUTH.LOGIN_NOW' | translate }}</button>
         </div>
       </div>
     </section>
