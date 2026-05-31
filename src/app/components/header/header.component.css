@@ -21,6 +21,23 @@
   border: none !important;
 }
 
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 150%;
+  background: linear-gradient(to bottom, var(--color-bg-dark) 0%, transparent 100%);
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+
+.header.scrolled::before {
+  opacity: 0;
+}
+
 .header-container {
   width: 100%;
   max-width: none;
