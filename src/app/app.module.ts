@@ -28,6 +28,7 @@ import { LiveComponent } from './pages/live/live.component';
 import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
 import { TranslatePipe } from './pipes/translate.pipe';
 import { AiChatComponent } from './components/ai-chat/ai-chat.component';
+import { TvshowsComponent } from './pages/tvshows/tvshows.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { AiChatComponent } from './components/ai-chat/ai-chat.component';
     LiveComponent,
     SettingsModalComponent,
     TranslatePipe,
-    AiChatComponent
+    AiChatComponent,
+    TvshowsComponent
   ],
   imports: [
     BrowserModule,

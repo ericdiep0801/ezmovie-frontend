@@ -1,5 +1,5 @@
 <header class="header" [class.scrolled]="isScrolled"
-  [class.has-search]="!isTvActive() && !isMusicActive() && !isCartoonActive() && !isLiveActive()" *ngIf="isVisible">
+  [class.has-search]="!isTvActive() && !isMusicActive() && !isCartoonActive() && !isLiveActive() && !isTvshowsActive()" *ngIf="isVisible">
   <div class="header-container">
 
     <!-- Top Row: Logo, Navigation Selector, and Auth/Profile menu -->
@@ -60,13 +60,19 @@
             </svg>
             <span class="segment-label">{{ 'HEADER.LIVE' | translate }}</span>
           </a>
+          <a routerLink="/tvshows" class="nav-segment-item" [class.active]="isTvshowsActive()">
+            <svg class="segment-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <span class="segment-label">{{ 'HEADER.REALITY_SHOWS' | translate }}</span>
+          </a>
         </nav>
       </div>
 
       <!-- Right: Desktop Search Bar & Auth Menu -->
       <div class="header-right">
         <!-- Desktop Search Bar (Hidden on Mobile) -->
-        <div class="search-bar desktop-search" *ngIf="!isTvActive() && !isMusicActive() && !isCartoonActive() && !isLiveActive()">
+        <div class="search-bar desktop-search" *ngIf="!isTvActive() && !isMusicActive() && !isCartoonActive() && !isLiveActive() && !isTvshowsActive()">
           <div class="search-input-wrapper">
             <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" (focus)="onSearchFocus()"
               (blur)="onSearchBlur()" [placeholder]="'HEADER.SEARCH_PLACEHOLDER' | translate">
@@ -264,7 +270,7 @@
     </div>
 
     <!-- Mobile Search Row: Renders cleanly under top row on mobile -->
-    <div class="search-bar mobile-search-row" *ngIf="!isTvActive() && !isMusicActive() && !isCartoonActive() && !isLiveActive()">
+    <div class="search-bar mobile-search-row" *ngIf="!isTvActive() && !isMusicActive() && !isCartoonActive() && !isLiveActive() && !isTvshowsActive()">
       <div class="search-input-wrapper">
         <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" (focus)="onSearchFocus()"
           (blur)="onSearchBlur()" [placeholder]="'HEADER.SEARCH_PLACEHOLDER' | translate">

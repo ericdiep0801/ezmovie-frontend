@@ -1,0 +1,74 @@
+<div class="tvshows-portal-container">
+  <!-- Hero Section -->
+  <section class="tvshows-hero-section" *ngIf="activeShow">
+    <div class="tvshows-hero-bg">
+      <img [src]="activeShow.coverUrl" alt="Hero Background">
+      <div class="hero-vignette"></div>
+    </div>
+    
+    <div class="tvshows-hero-content">
+      <div class="hero-left">
+        <span class="reality-badge">{{ activeShow.type }}</span>
+        <h1 class="hero-title">{{ activeShow.name }}</h1>
+        <div class="hero-meta">
+          <span class="match-score">{{ activeShow.popularity | number }} lượt quan tâm</span>
+          <span class="rating">{{ activeShow.rating }}</span>
+          <span class="episodes">{{ activeShow.episodes }} Tập</span>
+        </div>
+        <p class="hero-description">{{ activeShow.description }}</p>
+        
+        <div class="hero-actions">
+          <button class="btn-play" (click)="playPreview()">
+            <i class="fas fa-play"></i> {{ 'HOME.WATCH_NOW' | translate }}
+          </button>
+          <button class="btn-info">
+            <i class="fas fa-info-circle"></i> Chi tiết
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preview Modal -->
+  <div class="preview-modal" *ngIf="isPlayingPreview" (click)="stopPreview()">
+    <div class="preview-content" (click)="$event.stopPropagation()">
+      <button class="btn-close-modal" (click)="stopPreview()"><i class="fas fa-times"></i></button>
+      <iframe *ngIf="activeShow" 
+        [src]="getSafeUrl(activeShow.previewUrl)" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+  <!-- Shows List Section -->
+  <section class="tvshows-list-section">
+    <h2 class="section-title">Chương Trình Thịnh Hành</h2>
+    
+    <div class="tvshows-grid" *ngIf="shows.length > 0; else emptyState">
+      <div class="tvshow-card" *ngFor="let show of shows" (click)="selectShow(show)" [class.active]="activeShow?.id === show.id">
+        <div class="tvshow-thumbnail-wrapper">
+          <img [src]="show.coverUrl" [alt]="show.name" class="tvshow-thumbnail">
+          <div class="tvshow-overlay">
+            <button class="btn-play-mini"><i class="fas fa-play"></i></button>
+          </div>
+          <span class="tvshow-type-badge">{{ show.type }}</span>
+        </div>
+        <div class="tvshow-details">
+          <h3 class="tvshow-name">{{ show.name }}</h3>
+          <div class="tvshow-meta-mini">
+            <span class="rating-mini">{{ show.rating }}</span>
+            <span class="episodes-mini">{{ show.episodes }} Tập</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <i class="fas fa-film"></i>
+        <p>Không có dữ liệu chương trình truyền hình.</p>
+      </div>
+    </ng-template>
+  </section>
+</div>

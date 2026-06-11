@@ -1,0 +1,368 @@
+.tvshows-portal-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #141414;
+  color: #fff;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  padding-bottom: 50px;
+}
+
+/* Hero Section */
+.tvshows-hero-section {
+  position: relative;
+  height: 80vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.tvshows-hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.tvshows-hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+}
+
+.hero-vignette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #141414 10%, transparent 60%),
+              linear-gradient(to top, #141414 5%, transparent 40%);
+}
+
+.tvshows-hero-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 4%;
+}
+
+.hero-left {
+  max-width: 45%;
+}
+
+.reality-badge {
+  display: inline-block;
+  background-color: rgba(229, 9, 20, 0.8);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  margin-bottom: 15px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.45);
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.match-score {
+  color: #46d369;
+}
+
+.rating, .episodes {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.hero-description {
+  font-size: 1.3rem;
+  line-height: 1.5;
+  margin-bottom: 30px;
+  color: #e5e5e5;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.btn-play {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #fff;
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 24px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-play:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.btn-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(109, 109, 110, 0.7);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 24px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-info:hover {
+  background-color: rgba(109, 109, 110, 0.4);
+}
+
+/* List Section */
+.tvshows-list-section {
+  padding: 20px 4%;
+  position: relative;
+  z-index: 2;
+  margin-top: -80px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #e5e5e5;
+}
+
+.tvshows-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.tvshow-card {
+  background-color: #181818;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.tvshow-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
+  z-index: 10;
+}
+
+.tvshow-card.active {
+  border: 2px solid #e50914;
+}
+
+.tvshow-thumbnail-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.tvshow-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.tvshow-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tvshow-card:hover .tvshow-overlay {
+  opacity: 1;
+}
+
+.btn-play-mini {
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.btn-play-mini:hover {
+  transform: scale(1.1);
+  background: #fff;
+  color: #000;
+}
+
+.tvshow-type-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #e50914;
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+.tvshow-details {
+  padding: 15px;
+}
+
+.tvshow-name {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tvshow-meta-mini {
+  display: flex;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: #a3a3a3;
+}
+
+.rating-mini, .episodes-mini {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 100px 0;
+  color: #a3a3a3;
+  font-size: 1.2rem;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+/* Modal */
+.preview-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-content {
+  position: relative;
+  width: 80%;
+  max-width: 1000px;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.preview-content iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.btn-close-modal {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(255,255,255,0.2);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.btn-close-modal:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .hero-left {
+    max-width: 100%;
+    margin-top: 50px;
+  }
+  .hero-title {
+    font-size: 2.2rem;
+  }
+  .hero-description {
+    font-size: 1rem;
+  }
+  .tvshows-hero-section {
+    height: 60vh;
+  }
+  .tvshows-list-section {
+    margin-top: -30px;
+  }
+  .preview-content {
+    width: 95%;
+  }
+}

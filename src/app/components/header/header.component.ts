@@ -114,7 +114,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       !this.isTvActive() &&
       !this.isMusicActive() &&
       !this.isCartoonActive() &&
-      !this.isLiveActive();
+      !this.isLiveActive() &&
+      !this.isTvshowsActive();
     const stacked = showSearch && window.innerWidth <= 1320;
     document.body.classList.toggle('header-search-stacked', stacked);
   }
@@ -372,11 +373,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   isMoviesActive(): boolean {
-    return !this.isTvActive() && !this.isMusicActive() && !this.isCartoonActive() && !this.isLiveActive();
+    return !this.isTvActive() && !this.isMusicActive() && !this.isCartoonActive() && !this.isLiveActive() && !this.isTvshowsActive();
   }
 
   isTvActive(): boolean {
-    return this.router.url.split('?')[0].startsWith('/tv');
+    return this.router.url.split('?')[0].startsWith('/tv') && !this.router.url.split('?')[0].startsWith('/tvshows');
   }
 
   isMusicActive(): boolean {
@@ -389,6 +390,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isLiveActive(): boolean {
     return this.router.url.split('?')[0].startsWith('/live');
+  }
+
+  isTvshowsActive(): boolean {
+    return this.router.url.split('?')[0].startsWith('/tvshows');
   }
 
   gotoPage(type: string) {
