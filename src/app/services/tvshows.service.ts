@@ -13,6 +13,7 @@ export interface TvShowDto {
   popularity: number;
   episodes: number;
   rating: string;
+  slug?: string;
 }
 
 @Injectable({

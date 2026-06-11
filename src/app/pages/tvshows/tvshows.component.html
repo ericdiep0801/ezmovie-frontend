@@ -21,7 +21,7 @@
           <button class="btn-play" (click)="playPreview()">
             <i class="fas fa-play"></i> {{ 'HOME.WATCH_NOW' | translate }}
           </button>
-          <button class="btn-info">
+          <button class="btn-info" (click)="playPreview()">
             <i class="fas fa-info-circle"></i> Chi tiết
           </button>
         </div>
@@ -29,28 +29,16 @@
     </div>
   </section>
 
-  <!-- Preview Modal -->
-  <div class="preview-modal" *ngIf="isPlayingPreview" (click)="stopPreview()">
-    <div class="preview-content" (click)="$event.stopPropagation()">
-      <button class="btn-close-modal" (click)="stopPreview()"><i class="fas fa-times"></i></button>
-      <iframe *ngIf="activeShow" 
-        [src]="getSafeUrl(activeShow.previewUrl)" 
-        allow="autoplay; encrypted-media" 
-        allowfullscreen>
-      </iframe>
-    </div>
-  </div>
-
   <!-- Shows List Section -->
   <section class="tvshows-list-section">
     <h2 class="section-title">Chương Trình Thịnh Hành</h2>
     
     <div class="tvshows-grid" *ngIf="shows.length > 0; else emptyState">
-      <div class="tvshow-card" *ngFor="let show of shows" (click)="selectShow(show)" [class.active]="activeShow?.id === show.id">
+      <div class="tvshow-card" *ngFor="let show of shows" (click)="selectShow(show)" (dblclick)="watchShow(show)" [class.active]="activeShow?.id === show.id">
         <div class="tvshow-thumbnail-wrapper">
           <img [src]="show.coverUrl" [alt]="show.name" class="tvshow-thumbnail">
           <div class="tvshow-overlay">
-            <button class="btn-play-mini"><i class="fas fa-play"></i></button>
+            <button class="btn-play-mini" (click)="watchShow(show); $event.stopPropagation()"><i class="fas fa-play"></i></button>
           </div>
           <span class="tvshow-type-badge">{{ show.type }}</span>
         </div>

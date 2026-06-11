@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { TvShowsService, TvShowDto } from '../../services/tvshows.service';
 import { LoadingService } from '../../services/loading.service';
 
@@ -16,7 +16,7 @@ export class TvshowsComponent implements OnInit {
   constructor(
     private tvShowsService: TvShowsService,
     private loadingService: LoadingService,
-    private sanitizer: DomSanitizer
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -48,14 +48,14 @@ export class TvshowsComponent implements OnInit {
   }
 
   playPreview(): void {
-    this.isPlayingPreview = true;
+    if (this.activeShow?.slug) {
+      this.router.navigate(['/movie', this.activeShow.slug]);
+    }
   }
 
-  stopPreview(): void {
-    this.isPlayingPreview = false;
-  }
-
-  getSafeUrl(url: string): SafeResourceUrl {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  watchShow(show: TvShowDto): void {
+    if (show.slug) {
+      this.router.navigate(['/movie', show.slug]);
+    }
   }
 }
